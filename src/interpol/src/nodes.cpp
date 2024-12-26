@@ -1,5 +1,7 @@
 #include <calgo/interpol/interpol.hpp>
 
+#include <cmath>
+
 namespace ca::interpol {
 
 ListT Nodes::uniform(double a, double b, std::size_t n) {

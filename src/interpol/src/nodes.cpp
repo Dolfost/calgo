@@ -18,7 +18,7 @@ ListT Nodes::chebyshev(double a, double b, std::size_t n) {
 	double c2 = (b-a)/2.0;
 	ListT points;
 	for (long k = n-1; k >= 0; k--)
-		points.push_back(c1 + c2*std::cos(((2.0*k+1.0)/(2.0*n))*M_PI));
+		points.push_back(c1 + c2*std::cos(((2.0*k+1.0)/(2.0*n))*mconst.pi));
 
 	return points;
 }

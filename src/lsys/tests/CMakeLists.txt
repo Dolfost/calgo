@@ -1,5 +1,3 @@
-enable_testing()
-
 file(GLOB TESTS CONFIGURE_DEPENDS
 	*.cpp 
 )

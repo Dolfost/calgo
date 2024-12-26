@@ -16,6 +16,10 @@ option(CALGO_CALGO "Build library" YES)
 option(CALGO_DOCS "Build docs" ${PROJECT_IS_TOP_LEVEL})
 option(CALGO_TESTING "Build tests" ${PROJECT_IS_TOP_LEVEL})
 
+if (CALGO_TESTING)
+	enable_testing()
+endif()
+
 if (CALGO_CALGO)
 	add_subdirectory(src)
 endif()

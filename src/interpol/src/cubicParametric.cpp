@@ -1,6 +1,8 @@
 #include <calgo/interpol/cubicParametric.hpp>
 #include <calgo/lsys/cyclicThomas.hpp>
 
+#include <cmath>
+
 namespace ca::interpol {
 
 void CubicParametric::setX(ListT x) {

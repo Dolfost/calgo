@@ -8,7 +8,7 @@
 #include <algorithm>
 #include <random>
 
-const std::vector<std::vector<ca::optim::Box2D<int>>> boxSet = {
+static const std::vector<std::vector<ca::optim::Box2D<int>>> boxSet = {
 	{
 		{5, 8}, {7, 3}, {7, 15}, {9, 4}, {8,10}, {2, 5}, {8, 12},
 	}, {

@@ -12,9 +12,6 @@ foreach(T ${TESTS})
 	target_compile_definitions(optim_${TNAME} 
 		PRIVATE TESTPATH="${CMAKE_CURRENT_LIST_DIR}"
 	)
-	target_compile_features(optim_${TNAME} 
-		PRIVATE cxx_std_${CALGO_CXX_STANDARD}
-	)
 	target_link_libraries(optim_${TNAME} 
 		ca::optim
 		calgo_optim_testutils

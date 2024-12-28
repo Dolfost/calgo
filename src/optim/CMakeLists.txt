@@ -1,8 +1,6 @@
 add_library(ca_optim INTERFACE)
 add_library(ca::optim ALIAS ca_optim)
 target_sources(ca_optim
-	# PRIVATE
-		# src/packing2D.cpp
 	PUBLIC FILE_SET HEADERS
 			BASE_DIRS include/
 			FILES 
@@ -11,6 +9,9 @@ target_sources(ca_optim
 set_target_properties(ca_optim PROPERTIES
 	OUTPUT_NAME caoptim
 	EXPORT_NAME optim
+)
+target_compile_features(ca_optim 
+	INTERFACE cxx_std_${CALGO_CXX_STANDARD}
 )
 
 target_link_libraries(ca_optim

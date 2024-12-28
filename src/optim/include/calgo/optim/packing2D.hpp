@@ -8,6 +8,7 @@
 #include <sstream>
 #include <vector>
 #include <functional>
+#include <cmath>
 
 namespace ca::optim {
 

@@ -167,6 +167,23 @@ public:
 };
 
 template<typename T>
+class NextFit2D: virtual public Packing2D<T> {
+public:
+	using Packing2D<T>::Packing2D;
+	virtual void packInplace(std::vector<Box2D<T>>& in) override;
+
+	std::size_t k() const { return n_k; };
+	std::size_t setK(std::size_t k) {
+		std::size_t old = n_k;
+		n_k = k;
+		return old;
+	}
+
+private:
+	std::size_t n_k = 1;
+};
+
+template<typename T>
 class TreeFit2D: public virtual Packing2D<T> {
 public:
 	virtual void packInplace(std::vector<Box2D<T>>& in) override;
@@ -236,6 +253,7 @@ class Sorted##CLS: public CLS<T>, public SortedPacking2D<T> { \
 };
 
 CALGO_OPTIM_DEFINE_SORTED_PACKING(FirstFit2D)
+CALGO_OPTIM_DEFINE_SORTED_PACKING(NextFit2D)
 CALGO_OPTIM_DEFINE_SORTED_PACKING(TreeFit2D)
 
 #undef CALGO_OPTIM_DEFINE_SORTED_PACKING
@@ -243,6 +261,7 @@ CALGO_OPTIM_DEFINE_SORTED_PACKING(TreeFit2D)
 }
 
 #include "firstFit2D.inl"
+#include "nextFit2D.inl"
 #include "treeFit2D.inl"
 
 #endif // !_CALGO_OPTIM_HPP_

@@ -3,12 +3,12 @@
 
 #include <calgo/optim/packing2D.hpp>
 
+#include <iostream>
+#include <sstream>
 #include <numeric>
 #include <vector>
 #include <string>
-#include <iostream>
 #include <algorithm>
-#include <sstream>
 
 class ScreenRow: public std::string {
 public:

@@ -7,20 +7,23 @@
 
 #include <string>
 #include <iostream>
+#include <functional>
 
 static int calgo_optim_testing_test_no = 1;
 
 template<template<class> class P, typename N=int>
-bool test(P<N>& packing, std::vector<ca::optim::Box2D<N>> boxes, std::string msg) {
-	std::vector<ca::optim::Box2D<int>> rboxes = packing.pack(boxes);
+bool test(std::vector<ca::optim::Box2D<N>> boxes, std::string msg, std::function<void(P<N>&)> lambda = [](P<N>&){}) {
+	P<N> packing;
+	lambda(packing);
+	std::vector<ca::optim::Box2D<N>> rboxes = packing.pack(boxes);
+	
 	N boxArea = 0;
 	for (auto& box: boxes) {
 		boxArea += box.area();
 	}
-	N area = packing.area();
-	
 	if (calgo_optim_testing_test_no != 1)
 		std::cout << '\n';
+
 	std::cout << "test № "
 		<< calgo_optim_testing_test_no 
 		<< " ===> " <<  msg 
@@ -29,50 +32,34 @@ bool test(P<N>& packing, std::vector<ca::optim::Box2D<N>> boxes, std::string msg
 	for (int i = 0; i < boxes.size(); i++)
 		std::cout
 			<< boxes[i].size() << " ";
+
+	std::cout << std::endl;
+	drawBoxesRow<N>(boxes);
+
+	N area = packing.area();
+	double occupied = 100*double(boxArea)/area;
+	double whilespace = 100-occupied;
 	std::cout <<  "\nOutput boxes (" << packing.size() << "=" 
-		<< area << "u², " << 100*double(boxArea)/area << "%):\n";
+		<< area << "u², occupied: " << occupied 
+		<< "%, whitespace: " << whilespace << "%):\n";
+
+	if (occupied > 100)
+		throw std::logic_error("more than 100% is occupied, impossible.");
+
 	for (int i = 0; i < boxes.size(); i++)
 		std::cout
 			<< rboxes[i] << " ";
 
-	drawBoxesRow<N>(boxes);
-	std::cout << "- - - - - - - - - -\n";
 	drawBoxesPlane<N>(rboxes, packing);
 	calgo_optim_testing_test_no++;
 	return false;
 }
 
-template<template<class> class P, typename N=int>
-bool default_test(std::vector<ca::optim::Box2D<int>> boxes, std::string msg) {
-	P<N> ff;
-	return test<P, N>(ff, boxes, msg);
-}
-
-template<template<class> class P, typename N=int>
-bool default_test_sorted(
-	std::vector<ca::optim::Box2D<int>> boxes, 
-	typename ca::optim::SortedPacking2D<N>::Comp comp,
-	std::string msg
-) {
-	P<N> ff;
-	ff.setComparator(comp);
-	return test<P, N>(ff, boxes, msg);
-}
-
-
-#define CALGO_OPTIM_TESTING_DEFAULT(CLS) \
+#define CALGO_OPTIM_DEFAULT_TEST(CLS, N, LAMBDA) \
 int main(int argc, char** argv) { \
 	for (std::size_t i = 0; i < boxSet.size(); i++) \
-		default_test<CLS>(boxSet[i], "box set №" + std::to_string(i+1)); \
-	default_test<CLS>(binaryBs<int>(16), "binary set 16"); \
-	return 0; \
-}
-
-#define CALGO_OPTIM_TESTING_SORTED(CLS, COMP) \
-int main(int argc, char** argv) { \
-	for (std::size_t i = 0; i < boxSet.size(); i++) \
-		default_test_sorted<CLS>(boxSet[i], COMP, "box set №" + std::to_string(i+1)); \
-	default_test_sorted<CLS>(binaryBs<int>(16), COMP, "binary set 16"); \
+		test<CLS, N>(boxSet[i], "box set №" + std::to_string(i+1), LAMBDA); \
+	test<CLS, N>(binaryBs<int>(16), "binary set 16", LAMBDA); \
 	return 0; \
 }
 

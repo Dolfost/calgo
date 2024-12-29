@@ -75,8 +75,10 @@ template<typename T>
 class Bin2D {
 	static_assert(std::is_arithmetic<T>::value, "Not an arithmetic type");
 public:
-	Bin2D(T width = 1, T height = 1): 
+	Bin2D(T width = 0, T height = 0): 
 		b_size(width, height) {};
+	Bin2D(const Size2D<T>& size): 
+		b_size(size) {};
 	const Size2D<T>& size() const { return b_size; };
 	Size2D<T>& size() { return b_size; };
 	Size2D<T> setSize(Size2D<T> size) { 

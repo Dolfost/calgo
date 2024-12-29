@@ -49,6 +49,18 @@ public:
 	bool operator==(const Size2D<T>& other) const {
 		return other.s_width == s_width and other.s_height == s_height;
 	}
+	bool operator<=(const Size2D<T>& other) const {
+		return s_width <= other.s_width and s_height <= other.s_height;
+	}
+	bool operator>=(const Size2D<T>& other) const {
+		return s_width >= other.s_width and s_height >= other.s_height;
+	}
+	bool operator<(const Size2D<T>& other) const {
+		return s_width < other.s_width and s_height < other.s_height;
+	}
+	bool operator>(const Size2D<T>& other) const {
+		return not operator<(other);
+	}
 
 	friend std::ostream& operator<<(std::ostream& os, const Size2D<T>& size) {
 		return os << size.s_width << 'x' << size.s_height;
@@ -86,6 +98,8 @@ private:
 template<typename T>
 class Box2D: public Bin2D<T> {
 public:
+	Box2D(const Size2D<T>& size, T x = 0, T y = 0): 
+		b_x(x), b_y(y), Bin2D<T>(size.width(), size.height()) {};
 	Box2D(T width, T height, T x = 0, T y = 0): 
 		b_x(x), b_y(y), Bin2D<T>(width, height) {};
 	void setPosition(T x, T y) { setX(x), setY(y); }
@@ -150,38 +164,42 @@ public:
 };
 
 template<typename T>
-class TreeFit2D: public Packing2D<T> {
+class TreeFit2D: public virtual Packing2D<T> {
 public:
 	virtual void packInplace(std::vector<Box2D<T>>& in) override;
 
-public:
+protected:
 	class Node: public Box2D<T> {
+	public:
+		using Box2D<T>::Box2D;
 		Node* down() { return n_down; }
 		Node* right() { return n_right; }
-		Node* fit() { return n_fit; }
 		bool used() const { return n_used; }
 		void setDown(Node* n) { n_down = n; }
 		void setRight(Node* n) { n_right = n;}
-		void setFit(Node* n) { n_fit = n;}
 		void setUsed(bool u) { n_used = u; }
-	private:
+
+	public:
+		~Node() {
+			delete n_down;
+			delete n_right;
+		};
 
 	private:
-		Node* n_fit = nullptr;
 		Node* n_down = nullptr;
 		Node* n_right = nullptr;
 		bool n_used = false;
 	};
 
 protected:
-	Node* findNode(Node* root, Size2D<T> size);
-	Node* findNode(Size2D<T> size, Node* node) {
-		findNode(t_root, node);
+	Node* findNode(Node* root, const Size2D<T>& size);
+	Node* findNode(const Size2D<T>& size) {
+		return findNode(t_root, size);
 	};
-	Node* splitNode(Node* node, Size2D<T> size);
-	Node* growNode(Size2D<T> size);
-	Node* growRight(Size2D<T> size);
-	Node* growDown(Size2D<T> size);
+	Node* splitNode(Node* node, const Size2D<T>& size);
+	Node* growNode(const Size2D<T>& size);
+	Node* growRight(const Size2D<T>& size);
+	Node* growDown(const Size2D<T>& size);
 
 private:
 	Node* t_root = nullptr;
@@ -190,6 +208,7 @@ private:
 template<typename T>
 class SortedPacking2D: virtual public Packing2D<T> {
 public:
+	using Packing2D<T>::Packing2D;
 	using Comp = std::function<bool(const ca::optim::Box2D<T>& a, const ca::optim::Box2D<T>& b)>;
 	void setComparator(Comp comp) {
 		s_comp = comp;
@@ -206,7 +225,7 @@ protected:
 #define CALGO_OPTIM_DEFINE_SORTED_PACKING(CLS) \
 template<typename T> \
 class Sorted##CLS: public CLS<T>, public SortedPacking2D<T> { \
-	using CLS<T>::FirstFit2D; \
+	using CLS<T>::CLS; \
 	virtual void packInplace(std::vector<Box2D<T>>& in) { \
 		std::sort(in.begin(), in.end(), this->s_comp); \
 		CLS<T>::packInplace(in); \
@@ -219,7 +238,6 @@ CALGO_OPTIM_DEFINE_SORTED_PACKING(TreeFit2D)
 #undef CALGO_OPTIM_DEFINE_SORTED_PACKING
 
 }
-
 
 #include "firstFit2D.inl"
 #include "treeFit2D.inl"

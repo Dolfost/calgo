@@ -1,26 +1,124 @@
 #include <calgo/optim/packing2D.hpp>
 
-
 namespace ca::optim {
 
-// template<typename T>
-// void TreeFit2D<T>::packInplace(std::vector<Box2D<T>>& in) {
-// 	if (this->defaultFinish(in))
-// 		return;
-// 	this->setSize(in[0].size());
-// 	t_root = new Node(this->size(), 0, 0);
-// 	for (auto& box: in) {
-// 		Node* node = nullptr;
-// 		if ((node = findNode(box.size()))) {
-// 		}
-// 	}
-// }
+template<typename T>
+void TreeFit2D<T>::packInplace(std::vector<Box2D<T>>& in) {
+	if (this->defaultFinish(in))
+		return;
+	t_root = new Node(in[0].size(), 0, 0);
+	for (auto& box: in) {
+		Node* node = nullptr;
+		if ((node = findNode(box.size())))
+			node = splitNode(node, box.size());
+		else
+			node = growNode(box.size());
+		box.setPosition(node->x(), node->y());
+	}
 
-// Node* findNode(Size2D<T> size);
-// Node* splitNode(Node* node, Size2D<T> size);
-// Node* growNode(Size2D<T> size);
-// Node* growRight(Size2D<T> size);
-// Node* growDown(Size2D<T> size);
+	this->setSize(t_root->size());
 
+	delete t_root;
+	t_root = nullptr;
+}
+
+template<typename T>
+typename TreeFit2D<T>::Node* TreeFit2D<T>::findNode(Node* root, const Size2D<T>& size) {
+	if (root->used()) {
+		Node* node = findNode(root->right(), size); 
+		if (node) return node;
+		return findNode(root->down(), size);
+	} else if (size <= root->size())
+		return root;
+	return nullptr;
+}
+
+template<typename T>
+typename TreeFit2D<T>::Node* TreeFit2D<T>::splitNode(Node* node, const Size2D<T>& size) {
+	node->setUsed(true);
+	node->setDown(
+		new Node(
+			ca::optim::Size2D<T>(
+				node->size().width(), 
+				node->size().height() - size.height()
+			),
+			node->x(), node->y() + size.height()
+		)
+	);
+	node->setRight(
+		new Node(
+			ca::optim::Size2D<T>(
+				node->size().width() - size.width(), 
+				size.height()
+			),
+			node->x() + size.width(), node->y()
+		)
+	);
+	return node;
+}
+
+template<typename T>
+typename TreeFit2D<T>::Node* TreeFit2D<T>::growNode(const Size2D<T>& size) {
+	bool canGrowDown = (size.width() <= t_root->size().width());
+	bool canGrowRigth = (size.height() <= t_root->size().height());
+	bool shouldGrowRight = 
+		(canGrowRigth and (t_root->size().height() >= (t_root->size().width() + size.width())));
+	bool shouldGrowDown = 
+		(canGrowDown and (t_root->size().width() >= (t_root->size().height() + size.height())));
+
+	if (shouldGrowRight)
+		return growRight(size);
+	else if (shouldGrowDown)
+		return growDown(size);
+	else if (canGrowRigth)
+		return growRight(size);
+	else if (canGrowDown)
+		return growDown(size);
+	return nullptr; // should not happen if root size is correct
+}
+
+template<typename T>
+typename TreeFit2D<T>::Node* TreeFit2D<T>::growRight(const Size2D<T>& size) {
+	Node* node = new Node(
+		Size2D<T>(t_root->size().width() + size.width(), t_root->size().height()),
+		0, 0
+	);
+	node->setUsed(true);
+	node->setDown(t_root);
+	node->setRight(
+		new Node(
+			Size2D<T>(size.width(), t_root->size().height()), 
+			t_root->size().width(), 0
+		)
+	);
+	t_root = node;
+
+	node = nullptr;
+	if ((node = findNode(size)))
+		 return splitNode(node, size);
+	return nullptr;
+}
+
+template<typename T>
+typename TreeFit2D<T>::Node* TreeFit2D<T>::growDown(const Size2D<T>& size) {
+	Node* node = new Node(
+		Size2D<T>(t_root->size().width(), t_root->size().height() + size.height()),
+		0, 0
+	);
+	node->setUsed(true);
+	node->setDown(
+		new Node(
+			Size2D<T>(t_root->size().width(), size.height()), 
+			0, t_root->size().height()
+		)
+	);
+	node->setRight(t_root);
+	t_root = node;
+
+	node = nullptr;
+	if ((node = findNode(size)))
+		 return splitNode(node, size);
+	return nullptr;
+}
 
 }

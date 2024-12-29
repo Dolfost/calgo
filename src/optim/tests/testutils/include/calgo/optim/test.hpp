@@ -11,20 +11,34 @@
 static int calgo_optim_testing_test_no = 1;
 
 template<template<class> class P, typename N=int>
-bool test(P<N>& packing, std::vector<ca::optim::Box2D<int>> boxes, std::string msg) {
+bool test(P<N>& packing, std::vector<ca::optim::Box2D<N>> boxes, std::string msg) {
 	std::vector<ca::optim::Box2D<int>> rboxes = packing.pack(boxes);
-
-	std::cout 
+	N boxArea = 0;
+	for (auto& box: boxes) {
+		boxArea += box.area();
+	}
+	N area = packing.area();
+	
+	if (calgo_optim_testing_test_no != 1)
+		std::cout << '\n';
+	std::cout << "test № "
 		<< calgo_optim_testing_test_no 
-		<< " ===> " <<  msg << "\nInput boxes:\t\t" 
-	  <<  "Output boxes (in bin " << packing.size() << ", area: " << packing.area() << "):\n";
+		<< " ===> " <<  msg 
+		<< "\nInput boxes ("
+		<< boxes.size() << "pcs, " << boxArea << "u²):\n";
 	for (int i = 0; i < boxes.size(); i++)
 		std::cout
-			<< boxes[i] << "\t\t"
-			<< rboxes[i] << '\n';
-	drawBoxesRow<int>(boxes);
+			<< boxes[i].size() << " ";
+	std::cout <<  "\nOutput boxes (" << packing.size() << "=" 
+		<< area << "u², " << 100*double(boxArea)/area << "%):\n";
+	for (int i = 0; i < boxes.size(); i++)
+		std::cout
+			<< rboxes[i] << " ";
+
+	drawBoxesRow<N>(boxes);
 	std::cout << "- - - - - - - - - -\n";
-	drawBoxesPlane<int>(rboxes, packing);
+	drawBoxesPlane<N>(rboxes, packing);
+	calgo_optim_testing_test_no++;
 	return false;
 }
 
@@ -49,7 +63,7 @@ bool default_test_sorted(
 #define CALGO_OPTIM_TESTING_DEFAULT(CLS) \
 int main(int argc, char** argv) { \
 	for (std::size_t i = 0; i < boxSet.size(); i++) \
-		default_test<CLS>(boxSet[i], "box set №" + std::to_string(i)); \
+		default_test<CLS>(boxSet[i], "box set №" + std::to_string(i+1)); \
 	default_test<CLS>(binaryBs<int>(16), "binary set 16"); \
 	return 0; \
 }
@@ -57,7 +71,7 @@ int main(int argc, char** argv) { \
 #define CALGO_OPTIM_TESTING_SORTED(CLS, COMP) \
 int main(int argc, char** argv) { \
 	for (std::size_t i = 0; i < boxSet.size(); i++) \
-		default_test_sorted<CLS>(boxSet[i], COMP, "box set №" + std::to_string(i)); \
+		default_test_sorted<CLS>(boxSet[i], COMP, "box set №" + std::to_string(i+1)); \
 	default_test_sorted<CLS>(binaryBs<int>(16), COMP, "binary set 16"); \
 	return 0; \
 }

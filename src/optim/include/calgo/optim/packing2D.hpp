@@ -101,7 +101,7 @@ private:
 template<typename T>
 class Box2D: public Bin2D<T> {
 public:
-	Box2D(const Size2D<T>& size, T x = 0, T y = 0): 
+	Box2D(const Size2D<T>& size = {}, T x = 0, T y = 0): 
 		b_x(x), b_y(y), Bin2D<T>(size.width(), size.height()) {};
 	Box2D(T width, T height, T x = 0, T y = 0): 
 		b_x(x), b_y(y), Bin2D<T>(width, height) {};

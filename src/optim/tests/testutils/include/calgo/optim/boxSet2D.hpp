@@ -19,13 +19,13 @@ static const std::vector<std::vector<ca::optim::Box2D<int>>> boxSet = {
 };
 
 template<typename T>
-std::vector<ca::optim::Box2D<T>> binaryBs(T p) {
-	std::vector<ca::optim::Box2D<T>> bs;
+std::vector<ca::optim::Box2D<T>*> binaryBs(T p) {
+	std::vector<ca::optim::Box2D<T>*> bs;
 	for (int i = 0; i < std::log2(p); ++i) {
 		T side = std::pow(2, std::log2(p) - i);
 		int num_boxes = std::pow(2, i);
 		for (int j = 0; j < num_boxes; ++j)
-			bs.push_back(ca::optim::Box2D<T>(side, side));
+			bs.push_back(new ca::optim::Box2D<T>(side, side));
 	}	
 	std::shuffle(bs.begin(), bs.end(), std::default_random_engine(std::random_device()()));
 	return bs;

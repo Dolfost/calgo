@@ -87,41 +87,41 @@ public:
 
 
 template<typename T>
-void drawBoxesRow(const std::vector<ca::optim::Box2D<T>>& boxes) {
+void drawBoxesRow(const std::vector<ca::optim::Box2D<T>*>& boxes) {
 	T maxHeight = (*std::max_element(
 		boxes.cbegin(), boxes.cend(), 
-		[](const ca::optim::Box2D<T> a, const ca::optim::Box2D<T> b) {
-			return a.size().height() < b.size().height();
+		[](const ca::optim::Box2D<T>* a, const ca::optim::Box2D<T>* b) {
+			return a->size().height() < b->size().height();
 		}
-	)).size().height();
+	))->size().height();
 	using namespace std::placeholders;
 	T totalWidth = std::accumulate(
 		boxes.cbegin(), boxes.cend(), 0,
-		[](T sum, const ca::optim::Box2D<T>& box) {
-			return sum + box.size().width();
+		[](T sum, const ca::optim::Box2D<T>* box) {
+			return sum + box->size().width();
 		}
 	);
 	const std::size_t labelHeigt = 1;
 	ScreenBuffer buffer(totalWidth, maxHeight + labelHeigt);
 	std::size_t x = 0;
 	for (auto const& box: boxes) {
-		int y = maxHeight - box.size().height() + labelHeigt;
-		buffer.box(box.size(), x, y);
+		int y = maxHeight - box->size().height() + labelHeigt;
+		buffer.box(box->size(), x, y);
 		std::stringstream ss;
-		ss << box.size();
-		buffer.cwrite(ss.str(), x + box.size().width()/2, y - labelHeigt);
+		ss << box->size();
+		buffer.cwrite(ss.str(), x + box->size().width()/2, y - labelHeigt);
 
-		x += box.size().width();
+		x += box->size().width();
 	}
 
 	std::cout << buffer;
 }
 
 template<typename T>
-void drawBoxesPlane(const std::vector<ca::optim::Box2D<T>>& boxes, const ca::optim::Packing2D<T>& pack) {
+void drawBoxesPlane(const std::vector<ca::optim::Box2D<T>*>& boxes, const ca::optim::Packing2D<T>& pack) {
 	ScreenBuffer buffer(pack.size().width(), pack.size().height());
 	for (auto const& box: boxes) {
-		buffer.draw(box);
+		buffer.draw(*box);
 	}
 	std::cout << buffer;
 }

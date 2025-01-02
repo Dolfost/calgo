@@ -3,19 +3,19 @@
 namespace ca::optim {
 
 template<typename T>
-void TreeFit2D<T>::packInplace(std::vector<Box2D<T>>& in) {
+void TreeFit2D<T>::pack(std::vector<Box2D<T>*>& in) {
 	if (this->defaultFinish(in))
 		return;
-	t_root = new Node(in[0].size(), 0, 0);
+	t_root = new Node(in[0]->size(), 0, 0);
 	std::size_t boxCount = in.size();
 	for (std::size_t i = 0; i < boxCount; i++) {
-		Box2D<T>& box = in[i];
+		Box2D<T>* box = in[i];
 		Node* node = nullptr;
-		if ((node = findNode(box.size())))
-			node = splitNode(node, box.size());
+		if ((node = findNode(box->size())))
+			node = splitNode(node, box->size());
 		else
-			node = growNode(box.size());
-		box.setPosition(node->x(), node->y());
+			node = growNode(box->size());
+		box->setPosition(node->x(), node->y());
 
 		if (this->p_boxPackedCallback)
 			this->p_boxPackedCallback(in, i);

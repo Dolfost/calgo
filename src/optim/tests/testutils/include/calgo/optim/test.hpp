@@ -12,14 +12,13 @@
 static int calgo_optim_testing_test_no = 1;
 
 template<template<class> class P, typename N=int>
-bool test(std::vector<ca::optim::Box2D<N>> boxes, std::string msg, std::function<void(P<N>&)> lambda = [](P<N>&){}) {
+bool test(std::vector<ca::optim::Box2D<N>*> boxes, std::string msg, std::function<void(P<N>&)> lambda = [](P<N>&){}) {
 	P<N> packing;
 	lambda(packing);
-	std::vector<ca::optim::Box2D<N>> rboxes = packing.pack(boxes);
 	
 	N boxArea = 0;
 	for (auto& box: boxes) {
-		boxArea += box.area();
+		boxArea += box->area();
 	}
 	if (calgo_optim_testing_test_no != 1)
 		std::cout << '\n';
@@ -30,11 +29,12 @@ bool test(std::vector<ca::optim::Box2D<N>> boxes, std::string msg, std::function
 		<< "\nInput boxes ("
 		<< boxes.size() << "pcs, " << boxArea << "u²):\n";
 	for (int i = 0; i < boxes.size(); i++)
-		std::cout
-			<< boxes[i].size() << " ";
+		std::cout << boxes[i]->size() << " ";
 
 	std::cout << std::endl;
 	drawBoxesRow<N>(boxes);
+
+	packing.pack(boxes);
 
 	N area = packing.area();
 	double occupied = 100*double(boxArea)/area;
@@ -48,19 +48,32 @@ bool test(std::vector<ca::optim::Box2D<N>> boxes, std::string msg, std::function
 
 	for (int i = 0; i < boxes.size(); i++)
 		std::cout
-			<< rboxes[i] << " ";
+			<< *boxes[i] << " ";
 
-	drawBoxesPlane<N>(rboxes, packing);
+	drawBoxesPlane<N>(boxes, packing);
 	calgo_optim_testing_test_no++;
 	return false;
 }
 
 #define CALGO_OPTIM_DEFAULT_TEST(CLS, N, LAMBDA) \
 int main(int argc, char** argv) { \
-	for (std::size_t i = 0; i < boxSet.size(); i++) \
-		test<CLS, N>(boxSet[i], "box set №" + std::to_string(i+1), LAMBDA); \
-	test<CLS, N>(binaryBs<int>(16), "binary set 16", LAMBDA); \
+	for (std::size_t i = 0; i < boxSet.size(); i++) { \
+			std::vector<ca::optim::Box2D<N>*> v; \
+			for (const auto& x: boxSet[i]) { \
+				v.push_back(new ca::optim::Box2D<N>(x)); \
+			} \
+			test<CLS, N>(v, "box set №" + std::to_string(i+1), LAMBDA); \
+			for (auto& x: v) { \
+				delete x; \
+			} \
+	} \
+	std::vector<ca::optim::Box2D<N>*> v = binaryBs<int>(16); \
+	test<CLS, N>(v, "binary set 16", LAMBDA); \
+	for (auto& x: v) { \
+		delete x; \
+	} \
 	return 0; \
 }
+
 
 #endif // !_CALGO_OPTIM_TESTING_TEST_HPP_

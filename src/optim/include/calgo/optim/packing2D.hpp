@@ -152,19 +152,13 @@ class Packing2D: public Bin2D<T> {
 public:
 	using Bin2D<T>::Bin2D;
 
-	virtual std::vector<Box2D<T>> pack(const std::vector<Box2D<T>>& in) {
-		std::vector<Box2D<T>> res = in;
-		packInplace(res);
-		return res;
-	};
+	virtual void pack(std::vector<Box2D<T>*>& in) = 0;
 
-	virtual void packInplace(std::vector<Box2D<T>>& in) = 0;
-
-	CALLBACK(boxPacked, const std::vector<Box2D<T>>& boxes, std::size_t index)
-	CALLBACK(boxesPacked, const std::vector<Box2D<T>>& boxes)
+	CALLBACK(boxPacked, const std::vector<Box2D<T>*>& boxes, std::size_t index)
+	CALLBACK(boxesPacked, const std::vector<Box2D<T>*>& boxes)
 
 protected:
-	bool defaultFinish(const std::vector<Box2D<T>>& in) {
+	bool defaultFinish(const std::vector<Box2D<T>*>& in) {
 		if (in.size() == 0) {
 			this->setSize({0, 0});
 			return true;
@@ -180,14 +174,14 @@ template<typename T>
 class FirstFit2D: virtual public Packing2D<T> {
 public:
 	using Packing2D<T>::Packing2D;
-	virtual void packInplace(std::vector<Box2D<T>>& in) override;
+	virtual void pack(std::vector<Box2D<T>*>& in) override;
 };
 
 template<typename T>
 class NextFit2D: virtual public Packing2D<T> {
 public:
 	using Packing2D<T>::Packing2D;
-	virtual void packInplace(std::vector<Box2D<T>>& in) override;
+	virtual void pack(std::vector<Box2D<T>*>& in) override;
 
 	std::size_t k() const { return n_k; };
 	std::size_t setK(std::size_t k) {
@@ -203,7 +197,7 @@ private:
 template<typename T>
 class TreeFit2D: public virtual Packing2D<T> {
 public:
-	virtual void packInplace(std::vector<Box2D<T>>& in) override;
+	virtual void pack(std::vector<Box2D<T>*>& in) override;
 
 protected:
 	class Node: public Box2D<T> {
@@ -246,7 +240,7 @@ template<typename T>
 class SortedPacking2D: virtual public Packing2D<T> {
 public:
 	using Packing2D<T>::Packing2D;
-	using Comp = std::function<bool(const ca::optim::Box2D<T>& a, const ca::optim::Box2D<T>& b)>;
+	using Comp = std::function<bool(const ca::optim::Box2D<T>* a, const ca::optim::Box2D<T>* b)>;
 	void setComparator(Comp comp) {
 		s_comp = comp;
 	}
@@ -254,18 +248,19 @@ public:
 		return s_comp;
 	}
 protected:
-	Comp s_comp = [](const Box2D<T>& a, const Box2D<T>& b) {
-		return a.area() < b.area();
+	Comp s_comp = [](const Box2D<T>* a, const Box2D<T>* b) {
+		return a->area() < b->area();
 	};
 };
 
 #define CALGO_OPTIM_DEFINE_SORTED_PACKING(CLS) \
 template<typename T> \
 class Sorted##CLS: public CLS<T>, public SortedPacking2D<T> { \
+public: \
 	using CLS<T>::CLS; \
-	virtual void packInplace(std::vector<Box2D<T>>& in) { \
+	virtual void pack(std::vector<Box2D<T>*>& in) { \
 		std::sort(in.begin(), in.end(), this->s_comp); \
-		CLS<T>::packInplace(in); \
+		CLS<T>::pack(in); \
 	} \
 };
 

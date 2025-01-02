@@ -12,7 +12,9 @@ void NextFit2D<T>::packInplace(std::vector<Box2D<T>>& in) {
 	std::list<Size2D<T>> rows; 
 	T filledHeight = 0;
 	T totalWidth = 0;
-	for (auto& box: in) {
+	std::size_t boxCount = in.size();
+	for (std::size_t i = 0; i < boxCount; i++) {
+		Box2D<T>& box = in[i];
 		bool isPlaced = false;
 		T height = filledHeight;
 		for (auto& row: rows) {
@@ -34,6 +36,8 @@ void NextFit2D<T>::packInplace(std::vector<Box2D<T>>& in) {
 			}
 			totalWidth = std::max(totalWidth, box.size().width());
 		}
+		if (this->p_boxPackedCallback)
+			this->p_boxPackedCallback(in, i);
 	}
 
 	T totalHeight = filledHeight;
@@ -41,6 +45,9 @@ void NextFit2D<T>::packInplace(std::vector<Box2D<T>>& in) {
 		totalHeight += row.height();
 	}
 	this->size().set(totalWidth, totalHeight);
+
+	if (this->p_boxesPackedCallback)
+		this->p_boxesPackedCallback(in);
 }
 
 }

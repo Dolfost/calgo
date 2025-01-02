@@ -12,7 +12,9 @@ void FirstFit2D<T>::packInplace(std::vector<Box2D<T>>& in) {
 
 	std::vector<Size2D<T>> rows; 
 	rows.reserve(in.size()/2);
-	for (auto& box : in) {
+	std::size_t boxCount = in.size();
+	for (std::size_t i = 0; i < boxCount; i++) {
+		Box2D<T>& box = in[i];
 		bool isPlaced = false;
 		T height = 0;
 		for (auto& row : rows) {
@@ -28,6 +30,8 @@ void FirstFit2D<T>::packInplace(std::vector<Box2D<T>>& in) {
 			rows.push_back(box.size());
 			box.setPosition(0, height);
 		}
+		if (this->p_boxPackedCallback)
+			this->p_boxPackedCallback(in, i);
 	}
 
 	T totalHeight = 0, totalWidth = 0;
@@ -36,6 +40,9 @@ void FirstFit2D<T>::packInplace(std::vector<Box2D<T>>& in) {
 		totalWidth = std::max(totalWidth, row.width());
 	}
 	this->size().set(totalWidth, totalHeight);
+
+	if (this->p_boxesPackedCallback)
+		this->p_boxesPackedCallback(in);
 }
 
 }

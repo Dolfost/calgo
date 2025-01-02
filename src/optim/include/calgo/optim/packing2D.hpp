@@ -10,6 +10,20 @@
 #include <functional>
 #include <cmath>
 
+#define CALLBACK(NAME, ...) \
+	protected: \
+		std::function<void(__VA_ARGS__)> p_##NAME##Callback; \
+	public: \
+		void NAME##Callback(const std::function<void(__VA_ARGS__)>& callback) { \
+			p_##NAME##Callback = callback; \
+		} \
+		const std::function<void(__VA_ARGS__)>& NAME##Callback() const { \
+			return p_##NAME##Callback; \
+		} \
+		std::function<void(__VA_ARGS__)>& NAME##Callback() { \
+			return p_##NAME##Callback; \
+		}
+
 namespace ca::optim {
 
 template<typename T>
@@ -146,6 +160,9 @@ public:
 
 	virtual void packInplace(std::vector<Box2D<T>>& in) = 0;
 
+	CALLBACK(boxPacked, const std::vector<Box2D<T>>& boxes, std::size_t index)
+	CALLBACK(boxesPacked, const std::vector<Box2D<T>>& boxes)
+
 protected:
 	bool defaultFinish(const std::vector<Box2D<T>>& in) {
 		if (in.size() == 0) {
@@ -257,6 +274,7 @@ CALGO_OPTIM_DEFINE_SORTED_PACKING(NextFit2D)
 CALGO_OPTIM_DEFINE_SORTED_PACKING(TreeFit2D)
 
 #undef CALGO_OPTIM_DEFINE_SORTED_PACKING
+#undef CALLBACK
 
 }
 

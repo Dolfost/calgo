@@ -57,6 +57,7 @@ public:
 	}
 	void swap() { return std::swap(s_width, s_height); };
 	T max() const { return std::max(s_width, s_height); };
+	T min() const { return std::min(s_width, s_height); };
 
 	T width() const { return s_width; }
 	T height() const { return s_height; }

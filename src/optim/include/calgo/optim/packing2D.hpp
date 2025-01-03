@@ -152,10 +152,29 @@ class Packing2D: public Bin2D<T> {
 public:
 	using Bin2D<T>::Bin2D;
 
-	virtual void pack(std::vector<Box2D<T>*>& in) = 0;
+	virtual void pack(std::vector<Box2D<T>*>& in) {
+		if (this->s_comp)
+			std::sort(in.begin(), in.end(), this->s_comp);
+	}
 
 	CALLBACK(boxPacked, const std::vector<Box2D<T>*>& boxes, std::size_t index)
 	CALLBACK(boxesPacked, const std::vector<Box2D<T>*>& boxes)
+
+	using Comp = std::function<bool(const ca::optim::Box2D<T>* a, const ca::optim::Box2D<T>* b)>;
+	void setComparator(Comp comp) {
+		s_comp = comp;
+	}
+	const Comp& comparator() const {
+		return s_comp;
+	}
+	Comp& comparator() {
+		return s_comp;
+	}
+
+	virtual ~Packing2D() = 0;
+
+protected:
+	Comp s_comp;
 
 protected:
 	bool defaultFinish(const std::vector<Box2D<T>*>& in) {
@@ -171,10 +190,14 @@ private:
 };
 
 template<typename T>
+Packing2D<T>::~Packing2D() {}
+
+template<typename T>
 class FirstFit2D: virtual public Packing2D<T> {
 public:
 	using Packing2D<T>::Packing2D;
 	virtual void pack(std::vector<Box2D<T>*>& in) override;
+
 };
 
 template<typename T>
@@ -236,39 +259,6 @@ private:
 	Node* t_root = nullptr;
 };
 
-template<typename T>
-class SortedPacking2D: virtual public Packing2D<T> {
-public:
-	using Packing2D<T>::Packing2D;
-	using Comp = std::function<bool(const ca::optim::Box2D<T>* a, const ca::optim::Box2D<T>* b)>;
-	void setComparator(Comp comp) {
-		s_comp = comp;
-	}
-	const Comp& comparator() const {
-		return s_comp;
-	}
-protected:
-	Comp s_comp = [](const Box2D<T>* a, const Box2D<T>* b) {
-		return a->area() < b->area();
-	};
-};
-
-#define CALGO_OPTIM_DEFINE_SORTED_PACKING(CLS) \
-template<typename T> \
-class Sorted##CLS: public CLS<T>, public SortedPacking2D<T> { \
-public: \
-	using CLS<T>::CLS; \
-	virtual void pack(std::vector<Box2D<T>*>& in) { \
-		std::sort(in.begin(), in.end(), this->s_comp); \
-		CLS<T>::pack(in); \
-	} \
-};
-
-CALGO_OPTIM_DEFINE_SORTED_PACKING(FirstFit2D)
-CALGO_OPTIM_DEFINE_SORTED_PACKING(NextFit2D)
-CALGO_OPTIM_DEFINE_SORTED_PACKING(TreeFit2D)
-
-#undef CALGO_OPTIM_DEFINE_SORTED_PACKING
 #undef CALLBACK
 
 }

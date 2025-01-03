@@ -8,6 +8,7 @@ template<typename T>
 void NextFit2D<T>::pack(std::vector<Box2D<T>*>& in) {
 	if (this->defaultFinish(in))
 		return;
+	Packing2D<T>::pack(in);
 
 	std::list<Size2D<T>> rows; 
 	T filledHeight = 0;

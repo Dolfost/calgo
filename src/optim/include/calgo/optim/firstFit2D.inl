@@ -9,6 +9,7 @@ template<typename T>
 void FirstFit2D<T>::pack(std::vector<Box2D<T>*>& in) {
 	if (this->defaultFinish(in))
 		return;
+	Packing2D<T>::pack(in);
 
 	std::vector<Size2D<T>> rows; 
 	rows.reserve(in.size()/2);

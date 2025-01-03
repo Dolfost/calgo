@@ -6,6 +6,8 @@ template<typename T>
 void TreeFit2D<T>::pack(std::vector<Box2D<T>*>& in) {
 	if (this->defaultFinish(in))
 		return;
+	Packing2D<T>::pack(in);
+
 	t_root = new Node(in[0]->size(), 0, 0);
 	std::size_t boxCount = in.size();
 	for (std::size_t i = 0; i < boxCount; i++) {

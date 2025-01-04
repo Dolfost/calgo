@@ -11,18 +11,16 @@
 #include <cmath>
 
 #define CALLBACK(NAME, ...) \
-	public: \
-		using NAME##CallbackT = void (*)(__VA_ARGS__); \
 	protected: \
-		NAME##CallbackT p_##NAME##Callback = nullptr; \
+		std::function<void(__VA_ARGS__)> p_##NAME##Callback; \
 	public: \
-		void NAME##Callback(NAME##CallbackT callback) { \
+		void NAME##Callback(const std::function<void(__VA_ARGS__)>& callback) { \
 			p_##NAME##Callback = callback; \
 		} \
-		const NAME##CallbackT NAME##Callback() const { \
+		const std::function<void(__VA_ARGS__)>& NAME##Callback() const { \
 			return p_##NAME##Callback; \
 		} \
-		NAME##CallbackT NAME##Callback() { \
+		std::function<void(__VA_ARGS__)>& NAME##Callback() { \
 			return p_##NAME##Callback; \
 		}
 

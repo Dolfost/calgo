@@ -1,6 +1,6 @@
-#include "calgo/numeric/simpson.hpp"
+#include "calgo/num/simpson.hpp"
 
-namespace ca::numeric {
+namespace ca::num {
 
 double Simpson::integrate() {
 	std::size_t n = s_x.size() - 1;

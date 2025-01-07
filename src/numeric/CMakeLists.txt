@@ -1,4 +1,4 @@
-add_library(ca_numeric STATIC)
+add_library(ca_numeric)
 add_library(ca::numeric ALIAS ca_numeric)
 target_sources(ca_numeric
 	PRIVATE
@@ -6,7 +6,7 @@ target_sources(ca_numeric
 	PUBLIC FILE_SET HEADERS
 			BASE_DIRS include/
 			FILES 
-				include/calgo/numeric/simpson.hpp
+				include/calgo/num/simpson.hpp
 )
 set_target_properties(ca_numeric PROPERTIES
 	OUTPUT_NAME canumeric

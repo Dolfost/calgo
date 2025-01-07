@@ -1,7 +1,7 @@
 include(GNUInstallDirs)
 
 if(CALGO_CALGO)
-	install(TARGETS ca_calgo ca_interpol ca_lsys ca_numeric
+	install(TARGETS ca_calgo ca_interpolation ca_linear ca_numeric
 		EXPORT calgo
 		FILE_SET HEADERS
 	)

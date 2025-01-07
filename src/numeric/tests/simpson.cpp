@@ -1,9 +1,9 @@
-#include <calgo/numeric/simpson.hpp>
+#include <calgo/num/simpson.hpp>
 #include <iostream>
 #include <cmath>
 
 int main(int argc, char** argv) {
-	ca::numeric::Simpson s;
+	ca::num::Simpson s;
 	// sinx-cos2x+2
 	s.setX({-1, 0, 1, 2, 3, 4, 5, 6});
 	s.setY({1.574, 1, 3.257, 3.562, 1.180, 1.388, 1.880, 0.876});

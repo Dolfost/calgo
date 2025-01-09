@@ -1,0 +1,1 @@
+#undef CA_CALLBACK

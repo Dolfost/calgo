@@ -1,10 +1,10 @@
-add_library(calgo_optimization_testutils INTERFACE)
+add_library(calgo_opt_packing2D_testutils INTERFACE)
 
-target_link_libraries(calgo_optimization_testutils
+target_link_libraries(calgo_opt_packing2D_testutils
 	INTERFACE ca::optimization
 )
 
-target_sources(calgo_optimization_testutils 
+target_sources(calgo_opt_packing2D_testutils 
 	PUBLIC FILE_SET HEADERS 
 	BASE_DIRS include/
 	FILES 

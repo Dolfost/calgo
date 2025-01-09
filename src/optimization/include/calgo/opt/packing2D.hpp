@@ -3,26 +3,13 @@
 
 #include <calgo/calgo.hpp>
 
+#include <calgo/macros.hpp>
+
 #include <ostream>
 #include <string>
 #include <sstream>
 #include <vector>
-#include <functional>
 #include <cmath>
-
-#define CALLBACK(NAME, ...) \
-	protected: \
-		std::function<void(__VA_ARGS__)> p_##NAME##Callback; \
-	public: \
-		void NAME##Callback(const std::function<void(__VA_ARGS__)>& callback) { \
-			p_##NAME##Callback = callback; \
-		} \
-		const std::function<void(__VA_ARGS__)>& NAME##Callback() const { \
-			return p_##NAME##Callback; \
-		} \
-		std::function<void(__VA_ARGS__)>& NAME##Callback() { \
-			return p_##NAME##Callback; \
-		}
 
 namespace ca::opt {
 
@@ -158,8 +145,8 @@ public:
 			std::sort(in.begin(), in.end(), this->s_comp);
 	}
 
-	CALLBACK(boxPacked, const std::vector<Box2D<T>*>& boxes, std::size_t index)
-	CALLBACK(boxesPacked, const std::vector<Box2D<T>*>& boxes)
+	CA_CALLBACK(boxPacked, const std::vector<Box2D<T>*>& boxes, std::size_t index)
+	CA_CALLBACK(boxesPacked, const std::vector<Box2D<T>*>& boxes)
 
 	using Comp = std::function<bool(const ca::opt::Box2D<T>* a, const ca::opt::Box2D<T>* b)>;
 	void setComparator(Comp comp) {
@@ -260,12 +247,12 @@ private:
 	Node* t_root = nullptr;
 };
 
-#undef CALLBACK
-
 }
 
-#include "firstFit2D.inl"
-#include "nextFit2D.inl"
-#include "treeFit2D.inl"
+#include <calgo/nomacros.hpp>
+
+#include "../../../src/firstFit2D.inl"
+#include "../../../src/nextFit2D.inl"
+#include "../../../src/treeFit2D.inl"
 
 #endif // !_CALGO_OPT_PACKING2D_HPP_

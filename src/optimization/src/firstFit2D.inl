@@ -1,3 +1,4 @@
+#pragma once 
 #include <calgo/opt/packing2D.hpp>
 
 #include <vector>

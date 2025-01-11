@@ -1,12 +1,12 @@
+#ifndef _CALGO_OPT_SIMPLEX_HPP_
+#define _CALGO_OPT_SIMPLEX_HPP_
+
 #include <calgo/calgo.hpp>
 
 #include <calgo/vector.hpp>
 #include <calgo/matrix.hpp>
 
 #include <calgo/macros.hpp>
-
-#include <optional>
-#include <limits>
 
 namespace ca::opt {
 
@@ -18,20 +18,25 @@ namespace ca::opt {
  * @param c constraints vector pointer
  * @param f function vector pointer
  *
- * Simeplex method implementation takes the normalized
+ * Simeplex method implementation that solves normalized
  * problem in form 
- *
  * @f{equation}
- * \max c_1x_1 + c_2x_2 + ... c_nx_n \\
+ * (\min)\max c_1x_1 + c_2x_2 + \dots + c_mx_m + \dots + c_nx_n,\quad c_i = 0\ \forall i \geq m, \\
  * \begin{cases}
- * m_{11}x_1 &+& m_{12}x_2 &+& ... &+& m_{1n}x_n &=& b_1, \\
- * \dots &+& \dots &+& \dots &+& \dots &=& b_i, \\
- * m_{n1}x_1 &+& m_{n2}x_2 &+& \dots &+& m_{nn}x_n &=& b_n
- * \end{cases}
+ * a_{11}x_1 &+& a_{12}x_2 &+& \dots &+& a_{1m} &+& \dots &+& a_{1n}x_n &=& b_1, \\
+ * \dots &+& \dots &+& \dots &+& \dots &+& \dots &+& \dots &=& b_i, \\
+ * a_{n1}x_1 &+& a_{n2}x_2 &+& \dots &+& a_{nm} &+& \dots &+& a_{nn}x_n &=& b_n.
+ * \end{cases}\\
+ * x_i \geq 0,\quad i = \overline{1, n}, \quad m < n,\\
+ * a_{ij} = \begin{cases} 
+ * 	a_{ij}, &\text{ if } j < m, \\ 
+ * 	1, &\text{ if } j = i+m-1,\\
+ * 	0, &\text{ if } j \neq i+m-1,
+ * 	\end{cases} \text{ where } j \geq m.
  * @f}
  *
  * Class does not own any of passed pointers so they wont be freed.
- * Calculations are performed in-place.
+ * Calculations are performed in-place. Default operation is maximization.
  */
 template<typename T>
 class Simplex {
@@ -40,11 +45,7 @@ public:
 		Matrix<T>* v = nullptr, 
 		Vector<T>* c = nullptr, 
 		const Vector<T>* f = nullptr
-	) {
-		ctx.vars = v;
-		ctx.constr = c;
-		ctx.func = f;
-	}
+	); 
 
 	/**
 	 * @brief Sets variable matrix
@@ -59,62 +60,63 @@ public:
 	 * \end{bmatrix}
 	 * @f}
 	 */
-	void setVariables(Matrix<T>* v)   { ctx.vars = v; }
+	void setVariables(Matrix<T>* v) { s_ctx.vars = v; }
 	/**
 	 * @brief Sets constraints vector
 	 *
 	 * @param c constraints vector
 	 */
-	void setConstraints(Vector<T>* c) { ctx.constr = c; }
+	void setConstraints(Vector<T>* c) { s_ctx.constr = c; }
 	/**
 	 * @brief Sets the function vector
 	 *
 	 * @param f function vetor
 	 */
-	void setFunction(Vector<T>* f)    { ctx.func = f; }
+	void setFunction(Vector<T>* f) { s_ctx.func = f; }
 
-
-	T f() const { return ctx.f; }
-	Vector<T>* constraints() { return ctx.constr; }
-	Matrix<T>* variables()   { return ctx.vars; };
-	Vector<T>* function()    { return ctx.func; };
-	Vector<T>& netChange()   { return ctx.netEval; }
-	const Vector<T>* constraints() const { return ctx.constr; }
-	const Matrix<T>* variables()   const { return ctx.vars; };
-	const Vector<T>* function()    const { return ctx.func; };
-	const Vector<T>& netChange()   const { return ctx.netEval; }
-	bool optimal() const { return ctx.optimal; }
-	bool unbounded() const { return ctx.unbounded; }
-	bool degenerated() const { return ctx.unbounded; }
-
-	void optimize() {
-		if (not ctx.vars)
-			throw std::runtime_error("simplex: no input variables matrix");
-		if (not ctx.constr)
-			throw std::runtime_error("simplex: no constraints vector");
-		if (not ctx.func)
-			throw std::runtime_error("simplex: no function vector");
-
-		init();
-
-		while (iterate());
-
-		for (auto const& x : ctx.bas)
-			if (x == 0) {
-				ctx.degenerated = true;
-				break;
-			}
-		
-	}
 
 	/**
-	 * @brief Contains calculation context
+	 * @brief Specify maximization or minimization
+	 *
+	 * @param m `true` if maximize, `false` if minimise
+	 */
+	void setMaximize(bool m) { s_maximize = m; };
+
+	void setOperators(const Vector<Op>& ops) { s_ctx.ops = ops; }
+
+	/**
+	 * @brief Get maximization(minimization) result
+	 *
+	 * @return @f(\max(\min)@f) value
+	 *
+	 * @sa setMaximize
+	 */
+	T f() const { return s_ctx.f; }
+	Vector<T>* constraints() { return s_ctx.constr;  }
+	Matrix<T>* variables()   { return s_ctx.vars;    };
+	Vector<T>* function()    { return s_ctx.func;    };
+	Vector<T>& netChange()   { return s_ctx.netEval; }
+	const Vector<T>* constraints() const { return s_ctx.constr;  }
+	const Matrix<T>* variables()   const { return s_ctx.vars;    };
+	const Vector<T>* function()    const { return s_ctx.func;    };
+	const Vector<T>& netChange()   const { return s_ctx.netEval; }
+	bool maximize() const { return s_maximize; }
+	bool optimal() const { return s_ctx.optimal; }
+	bool unbounded() const { return s_ctx.unbounded; }
+	bool degenerated() const { return s_ctx.unbounded; }
+
+	/**
+	 * @brief Solve linear programing problem
+	 */
+	void optimize();
+
+	/**
+	 * @brief Simplex calculation context
 	 */
 	struct Context {
 		Matrix<T>* vars; /// Variables
 		Vector<T>* constr; /// Constraints
 		const Vector<T>* func; /// Function
-		Vector<T> unitCon; /// Unit contibution
 		Vector<T> netEval; /// Net evaluation
 		Vector<T> bas; /// Basis
 
@@ -152,14 +154,15 @@ public:
 	 */
 	CA_CALLBACK(iteration, const Context&);
 
-	friend std::ostream& operator<<(std::ostream& os, const Simplex<T>& s) {
-		s.variables()->system(*s.constraints(), os);
-		return os << std::boolalpha 
-			<< "Optimal: " <<  s.optimal()
-			<< " | Unbounded: " << s.unbounded()
-			<< " | Degenerated: " <<  s.degenerated()
-			<< " | Max: " << s.f();
-	}
+	/**
+	 * @brief Validity callback 
+	 * @param ctx Simplex context
+	 *
+	 * Gets called before any changes to input data after 
+	 * optimize() is called and input 
+	 * data checked for range errors.
+	 */
+	CA_CALLBACK(valid, const Context&);
 
 private:
 	/**
@@ -167,69 +170,21 @@ private:
 	 *
 	 * @return `true`, if iteration should continue, `false` otherwise
 	 */
-	bool iterate() {
-		if (p_iterationCallback)
-			p_iterationCallback(ctx);
-		std::size_t col = pivotCol();
-		if (ctx.optimal)
-			return false;
-
-		std::size_t row = pivotRow(col);
-
-		if (ctx.unbounded)
-			return false;
-
-		pivot(row, col);
-
-		return true;
-	}
+	bool iterate();
 
 	/**
 	 * @brief Find next pivot column
 	 *
 	 * @return column index
 	 */
-	std::size_t pivotCol() {
-		T val = 0;
-		std::size_t col;
-		for (std::size_t i = 0; i < s_c; i++) {
-			if (ctx.netEval[i] > val) {
-				val = ctx.netEval[i];
-				col = i;
-			}
-		}
-		
-		if (val == 0)
-			ctx.optimal = true;
-
-		return col;
-	}
+	std::size_t pivotCol();
 
 	/**
 	 * @brief Find next pivot row
 	 *
 	 * @return row index
 	 */
-	std::size_t pivotRow(std::size_t col) {
-		T val = std::numeric_limits<T>::max();
-		std::optional<std::size_t> row;
-		for (std::size_t i = 0; i < s_r; i++) {
-			if (ctx.vars->at(i)[col] <= 0)
-				continue;
-			T tmp = ctx.constr->at(i) / ctx.vars->at(i)[col];
-			if (tmp < val) {
-				val = tmp;
-				row = i;
-			}
-		}
-
-		if (not row) {
-			row = 0;
-			ctx.unbounded = true;
-		}
-
-		return *row;
-	}
+	std::size_t pivotRow(std::size_t col);
 
 	/**
 	 * @brief Perform pivoting
@@ -237,67 +192,26 @@ private:
 	 * @param row pivot row
 	 * @param col pivot col
 	 */
-	void pivot(std::size_t row, std::size_t col) {
-		T piv = ctx.vars->at(row)[col];
-		ctx.bas[row] = ctx.func->at(col);
-
-		for (auto& e: ctx.vars->at(row))
-			e /= piv;
-		ctx.constr->at(row) /= piv;
-
-		for (std::size_t i = 0; i < row; i++) {
-			T re = ctx.vars->at(i)[col];
-			for (std::size_t j = 0; j < s_c; j++)
-				ctx.vars->at(i)[j] -= re*ctx.vars->at(row)[j];
-			ctx.constr->at(i) -= re*ctx.constr->at(row);
-		}
-		for (std::size_t i = row + 1; i < s_r; i++) {
-			T re = ctx.vars->at(i)[col];
-			for (std::size_t j = 0; j < s_c; j++)
-				ctx.vars->at(i)[j] -= re*ctx.vars->at(row)[j];
-			ctx.constr->at(i) -= re*ctx.constr->at(row);
-		}
-
-		for (std::size_t i = 0; i < s_c; i++) {
-			ctx.unitCon[i] = 0;
-			for (std::size_t j = 0; j < s_r; j++)
-				ctx.unitCon[i] += ctx.bas[j]*ctx.vars->at(j)[i];
-			ctx.netEval[i] = ctx.func->at(i) - ctx.unitCon[i];
-		}
-
-		ctx.f = ctx.bas * *ctx.constr; // dot product;
-
-		if (p_pivotCallback)
-			p_pivotCallback(ctx, row, col);
-	}
+	void pivot(std::size_t row, std::size_t col);
 
 	/**
 	 * @brief Initialize simplex tableau
 	 */
-	void init() {
-		s_r = ctx.vars->rows();
-		s_c = ctx.vars->cols();
-
-		ctx.f = 0;
-
-		ctx.unbounded = false;
-		ctx.optimal = false;
-		ctx.degenerated = false;
-		ctx.unitCon.resize(s_c, 0);
-		ctx.netEval = *ctx.func;
-		ctx.bas.resize(s_r, 0);
-
-		if (p_initCallback)
-			p_initCallback(ctx);
-	}
+	void init();
 
 private:
-	Context ctx;
+	Context s_ctx;
 
 	std::size_t s_r, s_c;
+	bool s_maximize = true;
+	bool (*s_comparator)(const T& a, const T& b);
 };
 
 
 }
 
 #include <calgo/nomacros.hpp>
+
+#include "../../../src/simplex.inl"
+
+#endif // !_CALGO_OPT_SIMPLEX_HPP_

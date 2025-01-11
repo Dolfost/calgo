@@ -8,12 +8,14 @@
 #include <numeric>
 #include <ostream>
 #include <iomanip>
+#include <type_traits>
 
 namespace ca {
 
 template<typename T>
 
 class Vector: public std::vector<T> {
+	static_assert(std::is_arithmetic<T>(), "Not an arithmetic type");
 public:
 	using std::vector<T>::vector;
 	T sum() {
@@ -38,6 +40,14 @@ public:
 
 	T dot(const Vector<T>& other) {
 		return operator*(other);
+	}
+
+	template<typename M>
+	auto operator*=(const M& d) {
+		static_assert(std::is_arithmetic<M>(), "Not an arithmetic type");
+		for (auto& x: *this) {
+			x *= d;
+		}
 	}
 
 	friend std::ostream& operator<<(std::ostream& os, const Vector<T> v) {

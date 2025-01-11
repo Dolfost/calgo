@@ -5,6 +5,7 @@ target_sources(ca_optimization
 			BASE_DIRS include/
 			FILES 
 				include/calgo/opt/packing2D.hpp
+				include/calgo/opt/simplex.hpp
 )
 set_target_properties(ca_optimization PROPERTIES
 	OUTPUT_NAME caoptimization

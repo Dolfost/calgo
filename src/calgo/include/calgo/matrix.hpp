@@ -5,7 +5,6 @@
 #include <calgo/vector.hpp>
 
 #include <ostream>
-#include <iomanip>
 
 namespace ca {
 

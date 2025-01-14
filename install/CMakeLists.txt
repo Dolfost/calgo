@@ -5,6 +5,12 @@ if(CALGO_CALGO)
 		EXPORT calgo
 		FILE_SET HEADERS
 	)
+	if (CALGO_QT)
+		install(TARGETS ca_qt
+			EXPORT calgoqt
+			FILE_SET HEADERS
+		)
+	endif()
 endif()
 if(CALGO_DOCS)
 	install(DIRECTORY "${CMAKE_BINARY_DIR}/doc/out/html" 
@@ -23,6 +29,12 @@ if(CALGO_CALGO)
 		DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake"
 		NAMESPACE ca::
 	)
+	if (CALGO_QT)
+		install(EXPORT calgoqt
+			DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake"
+			NAMESPACE ca::
+		)
+	endif()
 	write_basic_package_version_file(
 		"${CMAKE_INSTALL_LIBDIR}/cmake/"
 		COMPATIBILITY SameMajorVersion

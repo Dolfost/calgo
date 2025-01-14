@@ -1,8 +1,8 @@
 #include <calgo/opt/test.hpp>
 
-ca::Vector<double> func = {-2, -3, -4, 0, 0};
-ca::Vector<double> constr = {10 ,15};
-ca::Matrix<double> vals = {
+ca::Vec<double> func = {-2, -3, -4, 0, 0};
+ca::Vec<double> constr = {10 ,15};
+ca::Mat<double> vals = {
 	{3, 2, 1, 1, 0},
 	{2, 5, 3, 0 ,1},
 };

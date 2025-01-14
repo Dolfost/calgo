@@ -3,8 +3,8 @@
 
 #include <calgo/calgo.hpp>
 
-#include <calgo/vector.hpp>
-#include <calgo/matrix.hpp>
+#include <calgo/vec.hpp>
+#include <calgo/mat.hpp>
 
 #include <calgo/macros.hpp>
 
@@ -42,9 +42,9 @@ template<typename T>
 class Simplex {
 public:
 	Simplex(
-		Matrix<T>* v = nullptr, 
-		Vector<T>* c = nullptr, 
-		const Vector<T>* f = nullptr
+		Mat<T>* v = nullptr, 
+		Vec<T>* c = nullptr, 
+		const Vec<T>* f = nullptr
 	); 
 
 	/**
@@ -60,19 +60,19 @@ public:
 	 * \end{bmatrix}
 	 * @f}
 	 */
-	void setVariables(Matrix<T>* v) { s_ctx.vars = v; }
+	void setVariables(Mat<T>* v) { s_ctx.vars = v; }
 	/**
 	 * @brief Sets constraints vector
 	 *
 	 * @param c constraints vector
 	 */
-	void setConstraints(Vector<T>* c) { s_ctx.constr = c; }
+	void setConstraints(Vec<T>* c) { s_ctx.constr = c; }
 	/**
 	 * @brief Sets the function vector
 	 *
 	 * @param f function vetor
 	 */
-	void setFunction(Vector<T>* f) { s_ctx.func = f; }
+	void setFunction(Vec<T>* f) { s_ctx.func = f; }
 
 
 	/**
@@ -82,7 +82,7 @@ public:
 	 */
 	void setMaximize(bool m) { s_maximize = m; };
 
-	void setOperators(const Vector<Op>& ops) { s_ctx.ops = ops; }
+	void setOperators(const Vec<Op>& ops) { s_ctx.ops = ops; }
 
 	/**
 	 * @brief Get maximization(minimization) result
@@ -92,14 +92,14 @@ public:
 	 * @sa setMaximize
 	 */
 	T f() const { return s_ctx.f; }
-	Vector<T>* constraints() { return s_ctx.constr;  }
-	Matrix<T>* variables()   { return s_ctx.vars;    };
-	Vector<T>* function()    { return s_ctx.func;    };
-	Vector<T>& netChange()   { return s_ctx.netEval; }
-	const Vector<T>* constraints() const { return s_ctx.constr;  }
-	const Matrix<T>* variables()   const { return s_ctx.vars;    };
-	const Vector<T>* function()    const { return s_ctx.func;    };
-	const Vector<T>& netChange()   const { return s_ctx.netEval; }
+	Vec<T>* constraints() { return s_ctx.constr;  }
+	Mat<T>* variables()   { return s_ctx.vars;    };
+	Vec<T>* function()    { return s_ctx.func;    };
+	Vec<T>& netChange()   { return s_ctx.netEval; }
+	const Vec<T>* constraints() const { return s_ctx.constr;  }
+	const Mat<T>* variables()   const { return s_ctx.vars;    };
+	const Vec<T>* function()    const { return s_ctx.func;    };
+	const Vec<T>& netChange()   const { return s_ctx.netEval; }
 	bool maximize() const { return s_maximize; }
 	bool optimal() const { return s_ctx.optimal; }
 	bool unbounded() const { return s_ctx.unbounded; }
@@ -114,11 +114,11 @@ public:
 	 * @brief Simplex calculation context
 	 */
 	struct Context {
-		Matrix<T>* vars; /// Variables
-		Vector<T>* constr; /// Constraints
-		const Vector<T>* func; /// Function
-		Vector<T> netEval; /// Net evaluation
-		Vector<T> bas; /// Basis
+		Mat<T>* vars; /// Variables
+		Vec<T>* constr; /// Constraints
+		const Vec<T>* func; /// Function
+		Vec<T> netEval; /// Net evaluation
+		Vec<T> bas; /// Basis
 
 		T f; /// Function value
 

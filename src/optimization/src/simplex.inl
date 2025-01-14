@@ -28,13 +28,12 @@ void Simplex<T>::init() {
 			s_ctx.vars->at(i) *= -1;
 		}
 	}
-	
 
 	s_ctx.unbounded = false;
 	s_ctx.optimal = false;
 	s_ctx.degenerated = false;
 	s_ctx.netEval = *s_ctx.func;
-	s_ctx.bas.resize(s_r, 0);
+	s_ctx.bas.resize(s_r);
 
 	if (p_initCallback)
 		p_initCallback(s_ctx);
@@ -42,18 +41,18 @@ void Simplex<T>::init() {
 
 template<typename T>
 void Simplex<T>::pivot(std::size_t row, std::size_t col) {
-	T pn = s_ctx.vars->at(row)[col]; // pivot number
+	T pn = (*s_ctx.vars)(row, col); // pivot number
 	s_ctx.bas[row] = s_ctx.func->at(col);
 
-	for (auto& e: s_ctx.vars->at(row))
-	e /= pn;
+	for (std::size_t i = 0; i < s_c; i++)
+		(*s_ctx.vars)(row, i) /= pn;
 	s_ctx.constr->at(row) /= pn;
 
 	for (std::size_t i = 0; i < row; i++) {
-		T re = s_ctx.vars->at(i)[col];
+		T re = (*s_ctx.vars)(i, col);
 		for (std::size_t j = 0; j < s_c; j++)
-			s_ctx.vars->at(i)[j] -= re*s_ctx.vars->at(row)[j];
-		s_ctx.constr->at(i) -= re*s_ctx.constr->at(row);
+			(*s_ctx.vars)(i, j) -= re*(*s_ctx.vars)(row, j);
+		(*s_ctx.constr)[i] -= re*(*s_ctx.constr)[row];
 	}
 	for (std::size_t i = row + 1; i < s_r; i++) {
 		T re = s_ctx.vars->at(i)[col];
@@ -157,18 +156,18 @@ void Simplex<T>::optimize() {
 		if (call)
 			p_iterationCallback(s_ctx);
 
-	for (auto const& x : s_ctx.bas)
-	if (x == 0) {
-		s_ctx.degenerated = true;
-		break;
-	}
+	for (typename Vec<T>::size_type i = 0; i < s_ctx.bas.n(); i++)
+		if (s_ctx.bas[i] == 0) {
+			s_ctx.degenerated = true;
+			break;
+		}
 }
 
 template<typename T>
 Simplex<T>::Simplex(
-	Matrix<T>* v, 
-	Vector<T>* c, 
-	const Vector<T>* f
+	Mat<T>* v, 
+	Vec<T>* c, 
+	const Vec<T>* f
 ) {
 	s_ctx.vars = v;
 	s_ctx.constr = c;
@@ -177,7 +176,7 @@ Simplex<T>::Simplex(
 
 template<typename T>
 std::ostream& operator<<(std::ostream& os, const Simplex<T>& s) {
-	s.variables()->system(*s.constraints(), os);
+	s.variables()->showSystem(*s.constraints(), os);
 	return os << std::boolalpha 
 	<< "Optimal: " <<  s.optimal()
 	<< " | Unbounded: " << s.unbounded()

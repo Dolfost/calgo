@@ -8,3 +8,7 @@ add_subdirectory(linear)
 add_subdirectory(interpolation)
 add_subdirectory(numeric)
 add_subdirectory(optimization)
+
+if (CALGO_QT)
+	add_subdirectory(qt)
+endif()

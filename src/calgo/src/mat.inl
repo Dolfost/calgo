@@ -4,7 +4,7 @@
 #include <stdexcept>
 #include <algorithm>
 
-#define CALGO_MATRIX_INDEX(mat, cols, row, col) (mat + row*cols + col)
+#define CALGO_MATRIX_INDEX(mat, cols, row, col) ((mat) + (row)*cols + (col))
 
 namespace ca {
 
@@ -176,10 +176,107 @@ std::ostream& Mat<T>::showSystem(const VecView<D>& v, std::ostream& os) const {
 
 template<typename D>
 std::ostream& operator<<(std::ostream& os, const Mat<D>& m) {
-	for (typename Mat<D>::size_type i = 0; i < m.m_cols; i++) {
+	for (typename Mat<D>::size_type i = 0; i < m.m_rows; i++) {
 		os << m[i] << '\n';
 	}
 	return os;
+}
+
+template<typename T>
+void ca::Mat<T>::insertRows(const size_type& row, const size_type& count, const value_type& init) {
+	if (row > m_rows)
+		throw std::out_of_range("ca::Matrix: inserted row is out of bounds");
+
+	size_type newRows = m_rows + count;
+	value_type* newMat = new value_type[newRows*m_cols];
+
+	for (size_type i = 0; i < row; ++i)
+		for (size_type j = 0; j < m_cols; ++j)
+			*CALGO_MATRIX_INDEX(newMat, m_cols, i, j) = 
+				*CALGO_MATRIX_INDEX(m_mat, m_cols, i, j);
+
+	for (size_type i = row; i < row + count; ++i)
+		for (size_type j = 0; j < m_cols; ++j)
+			*CALGO_MATRIX_INDEX(newMat, m_cols, i, j) = init;
+
+	for (size_type i = row + count; i < newRows; ++i)
+		for (size_type j = 0; j < m_cols; ++j)
+			*CALGO_MATRIX_INDEX(newMat, m_cols, i, j) = 
+				*CALGO_MATRIX_INDEX(m_mat, m_cols, i - count, j);
+
+	delete[] m_mat;
+	m_mat = newMat;
+	m_rows = newRows;
+}
+
+template<typename T>
+void ca::Mat<T>::removeRows(const size_type& row, const size_type& count) {
+	if (row + count > m_rows)
+		throw std::out_of_range("ca::Matrix: removed row is out of bounds");
+
+	size_type newRows = m_rows - count;
+	value_type* newMat = new value_type[newRows*m_cols];
+
+	for (size_type i = 0; i < row; ++i)
+		for (size_type j = 0; j < m_cols; ++j)
+			*CALGO_MATRIX_INDEX(newMat, m_cols, i, j) = 
+				*CALGO_MATRIX_INDEX(m_mat, m_cols, i, j);
+
+	for (size_type i = row; i < newRows; ++i)
+		for (size_type j = 0; j < m_cols; ++j)
+			*CALGO_MATRIX_INDEX(newMat, m_cols, i, j) = 
+				*CALGO_MATRIX_INDEX(m_mat, m_cols, i + count, j);
+
+	delete[] m_mat;
+	m_mat = newMat;
+	m_rows = newRows;
+}
+
+template<typename T>
+void ca::Mat<T>::insertCols(const size_type& col, const size_type& count, const value_type& init) {
+	if (col > m_cols)
+		throw std::out_of_range("ca::Matrix: inserted columnt is out of bounds");
+
+	size_type newCols = m_cols + count;
+	value_type* newMat = new value_type[m_rows*newCols];
+
+	for (size_type i = 0; i < m_rows; ++i) {
+		for (size_type j = 0; j < col; ++j)
+			*CALGO_MATRIX_INDEX(newMat, newCols, i, j) =
+				*CALGO_MATRIX_INDEX(m_mat, m_cols, i, j);
+
+		for (size_type j = col; j < col + count; ++j)
+			*CALGO_MATRIX_INDEX(newMat, newCols, i, j) = init;
+
+		for (size_type j = col + count; j < newCols; ++j)
+			*CALGO_MATRIX_INDEX(newMat, newCols, i, j) = 
+				*CALGO_MATRIX_INDEX(m_mat, m_cols, i, j - count);
+	}
+
+	delete[] m_mat;
+	m_mat = newMat;
+	m_cols = newCols;
+}
+
+template<typename T>
+void ca::Mat<T>::removeCols(const size_type& col, const size_type& count) {
+	if (col + count > m_cols)
+		throw std::out_of_range("ca::Matrix: removed columnt is out of bounds");
+
+	size_type newCols = m_cols - count;
+	value_type* newMat = new value_type[m_rows*newCols];
+
+	for (size_type r = 0; r < m_rows; ++r) {
+		for (size_type c = 0; c < col; ++c)
+			newMat[r * newCols + c] = m_mat[r * m_cols + c];
+
+		for (size_type c = col; c < newCols; ++c)
+			newMat[r * newCols + c] = m_mat[r * m_cols + (c + count)];
+	}
+
+	delete[] m_mat;
+	m_mat = newMat;
+	m_cols = newCols;
 }
 
 template<typename T>

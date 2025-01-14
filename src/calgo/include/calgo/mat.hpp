@@ -125,6 +125,54 @@ public:
 	const value_type& at(const size_type& row, const size_type& col) const;
 	/// @}
 
+	/** @name Qt-styled MVC-like column/row manipulator functions
+	 *
+	 * These functions are memory realocation hungry, so be careful with them.
+	*/
+	/// @{
+	/**
+	 * @brief Insert rows
+	 *
+	 * Inserts `count` rows into the model before the given `row`. If
+	 * `row` is 0, the rows are prepended to any existing rows in matrix. If
+	 * row is Mat::rows(), the rows are appended to any existing rows in the
+	 * matrix.
+	 *
+	 * @param row row to insert before
+	 * @param count new row count
+	 * @param init default element value
+	 */
+	void insertRows(const size_type& row, const size_type& count, const value_type& init = 0);
+	/**
+	 * @brief Remove rows
+	 * Removes `count` rows starting with the given `row`.
+	 *
+	 * @param row starting row
+	 * @param count row count
+	 */
+	void removeRows(const size_type& row, const size_type& count);
+	/**
+	 * @brief  Insert columns
+	 *
+	 * Inserts `count` new columns into matrix before the given `col`. If `col`
+	 * is 0, the columns are prepended to any existing columns. If column is
+	 * Mat::cols(), the columns are appended to any existing columns.
+	 *
+	 * @param col last column (exclusive)
+	 * @param count column count
+	 * @param init default element value
+	 */
+	void insertCols(const size_type& col, const size_type& count, const value_type& init = 0);
+	/**
+	 * @brief Remove columns
+	 * Removes `count` columns starting with the given `col`.
+	 *
+	 * @param row starting column
+	 * @param count column count
+	 */
+	void removeCols(const size_type& row, const size_type& count);
+	/// @}
+
 	/**
 	 * @brief Print matrix as system of equations
 	 *

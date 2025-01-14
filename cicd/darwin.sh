@@ -17,7 +17,7 @@ esac
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
 # installing dependencies
-brew install --formula cmake git $brewformulas
+brew install --formula cmake git qt $brewformulas
 brew install --cask $brewcasks
 
 SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"

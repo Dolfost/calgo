@@ -5,7 +5,7 @@ if [ -z "$1" ]; then
 	exit 1
 fi
 
-aptdeps="cmake git"
+aptdeps="cmake git qt6-base-dev"
 case "$1" in
 	'docs'|'pack')
 		aptdeps="$aptdeps doxygen graphviz"

@@ -15,7 +15,7 @@ IF %needdoxygen% EQU 1 SET "chocodeps=doxygen.install graphviz"
 SET "needmingw=0"
 IF "%1" == "pack" SET "needmingw=1"
 IF "%1" == "test" SET "needmingw=1"
-IF %needmingw% EQU 1 SET "chocodeps=%chocodeps% mingw"
+IF %needmingw% EQU 1 SET "chocodeps=%chocodeps% mingw qt6-base-dev"
 
 REM install dependencies
 IF "%chocodeps%" == "" (

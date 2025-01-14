@@ -15,7 +15,7 @@ project(calgo
 option(CALGO_CALGO   "Build library" YES)
 option(CALGO_DOCS    "Build docs"    ${PROJECT_IS_TOP_LEVEL})
 option(CALGO_TESTING "Build tests"   ${PROJECT_IS_TOP_LEVEL})
-option(CALGO_QT      "Qt widgets"    NO)
+option(CALGO_QT      "Qt widgets"    YES)
 
 if (CALGO_TESTING)
 	enable_testing()

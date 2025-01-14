@@ -164,7 +164,7 @@ public:
 	 */
 	CA_CALLBACK(valid, const Context&);
 
-private:
+protected:
 	/**
 	 * @brief Main iteration function
 	 *
@@ -199,7 +199,7 @@ private:
 	 */
 	void init();
 
-private:
+protected:
 	Context s_ctx;
 
 	std::size_t s_r, s_c;

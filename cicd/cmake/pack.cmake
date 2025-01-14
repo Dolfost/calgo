@@ -1,6 +1,8 @@
+separate_arguments(CONFIG UNIX_COMMAND $ENV{CONFIGURATION_OPTIONS})
+
 message("==>> Configuring...")
 execute_process( # configuration
-	COMMAND "${CMAKE_COMMAND}" $ENV{CONFIGURATION_OPTIONS} -B build -S . 
+	COMMAND "${CMAKE_COMMAND}" ${CONFIG} -B build -S . 
 	-DCALGO_DOCS=YES -DCALGO_TESTING=NO
 	WORKING_DIRECTORY "$ENV{REPO}"
 	COMMAND_ERROR_IS_FATAL ANY

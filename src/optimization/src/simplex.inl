@@ -46,7 +46,7 @@ void Simplex<T>::pivot(std::size_t row, std::size_t col) {
 
 	for (std::size_t i = 0; i < s_c; i++)
 		(*s_ctx.vars)(row, i) /= pn;
-	s_ctx.constr->at(row) /= pn;
+	(*s_ctx.constr)[row] /= pn;
 
 	for (std::size_t i = 0; i < row; i++) {
 		T re = (*s_ctx.vars)(i, col);
@@ -55,20 +55,20 @@ void Simplex<T>::pivot(std::size_t row, std::size_t col) {
 		(*s_ctx.constr)[i] -= re*(*s_ctx.constr)[row];
 	}
 	for (std::size_t i = row + 1; i < s_r; i++) {
-		T re = s_ctx.vars->at(i)[col];
+		T re = (*s_ctx.vars)(i, col);
 		for (std::size_t j = 0; j < s_c; j++)
-			s_ctx.vars->at(i)[j] -= re*s_ctx.vars->at(row)[j];
-		s_ctx.constr->at(i) -= re*s_ctx.constr->at(row);
+			(*s_ctx.vars)(i, j) -= re*(*s_ctx.vars)(row, j);
+		(*s_ctx.constr)[i] -= re*(*s_ctx.constr)[row];
 	}
 
 	for (std::size_t i = 0; i < s_c; i++) {
 		s_ctx.netEval[i] = 0;
 		for (std::size_t j = 0; j < s_r; j++)
-			s_ctx.netEval[i] += s_ctx.bas[j]*s_ctx.vars->at(j)[i];
-		s_ctx.netEval[i] = s_ctx.func->at(i) - s_ctx.netEval[i];
+			s_ctx.netEval[i] += s_ctx.bas[j]*(*s_ctx.vars)(j, i);
+		s_ctx.netEval[i] = (*s_ctx.func)[i] - s_ctx.netEval[i];
 	}
 
-	s_ctx.f = s_ctx.bas * *s_ctx.constr; // dot product;
+	s_ctx.f = s_ctx.bas * (*s_ctx.constr); // dot product;
 
 	if (p_pivotCallback)
 		p_pivotCallback(s_ctx, row, col);
@@ -80,9 +80,9 @@ std::size_t Simplex<T>::pivotRow(std::size_t col) {
 	std::size_t row; // basis variable that leave
 	std::size_t rowCount = 0; // count of ties
 	for (std::size_t i = 0; i < s_r; i++) {
-		if (s_ctx.vars->at(i)[col] <= 0)
+		if ((*s_ctx.vars)(i, col) <= 0)
 			continue;
-		T tmp = s_ctx.constr->at(i) / s_ctx.vars->at(i)[col];
+		T tmp = (*s_ctx.constr)[i] / (*s_ctx.vars)(i, col);
 		if (tmp < val) {
 			rowCount = 1;
 			val = tmp;
@@ -140,11 +140,16 @@ bool Simplex<T>::iterate() {
 template<typename T>
 void Simplex<T>::optimize() {
 	if (not s_ctx.vars)
-		throw std::runtime_error("simplex: no input variables matrix");
+		throw std::runtime_error("ca::Simplex: no input variables matrix");
 	if (not s_ctx.constr)
-		throw std::runtime_error("simplex: no constraints vector");
+		throw std::runtime_error("ca::Simplex: no constraints vector");
 	if (not s_ctx.func)
-		throw std::runtime_error("simplex: no function vector");
+		throw std::runtime_error("ca::Simplex: no function vector");
+
+	if (s_ctx.vars->cols() != s_ctx.func->n())
+		throw std::runtime_error("ca::Simplex: wrong function dimentions");
+	if (s_ctx.vars->rows() != s_ctx.constr->n())
+		throw std::runtime_error("ca::Simplex: wrong constraints dimentions");
 
 	if (p_validCallback)
 		p_validCallback(s_ctx);

@@ -26,6 +26,6 @@ IF "%chocodeps%" == "" (
 
 SET "SCRIPT_DIR=%~dp0"
 SET "REPO=%SCRIPT_DIR%.."
-SET CONFIGURATION_OPTIONS=-G MinGW Makefiles -DCALGO_QT=NO
+SET CONFIGURATION_OPTIONS=-G "MinGW Makefiles" -DCALGO_QT=NO
 
 cmake -P "%SCRIPT_DIR%cmake\%1.cmake"

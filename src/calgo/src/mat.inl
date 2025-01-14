@@ -10,6 +10,9 @@ namespace ca {
 
 template<typename T>
 Mat<T>::Mat(std::initializer_list<std::initializer_list<value_type>> data) {
+	if (not data.size())
+		return;
+
 	m_cols = std::max_element(
 		data.begin(), data.end(), [](auto a, auto b) {
 			return a.size() > b.size();

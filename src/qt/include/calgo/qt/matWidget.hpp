@@ -1,5 +1,5 @@
-#ifndef _CALGO_QT_MATRIX_WIDGET_HPP_
-#define _CALGO_QT_MATRIX_WIDGET_HPP_
+#ifndef _CALGO_QT_MAT_WIDGET_HPP_
+#define _CALGO_QT_MAT_WIDGET_HPP_
 
 #include <QTableView>
 #include <QAbstractTableModel>
@@ -88,4 +88,4 @@ private:
 
 }
 
-#endif // !_CALGO_QT_MATRIX_WIDGET_HPP_
+#endif // !_CALGO_QT_MAT_WIDGET_HPP_

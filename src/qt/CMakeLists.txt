@@ -8,6 +8,7 @@ qt_add_library(ca_qt
 	src/matModel.cpp
 	src/matWidget.cpp
 	src/systemWidget.cpp
+	src/simplexWidget.cpp
 )
 add_library(ca::qt ALIAS ca_qt)
 target_sources(ca_qt
@@ -16,6 +17,7 @@ target_sources(ca_qt
 			FILES 
 				include/calgo/qt/matWidget.hpp
 				include/calgo/qt/systemWidget.hpp
+				include/calgo/qt/simplexWidget.hpp
 )
 set_target_properties(ca_qt PROPERTIES
 	OUTPUT_NAME caqt

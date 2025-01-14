@@ -1,5 +1,5 @@
-#ifndef _CALGO_MATRIX_HPP_
-#define _CALGO_MATRIX_HPP_
+#ifndef _CALGO_MAT_HPP_
+#define _CALGO_MAT_HPP_
 
 #include <calgo/calgo.hpp>
 #include <calgo/vec.hpp>
@@ -195,4 +195,4 @@ protected:
 
 #include "../../src/mat.inl"
 
-#endif // !_CALGO_MATRIX_HPP_
+#endif // !_CALGO_MAT_HPP_

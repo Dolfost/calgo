@@ -14,6 +14,10 @@ const ca::Mat<double>& MatWidget::matrix() {
 	return m_model.matrix();
 }
 
+void MatWidget::setMatrix(const ca::Mat<double>& matrix) {
+	return m_model.setMatrix(matrix);
+}
+
 void MatWidget::showIndices() {
 	horizontalHeader()->show();
 	verticalHeader()->show();

@@ -12,6 +12,8 @@
 namespace ca {
 
 template<typename T>
+class MatView;
+template<typename T>
 class Mat;
 
 /**
@@ -36,8 +38,9 @@ public:
 	 *
 	 * @param data pointer to `len` `value_type` entries 
 	 * @param len data length
+	 * @param dist distance between neighboring elements
 	 */
-	VecView(value_type* data, size_type len);
+	VecView(value_type* data, const size_type& len, const size_type& dist = 1);
 
 	/**
 	 * @brief Array length
@@ -63,21 +66,23 @@ public:
 	 * If index is out of range, then behaivour is 
 	 * undefined.
 	 *
-	 * @param idx index
+	 * @param index element index
 	 * @return value reference
 	 */
-	value_type& operator[](const size_type& idx) noexcept;
-	const value_type& operator[](const size_type& idx) const noexcept;
+	inline value_type& operator[](const size_type& index) noexcept;
+	inline const value_type& operator[](const size_type& index) const noexcept;
+	inline value_type& el(const size_type& index) noexcept;
+	inline const value_type& el(const size_type& index) const noexcept;
 
 	/**
 	 * @brief Smart subscript operator
 	 *
-	 * @param idx index
+	 * @param index element index
 	 * @return value reference
 	 * @throws std::out_of_range
 	 */
-	value_type& at(const size_type& idx);
-	const value_type& at(const size_type& idx) const;
+	value_type& at(const size_type& index);
+	const value_type& at(const size_type& index) const;
 
 	/**
 	 * @brief Scalar multiplication
@@ -98,6 +103,7 @@ public:
 	T dot(const VecView<T>& other);
 
 	friend ca::Mat<T>;
+	friend ca::MatView<T>;
 
 	/**
 	 * @brief STL output operator
@@ -111,9 +117,15 @@ public:
 	friend std::ostream& operator<<(std::ostream& os, const VecView<D>& v);
 
 protected:
+	inline value_type* addr(const size_type& idx) const noexcept;
+
+protected:
 	value_type* m_vec = nullptr; ///< data pointer
 	size_type m_len = 0; ///< data length
+	size_type m_dist = 1; ///< space between each value
 };
+
+
 
 /**
  * @brief Array class
@@ -175,7 +187,36 @@ public:
 	 */
 	void set(const value_type& val);
 
+	/** @name Qt-styled MVC-like element manipulator functions
+	 *
+	 * These functions are memory realocation hungry, so be careful with them.
+	*/
+	/// @{
+	/**
+	 * @brief Insert elements
+	 *
+	 * Inserts `count` elements into the array before the given `where`. If
+	 * `where` is 0, elements are prepended to any existing elements in array. If
+	 * `where` is Vec::n(), the elements are appended to any existing in the
+	 * array.
+	 *
+	 * @param where element to insert before
+	 * @param count new element count
+	 * @param init default element value
+	 */
+	void insert(const size_type& where, const size_type& count, const value_type& init = 0);
+	/**
+	 * @brief Remove elements
+	 * Removes `count` rows starting with the given `row`.
+	 *
+	 * @param from first element
+	 * @param count element count
+	 */
+	void remove(const size_type& from, const size_type& count);
+	/// @}
+
 	friend ca::Mat<T>;
+	friend ca::MatView<T>;
 
 	/**
 	 * @brief Destructor

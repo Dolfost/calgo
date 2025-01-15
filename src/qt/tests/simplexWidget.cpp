@@ -21,8 +21,8 @@ int main(int argc, char** argv) {
 	QObject::connect(
 		w, &ca::qt::SimplexWidget::systemChanged,
 		[w]() {
-			std::cout << "change No: " << ++c << '\n'
-				<< w->function() << "\t | " << (w->max() ? "max" : "min") << std::endl;
+			std::cout << "change No: " << ++c << '\n';
+				// << w->function() << "\t | " << (w->max() ? "max" : "min") << std::endl;
 			w->variables().showSystem(w->constraints()) << std::endl;
 		}
 	);

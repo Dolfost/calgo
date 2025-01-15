@@ -9,38 +9,34 @@ SystemWidget::SystemWidget(
 ): QWidget(parent) {
 	setLayout(m_lay);
 
-	m_syslay->setSpacing(0);
-	m_syslay->addWidget(m_variables);
-	m_syslay->addWidget(m_constraints);
-	m_lay->addLayout(m_syslay);
-
-	ca::Mat<double>::size_type rows = 3, cols = 3;
-	m_constraints->setColumnCount(1);
-	m_constraints->setRowCount(rows);
-	m_variables->setRowCount(rows);
-	m_variables->setColumnCount(cols);
+	ca::Mat<double>::size_type size = 3;
+	m_variables->setRowCount(size);
+	m_variables->setColumnCount(size+1);
 
 	m_rows->setMinimumWidth(75);
 	m_cols->setMinimumWidth(75);
 	m_rows->setRange(1, 100);
 	m_cols->setRange(1, 100);
-	m_rows->setValue(rows);
-	m_cols->setValue(cols);
+	m_rows->setValue(size);
+	m_cols->setValue(size);
 	connect(
 		m_rows, &QSpinBox::editingFinished,
-		[this]() {
-			m_variables->setRowCount(m_rows->value());
-			m_constraints->setRowCount(m_rows->value());
-			emit systemChanged();
-		}
+		this, &SystemWidget::rowCountChanged
 	);
 	connect(
 		m_cols, &QSpinBox::editingFinished,
-		[this]() {
-			m_variables->setColumnCount(m_cols->value());
-			emit systemChanged();
-		}
+		this, &SystemWidget::columnCountChanged
 	);
+	connect(
+		m_rows, &QSpinBox::valueChanged,
+		[this]() { emit systemChanged(); }
+	);
+	connect(
+		m_cols, &QSpinBox::valueChanged,
+		[this]() { emit systemChanged(); }
+	);
+
+	m_lay->addWidget(m_variables);
 
 	auto controlslay = new QHBoxLayout;
 	controlslay->addWidget(m_rowsLabel);
@@ -58,17 +54,44 @@ SystemWidget::SystemWidget(
 		m_variables->model(), &ca::qt::MatModel::dataChanged,
 		emitSystemChanged
 	);
-	connect(
-		m_constraints->model(), &ca::qt::MatModel::dataChanged,
-		emitSystemChanged
-	);
-
-
-	m_constraints->verticalHeader()->hide();
-	m_constraints->setMaximumWidth(
-		m_constraints->columnWidth(0) + 10 +
-		m_constraints->verticalHeader()->width()
-	);
 }
+
+void SystemWidget::rowCountChanged() {
+	m_variables->setRowCount(m_rows->value());
+}
+
+void SystemWidget::columnCountChanged() {
+	int colCount = m_variables->model()->columnCount();
+	int cols = m_cols->value();
+	if (cols < colCount-1) {
+		m_variables->model()->removeColumns(cols, colCount - cols - 1);
+	} else if (cols > colCount-1) {
+		m_variables->model()->insertColumns(colCount-1, cols - (colCount - 1));
+	}
+}
+
+void SystemWidget::setConstraints(const ca::VecView<double>& constr) { 
+	m_rows->setValue(constr.n());
+	rowCountChanged();
+	std::size_t col = m_variables->matrix().cols()-1;
+	for (ca::MatView<double>::size_type i = 0; i < constr.n(); i++)
+		m_variables->model()->setData(
+			m_variables->model()->index(i, col),
+			constr[i]
+		);
+};
+
+void SystemWidget::setVariables(const ca::MatView<double>& vars )  { 
+	m_rows->setValue(vars.rows());
+	rowCountChanged();
+	m_cols->setValue(vars.cols());
+	columnCountChanged();
+	for (ca::MatView<double>::size_type i = 0; i < vars.rows(); i++)
+		for (ca::MatView<double>::size_type j = 0; j < vars.cols(); j++)
+			m_variables->model()->setData(
+				m_variables->model()->index(i, j),
+				vars(i, j)
+			);
+};
 
 }

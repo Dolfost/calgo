@@ -2,6 +2,7 @@
 #define _CALGO_QT_SIMPLEX_WIDGET_HPP_
 
 #include <calgo/qt/systemWidget.hpp>
+#include <calgo/qt/vecWidget.hpp>
 
 #include <QWidget>
 #include <QLayout>
@@ -19,20 +20,14 @@ class SimplexWidget: public SystemWidget {
 public:
 	SimplexWidget(QWidget* parent = nullptr);
 
-	const ca::Vec<double> function() { 
-		ca::Vec<double>::size_type size = m_funciton->model()->columnCount();
-		ca::Vec<double> c(size);
-		for (ca::Vec<double>::size_type i = 0; i < size; i++)
-			c[i] = m_funciton->matrix()(0, i);
-		return c;
-	};
+	// const ca::Vec<double> function() { return m_constraints->vector(); };
 
 	bool max() {
 		return m_minmax->currentIndex() == 0;
 	}
 
 protected:
-	MatWidget* m_funciton = new MatWidget;
+	VecWidget* m_funciton = new VecWidget;
 	QComboBox* m_minmax = new QComboBox;
 };
 

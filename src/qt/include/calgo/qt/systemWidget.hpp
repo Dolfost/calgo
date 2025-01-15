@@ -2,6 +2,7 @@
 #define _CALGO_QT_SYSTEM_WIDGET_HPP_
 
 #include <calgo/qt/matWidget.hpp>
+#include <calgo/qt/vecWidget.hpp>
 
 #include <QWidget>
 #include <QLayout>
@@ -24,26 +25,31 @@ public:
 	QString colsLabel() { return m_colsLabel->text(); }
 	QString rowsLabel() { return m_rowsLabel->text(); };
 
-	const ca::Mat<double>& variables() { return m_variables->matrix(); };
-	const ca::Vec<double> constraints() { 
-		ca::Vec<double>::size_type size = m_constraints->model()->rowCount();
-		ca::Vec<double> c(size);
-		for (ca::Vec<double>::size_type i = 0; i < size; i++) {
-			c[i] = m_constraints->matrix()(0, i);
-		}
-		return c;
+	const ca::MatView<double> variables() const { 
+		return m_variables->matrix().mat(
+			0, 0, m_variables->matrix().rows(),
+			m_variables->matrix().cols() - 1
+		);
 	};
+	const ca::VecView<double> constraints() const { 
+		return m_variables->matrix().col(m_variables->matrix().cols()-1);
+	};
+
+	void setVariables(const ca::MatView<double>& vars);
+	void setConstraints(const ca::VecView<double>& constr);
 
 signals:
 	void systemChanged();
 
+private slots:
+	void columnCountChanged();
+	void rowCountChanged();
+
 protected:
 	MatWidget* m_variables = new MatWidget;
-	MatWidget* m_constraints = new MatWidget;
 	QSpinBox* m_rows = new QSpinBox;
 	QSpinBox* m_cols = new QSpinBox;
 	QVBoxLayout* m_lay = new QVBoxLayout;
-	QHBoxLayout* m_syslay = new QHBoxLayout;
 	QLabel* m_rowsLabel = new QLabel("rows");
 	QLabel* m_colsLabel = new QLabel("cols");
 };

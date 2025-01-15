@@ -19,15 +19,15 @@ SimplexWidget::SimplexWidget(
 	funclay->addWidget(m_funciton);
 	funclay->addWidget(m_minmax);
 
-	m_funciton->hideIndices();
-	m_funciton->setRowCount(1);
-	m_funciton->setColumnCount(m_cols->value());
+	m_funciton->setSize(m_cols->value());
+	m_funciton->setFlow(VecWidget::Flow::LeftToRight);
+	m_funciton->setGridSize(QSize(m_variables->columnWidth(0), 40));
 
-	auto margins = m_syslay->contentsMargins();
-	margins.setTop(0);
-	m_syslay->setContentsMargins(margins);
-
-	m_minmax->setFixedWidth(m_constraints->width());
+	// auto margins = m_syslay->contentsMargins();
+	// margins.setTop(0);
+	// m_syslay->setContentsMargins(margins);
+	//
+	// m_minmax->setFixedWidth(m_constraints->width());
 	m_minmax->addItems({
 		"max",
 		"min"
@@ -48,13 +48,11 @@ SimplexWidget::SimplexWidget(
 	connect(
 		m_cols, &QSpinBox::editingFinished,
 		[this]() {
-			m_funciton->setColumnCount(m_cols->value());
+			m_funciton->setSize(m_cols->value());
 		}
 	);
 
-	std::size_t height = m_funciton->rowHeight(0)+20;
-	m_funciton->setMaximumHeight(height);
-	m_minmax->setFixedHeight(height);
+	m_funciton->setMaximumHeight(40);
 
 	m_lay->insertLayout(0, funclay);
 }

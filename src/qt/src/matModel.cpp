@@ -24,7 +24,7 @@ QVariant MatModel::data(const QModelIndex &index, int role) const {
 		return QVariant();
 
 	if (role == Qt::DisplayRole or role == Qt::EditRole)
-		return m_matrix[index.row()][index.column()];
+		return m_matrix(index.row(), index.column());
 	else
 		return QVariant();
 }
@@ -51,8 +51,7 @@ bool MatModel::setData(
 	const QVariant &value, int role
 ) {
 	if (index.isValid() && role == Qt::EditRole) {
-
-		m_matrix[index.row()][index.column()] =  value.toDouble();
+		m_matrix(index.row(), index.column()) = value.toDouble();
 		emit dataChanged(index, index, {role});
 		return true;
 	}
@@ -99,6 +98,14 @@ bool MatModel::removeColumns(int position, int cols, const QModelIndex &parent) 
 
 const ca::Mat<double>& MatModel::matrix() {
 	return m_matrix;
+}
+
+void MatModel::setMatrix(const ca::Mat<double>& matrix) {
+	m_matrix = matrix;
+	emit dataChanged(
+		MatModel::createIndex(0, 0),
+		MatModel::createIndex(matrix.rows()-1, matrix.cols()-1)
+	);
 }
 
 }

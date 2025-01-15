@@ -38,7 +38,8 @@ int main(int argc, char** argv) {
 	spinlay->addWidget(cols);
 
 
-	auto mtrx = new ca::qt::MatWidget(mat);
+	auto mtrx = new ca::qt::MatWidget();
+	mtrx->setMatrix(mat);
 
 	QObject::connect(
 		rows, &QSpinBox::valueChanged, 

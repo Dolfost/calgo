@@ -5,6 +5,8 @@ find_package(Qt6 REQUIRED COMPONENTS
 qt_standard_project_setup()
 
 qt_add_library(ca_qt
+	src/vecModel.cpp
+	src/vecWidget.cpp
 	src/matModel.cpp
 	src/matWidget.cpp
 	src/systemWidget.cpp
@@ -15,6 +17,9 @@ target_sources(ca_qt
 	PUBLIC FILE_SET HEADERS
 			BASE_DIRS include/
 			FILES 
+				include/calgo/qt/vecModel.hpp
+				include/calgo/qt/vecWidget.hpp
+				include/calgo/qt/matModel.hpp
 				include/calgo/qt/matWidget.hpp
 				include/calgo/qt/systemWidget.hpp
 				include/calgo/qt/simplexWidget.hpp

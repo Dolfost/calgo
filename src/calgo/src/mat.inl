@@ -36,7 +36,7 @@ Mat<T>::Mat(
 
 	this->m_rows = data.size();
 	this->m_mat = new value_type[this->m_rows*this->m_cols];
-	std::size_t col, row = 0;
+	size_type col, row = 0;
 	for (const auto& drow: data) {
 		col = 0;
 		for (const auto& elem: drow) {
@@ -59,22 +59,22 @@ Mat<T>::Mat(
 	const size_type& cols, 
 	const value_type& init
 ): Mat(rows, cols) {
-	for (std::size_t i = 0; i < this->m_rows; i++)
-		for (std::size_t j = 0; j < this->m_cols; j++)
+	for (size_type i = 0; i < this->m_rows; i++)
+		for (size_type j = 0; j < this->m_cols; j++)
 			 this->el(i, j) = init;
 }
 
 template<typename T>
 Mat<T>::Mat(const Mat<value_type>& other): Mat(other.m_rows, other.m_cols) {
-	for (std::size_t i = 0; i < this->m_cols; i++)
-		for (std::size_t j = 0; j < this->m_rows; j++)
+	for (size_type i = 0; i < this->m_rows; i++)
+		for (size_type j = 0; j < this->m_cols; j++)
 			 this->el(i, j) = other.el(i, j);
 }
 
 template<typename T>
 Mat<T>::Mat(const MatView<value_type>& other): Mat(other.m_rows, other.m_cols) {
-	for (std::size_t i = 0; i < this->m_cols; i++)
-		for (std::size_t j = 0; j < this->m_rows; j++)
+	for (size_type i = 0; i < this->m_rows; i++)
+		for (size_type j = 0; j < this->m_cols; j++)
 			 this->el(i, j) = other.el(i, j);
 }
 
@@ -84,16 +84,16 @@ Mat<T>& Mat<T>::operator=(const Mat<T>& other) {
 	this->m_cols = other.m_cols;
 	this->m_rows = other.m_rows;
 	this->m_mat = new value_type[this->m_cols*this->m_rows];
-	for (std::size_t i = 0; i < this->m_cols; i++)
-		for (std::size_t j = 0; j < this->m_rows; j++)
+	for (size_type i = 0; i < this->m_rows; i++)
+		for (size_type j = 0; j < this->m_cols; j++)
 			 this->el(i, j) = other.el(i, j);
 	return *this;
 }
 
 template<typename T>
 void MatView<T>::set(const value_type& val) {
-	for (std::size_t i = 0; i < this->m_cols; i++)
-		for (std::size_t j = 0; j < this->m_rows; j++)
+	for (size_type i = 0; i < this->m_rows; i++)
+		for (size_type j = 0; j < this->m_cols; j++)
 			 this->el(i, j) = val;
 }
 
@@ -199,7 +199,7 @@ std::ostream& MatView<T>::showSystem(const VecView<D>& v, std::ostream& os) cons
 	if (this->m_rows != v.m_len)
 		throw std::runtime_error("ca::Mat: can not print system");
 
-	for (std::size_t i = 0; i < v.m_len; i++)
+	for (size_type i = 0; i < v.m_len; i++)
 			os << row(i) << "\t | " << v[i] << '\n';
 	return os;
 }

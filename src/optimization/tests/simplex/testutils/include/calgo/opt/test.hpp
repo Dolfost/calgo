@@ -25,9 +25,10 @@ int main(int argc, char** argv) { \
 	simplex.initCallback([](auto ctx) { \
 		std::cout << "Initial tableau:\n"; \
 		ctx.vars->showSystem(*ctx.constr, std::cout); \
-		std::cout << "basis: " << ctx.bas << std::endl; \
+		std::cout << "basis: " << ctx.basis << std::endl; \
 		std::cout << "func: " << *ctx.func << std::endl; \
 		std::cout << "netEval: " << ctx.netEval << std::endl; \
+		std::cout << ctx.basisIndexes << "  <--- basis indexes" << std::endl; \
 	}); \
  \
 	simplex.pivotCallback([](auto ctx, auto row, auto col) { \
@@ -36,6 +37,7 @@ int main(int argc, char** argv) { \
 		std::cout <<  *ctx.func << "  <--- function" << std::endl; \
 		ctx.vars->showSystem(*ctx.constr, std::cout); \
 		std::cout << ctx.netEval << "  <--- net evaluation" << std::endl; \
+		std::cout << ctx.basisIndexes << "  <--- basis indexes" << std::endl; \
 		std::cout << "function estimate: " <<  ctx.f << std::endl; \
 		if (no >= 120) { \
 			std::cout << "\n\nOver 120 made iterations. Stopping...\n";\

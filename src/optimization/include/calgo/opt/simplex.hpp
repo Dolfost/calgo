@@ -93,10 +93,11 @@ public:
 	Vec<T>* constraints() { return s_ctx.constr;  }
 	Mat<T>* variables()   { return s_ctx.vars;    };
 	const Vec<T>* function() const { return s_ctx.func;    };
-	Vec<T>& netChange()   { return s_ctx.netEval; }
 	const Vec<T>* constraints() const { return s_ctx.constr;  }
 	const Mat<T>* variables()   const { return s_ctx.vars;    };
-	const Vec<T>& netChange()   const { return s_ctx.netEval; }
+	const Vec<T>& netEvaluation() const { return s_ctx.netEval; }
+	const Vec<T>& basis() { return s_ctx.basis; }
+	const Vec<T>& basisIndexes() { return s_ctx.basisIndexes; }
 	bool maximize() const { return s_maximize; }
 	bool optimal() const { return s_ctx.optimal; }
 	bool unbounded() const { return s_ctx.unbounded; }
@@ -111,13 +112,14 @@ public:
 	 * @brief Simplex calculation context
 	 */
 	struct Context {
-		Mat<T>* vars; /// Variables
-		Vec<T>* constr; /// Constraints
-		const Vec<T>* func; /// Function
-		Vec<T> netEval; /// Net evaluation
-		Vec<T> bas; /// Basis
+		Mat<T>* vars; ///< variables
+		Vec<T>* constr; ///< constraints
+		const Vec<T>* func; ///< function
+		Vec<T> netEval; ///< net evaluation
+		Vec<T> basis; ///< basis
+		Vec<typename Vec<T>::size_type> basisIndexes; ///< indexes of basis variables
 
-		T f; /// Function value
+		T f; ///< function value
 
 		bool unbounded;
 		bool optimal;
@@ -161,6 +163,9 @@ public:
 	 */
 	CA_CALLBACK(valid, const Context&);
 
+	template<typename D>
+	friend std::ostream& operator<<(std::ostream& os, const Simplex<D>& s);
+
 protected:
 	/**
 	 * @brief Main iteration function
@@ -194,6 +199,7 @@ protected:
 	/**
 	 * @brief Initialize simplex tableau
 	 */
+
 	void init();
 
 protected:

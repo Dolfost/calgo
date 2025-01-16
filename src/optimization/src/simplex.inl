@@ -32,8 +32,11 @@ void Simplex<T>::init() {
 	s_ctx.optimal = false;
 	s_ctx.degenerated = false;
 	s_ctx.netEval = *s_ctx.func;
-	s_ctx.bas.resize(s_r);
-	s_ctx.bas.set(0);
+	s_ctx.basis.resize(s_r);
+	s_ctx.basis.set(0);
+	s_ctx.basisIndexes.resize(s_r);
+	for (typename ca::Vec<T>::size_type i = 0; i < s_ctx.basisIndexes.n(); i++)
+		s_ctx.basisIndexes[i] = (s_c - s_r) + i;
 
 	if (p_initCallback)
 		p_initCallback(s_ctx);
@@ -42,7 +45,7 @@ void Simplex<T>::init() {
 template<typename T>
 void Simplex<T>::pivot(std::size_t row, std::size_t col) {
 	T pn = (*s_ctx.vars)(row, col); // pivot number
-	s_ctx.bas[row] = s_ctx.func->at(col);
+	s_ctx.basis[row] = s_ctx.func->at(col);
 
 	for (std::size_t i = 0; i < s_c; i++)
 		(*s_ctx.vars)(row, i) /= pn;
@@ -64,11 +67,11 @@ void Simplex<T>::pivot(std::size_t row, std::size_t col) {
 	for (std::size_t i = 0; i < s_c; i++) {
 		s_ctx.netEval[i] = 0;
 		for (std::size_t j = 0; j < s_r; j++)
-			s_ctx.netEval[i] += s_ctx.bas[j]*(*s_ctx.vars)(j, i);
+			s_ctx.netEval[i] += s_ctx.basis[j]*(*s_ctx.vars)(j, i);
 		s_ctx.netEval[i] = (*s_ctx.func)[i] - s_ctx.netEval[i];
 	}
 
-	s_ctx.f = s_ctx.bas * (*s_ctx.constr); // dot product;
+	s_ctx.f = s_ctx.basis * (*s_ctx.constr); // dot product;
 
 	if (p_pivotCallback)
 		p_pivotCallback(s_ctx, row, col);
@@ -132,6 +135,8 @@ bool Simplex<T>::iterate() {
 	if (s_ctx.unbounded)
 		return false;
 
+	s_ctx.basisIndexes[row] = col; // save index
+
 	pivot(row, col);
 
 	return true;
@@ -161,8 +166,8 @@ void Simplex<T>::optimize() {
 		if (call)
 			p_iterationCallback(s_ctx);
 
-	for (typename Vec<T>::size_type i = 0; i < s_ctx.bas.n(); i++)
-		if (s_ctx.bas[i] == 0) {
+	for (typename Vec<T>::size_type i = 0; i < s_ctx.basis.n(); i++)
+		if (s_ctx.basis[i] == 0) {
 			s_ctx.degenerated = true;
 			break;
 		}
@@ -179,10 +184,11 @@ Simplex<T>::Simplex(
 	s_ctx.func = f;
 }
 
-template<typename T>
-std::ostream& operator<<(std::ostream& os, const Simplex<T>& s) {
+template<typename D>
+std::ostream& operator<<(std::ostream& os, const Simplex<D>& s) {
 	s.variables()->showSystem(*s.constraints(), os);
 	return os << std::boolalpha 
+	<< "Basis indexes: " << s.s_ctx.basisIndexes << '\n'
 	<< "Optimal: " <<  s.optimal()
 	<< " | Unbounded: " << s.unbounded()
 	<< " | Degenerated: " <<  s.degenerated()

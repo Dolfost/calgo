@@ -19,6 +19,7 @@ Vec<T>::Vec(
 	}
 }
 
+
 template<typename T>
 Vec<T>::Vec(
 	const size_type& len
@@ -26,6 +27,11 @@ Vec<T>::Vec(
 
 template<typename T>
 Vec<T>::Vec(const Vec<value_type>& other): Vec(other.m_len) {
+	for (size_type i = 0; i < this->m_len; i++)
+		this->el(i) = other[i];
+}
+template<typename T>
+Vec<T>::Vec(const VecView<value_type>& other): Vec(other.m_len) {
 	for (size_type i = 0; i < this->m_len; i++)
 		this->el(i) = other[i];
 }

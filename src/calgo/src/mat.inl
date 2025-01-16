@@ -72,6 +72,13 @@ Mat<T>::Mat(const Mat<value_type>& other): Mat(other.m_rows, other.m_cols) {
 }
 
 template<typename T>
+Mat<T>::Mat(const MatView<value_type>& other): Mat(other.m_rows, other.m_cols) {
+	std::size_t size = this->m_cols*this->m_rows;
+	for (std::size_t i = 0; i < size; i++)
+		this->m_mat[i] = other.m_mat[i];
+}
+
+template<typename T>
 Mat<T>& Mat<T>::operator=(const Mat<T>& other) {
 	delete[] this->m_mat;
 	this->m_cols = other.m_cols;

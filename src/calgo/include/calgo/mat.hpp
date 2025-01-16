@@ -275,6 +275,11 @@ public:
 	 */
 	Mat(const Mat<value_type>& other);
 	/**
+	 * @brief View copy constructor
+	 * @param other other matrix
+	 */
+	Mat(const MatView<value_type>& other);
+	/**
 	 * @brief Copy assignment operator
 	 * @param other other matrix
 	 * @return lvalue

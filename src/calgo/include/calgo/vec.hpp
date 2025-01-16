@@ -163,6 +163,12 @@ public:
 	 */
 	Vec(const Vec<value_type>& other);
 	/**
+	 * @brief View copy constructor
+	 *
+	 * @param other other object
+	 */
+	Vec(const VecView<value_type>& other);
+	/**
 	 * @brief Copy assignment operator
 	 *
 	 * @param other other object

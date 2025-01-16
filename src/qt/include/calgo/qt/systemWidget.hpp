@@ -37,8 +37,8 @@ signals:
 	void systemChanged();
 
 protected slots:
-	void virtual columnCountChanged();
-	void virtual rowCountChanged();
+	virtual void columnCountChanged();
+	virtual void rowCountChanged();
 
 protected:
 	MatWidget* m_variables = new MatWidget;

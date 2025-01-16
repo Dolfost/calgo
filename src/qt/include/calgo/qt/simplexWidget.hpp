@@ -28,6 +28,7 @@ public:
 	virtual const ca::VecView<double> function() const;
 
 	bool maximize() { return m_minmax->currentIndex() == 0; }
+	void setMaximize(bool m) { m_minmax->setCurrentIndex(!m); }
 
 protected slots:
 	void rowCountChanged() override;

@@ -4,7 +4,7 @@
 #include <stdexcept>
 #include <algorithm>
 
-#define CALGO_MAT_INDEX(mat, cols, dist, row, col) ((mat) + (row)*((cols)+(dist)) + (col))
+#define CALGO_MAT_INDEX(mat, cols, dist, row, col) ((mat) + (row)*((cols)+(dist)-1) + (col))
 
 namespace ca {
 
@@ -123,7 +123,7 @@ void Mat<T>::resize(const size_type& rows, const size_type& cols, bool copy) {
 
 	this->m_rows = rows;
 	this->m_cols = cols;
-	this->m_dist = 0;
+	this->m_dist = 1;
 }
 
 template<typename T>
@@ -221,20 +221,20 @@ void ca::Mat<T>::insertRows(const size_type& row, const size_type& count, const 
 
 	for (size_type i = 0; i < row; ++i)
 		for (size_type j = 0; j < this->m_cols; ++j)
-			*CALGO_MAT_INDEX(newMat, this->m_cols, 0, i, j) = this->el(i, j);
+			*CALGO_MAT_INDEX(newMat, this->m_cols, 1, i, j) = this->el(i, j);
 
 	for (size_type i = row; i < row + count; ++i)
 		for (size_type j = 0; j < this->m_cols; ++j)
-			*CALGO_MAT_INDEX(newMat, this->m_cols, 0, i, j) = init;
+			*CALGO_MAT_INDEX(newMat, this->m_cols, 1, i, j) = init;
 
 	for (size_type i = row + count; i < newRows; ++i)
 		for (size_type j = 0; j < this->m_cols; ++j)
-			*CALGO_MAT_INDEX(newMat, this->m_cols, 0, i, j) = this->el(i - count, j);
+			*CALGO_MAT_INDEX(newMat, this->m_cols, 1, i, j) = this->el(i - count, j);
 
 	delete[] this->m_mat;
 	this->m_mat = newMat;
 	this->m_rows = newRows;
-	this->m_dist = 0;
+	this->m_dist = 1;
 }
 
 template<typename T>
@@ -247,18 +247,18 @@ void ca::Mat<T>::removeRows(const size_type& row, const size_type& count) {
 
 	for (size_type i = 0; i < row; ++i)
 		for (size_type j = 0; j < this->m_cols; ++j)
-			*CALGO_MAT_INDEX(newMat, this->m_cols, 0, i, j) = 
+			*CALGO_MAT_INDEX(newMat, this->m_cols, 1, i, j) = 
 				this->el(i, j);
 
 	for (size_type i = row; i < newRows; ++i)
 		for (size_type j = 0; j < this->m_cols; ++j)
-			*CALGO_MAT_INDEX(newMat, this->m_cols, 0, i, j) = 
+			*CALGO_MAT_INDEX(newMat, this->m_cols, 1, i, j) = 
 				this->el(i + count, j);
 
 	delete[] this->m_mat;
 	this->m_mat = newMat;
 	this->m_rows = newRows;
-	this->m_dist = 0;
+	this->m_dist = 1;
 }
 
 template<typename T>
@@ -271,21 +271,21 @@ void ca::Mat<T>::insertCols(const size_type& col, const size_type& count, const 
 
 	for (size_type i = 0; i < this->m_rows; ++i) {
 		for (size_type j = 0; j < col; ++j)
-			*CALGO_MAT_INDEX(newMat, newCols, 0, i, j) =
+			*CALGO_MAT_INDEX(newMat, newCols, 1, i, j) =
 				this->el(i, j);
 
 		for (size_type j = col; j < col + count; ++j)
-			*CALGO_MAT_INDEX(newMat, newCols, 0, i, j) = init;
+			*CALGO_MAT_INDEX(newMat, newCols, 1, i, j) = init;
 
 		for (size_type j = col + count; j < newCols; ++j)
-			*CALGO_MAT_INDEX(newMat, newCols, 0, i, j) = 
+			*CALGO_MAT_INDEX(newMat, newCols, 1, i, j) = 
 				this->el(i, j - count);
 	}
 
 	delete[] this->m_mat;
 	this->m_mat = newMat;
 	this->m_cols = newCols;
-	this->m_dist = 0;
+	this->m_dist = 1;
 }
 
 template<typename T>
@@ -298,18 +298,18 @@ void ca::Mat<T>::removeCols(const size_type& col, const size_type& count) {
 
 	for (size_type i = 0; i < this->m_rows; ++i) {
 		for (size_type j = 0; j < col; ++j)
-			*CALGO_MAT_INDEX(newMat, newCols, 0, i, j) = 
+			*CALGO_MAT_INDEX(newMat, newCols, 1, i, j) = 
 				this->el(i, j);
 
 		for (size_type j = col; j < newCols; ++j)
-			*CALGO_MAT_INDEX(newMat, newCols, 0, i, j) = 
+			*CALGO_MAT_INDEX(newMat, newCols, 1, i, j) = 
 				this->el(i, j + count);
 	}
 
 	delete[] this->m_mat;
 	this->m_mat = newMat;
 	this->m_cols = newCols;
-	this->m_dist = 0;
+	this->m_dist = 1;
 }
 
 template<typename T>
@@ -433,7 +433,7 @@ MatView<typename MatView<T>::value_type> MatView<T>::mat(
 	return MatView<value_type>(
 		addr(row, col),
 		rows, cols,
-		m_cols - cols
+		m_cols - cols + 1
 	);
 }
 
@@ -447,7 +447,7 @@ const MatView<typename MatView<T>::value_type> MatView<T>::mat(
 	return MatView<value_type>(
 		addr(row, col),
 		rows, cols,
-		m_cols - cols
+		m_cols - cols + 1
 	);
 }
 

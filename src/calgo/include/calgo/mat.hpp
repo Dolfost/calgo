@@ -42,7 +42,7 @@ public:
 		value_type* data, 
 		const size_type& rows, 
 		const size_type& cols, 
-		const size_type& dist = 0
+		const size_type& dist = 1
 	);
 
 	/**
@@ -237,7 +237,7 @@ protected:
 
 protected:
 	value_type* m_mat = nullptr; ///< data pointer
-	size_type m_rows = 0, m_cols = 0, m_dist = 0;
+	size_type m_rows = 0, m_cols = 0, m_dist = 1;
 };
 
 

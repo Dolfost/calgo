@@ -10,6 +10,9 @@
 
 namespace ca {
 
+template<typename T>
+class Mat;
+
 /**
  * @brief Matrix view
  *
@@ -227,6 +230,8 @@ public:
 	template<typename D>
 	std::ostream& showSystem(const VecView<D>& v, std::ostream& os = std::cout) const;
 
+	friend Mat<T>;
+
 protected:
 	inline value_type* addr(const size_type& row, const size_type& col) const noexcept;
 
@@ -347,6 +352,8 @@ public:
 	 */
 	void removeCols(const size_type& row, const size_type& count);
 	/// @}
+
+	friend MatView<T>;
 
 	~Mat();
 };

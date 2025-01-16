@@ -15,6 +15,8 @@ template<typename T>
 class MatView;
 template<typename T>
 class Mat;
+template<typename T>
+class Vec;
 
 /**
  * @brief Array viev
@@ -103,6 +105,7 @@ public:
 	T dot(const VecView<T>& other);
 
 	friend ca::Mat<T>;
+	friend ca::Vec<T>;
 	friend ca::MatView<T>;
 
 	/**
@@ -223,6 +226,7 @@ public:
 
 	friend ca::Mat<T>;
 	friend ca::MatView<T>;
+	friend ca::VecView<T>;
 
 	/**
 	 * @brief Destructor

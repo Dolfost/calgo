@@ -7,7 +7,6 @@ namespace ca::opt {
 
 template<typename T>
 void Simplex<T>::init() {
-
 	s_r = s_ctx.vars->rows();
 	s_c = s_ctx.vars->cols();
 
@@ -34,6 +33,7 @@ void Simplex<T>::init() {
 	s_ctx.degenerated = false;
 	s_ctx.netEval = *s_ctx.func;
 	s_ctx.bas.resize(s_r);
+	s_ctx.bas.set(0);
 
 	if (p_initCallback)
 		p_initCallback(s_ctx);

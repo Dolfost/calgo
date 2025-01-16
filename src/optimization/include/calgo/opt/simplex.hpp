@@ -82,8 +82,6 @@ public:
 	 */
 	void setMaximize(bool m) { s_maximize = m; };
 
-	void setOperators(const Vec<Op>& ops) { s_ctx.ops = ops; }
-
 	/**
 	 * @brief Get maximization(minimization) result
 	 *

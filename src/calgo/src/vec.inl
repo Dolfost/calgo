@@ -19,7 +19,6 @@ Vec<T>::Vec(
 	}
 }
 
-
 template<typename T>
 Vec<T>::Vec(
 	const size_type& len
@@ -73,6 +72,13 @@ void Vec<T>::resize(const size_type& len, bool copy) {
 template<typename T>
 typename VecView<T>::size_type VecView<T>::n() const {
 	return m_len;
+}
+
+template<typename T>
+void VecView<T>::set(const value_type& val) {
+	for (size_type i = 0; i < m_len; i++) {
+		el(i) = val;
+	}
 }
 
 template<typename T>

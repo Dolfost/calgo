@@ -87,6 +87,13 @@ public:
 	const value_type& at(const size_type& index) const;
 
 	/**
+	 * @brief Set each element to some value
+	 *
+	 * @param val value of each element
+	 */
+	void set(const value_type& val);
+
+	/**
 	 * @brief Scalar multiplication
 	 *
 	 * Multiplies each element of array by `value`
@@ -189,12 +196,6 @@ public:
 	 * @param copy will copy old matrix to new if `true`
 	 */
 	void resize(const size_type& len, bool copy = false);
-	/**
-	 * @brief Set each element to some value
-	 *
-	 * @param val value of each element
-	 */
-	void set(const value_type& val);
 
 	/** @name Qt-styled MVC-like element manipulator functions
 	 *

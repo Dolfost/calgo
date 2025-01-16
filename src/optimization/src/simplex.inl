@@ -131,7 +131,6 @@ bool Simplex<T>::iterate() {
 		return false;
 
 	std::size_t row = pivotRow(col);
-
 	if (s_ctx.unbounded)
 		return false;
 

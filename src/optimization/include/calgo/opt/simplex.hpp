@@ -97,7 +97,7 @@ public:
 	const Mat<T>* variables()   const { return s_ctx.vars;    };
 	const Vec<T>& netEvaluation() const { return s_ctx.netEval; }
 	const Vec<T>& basis() { return s_ctx.basis; }
-	const Vec<T>& basisIndexes() { return s_ctx.basisIndexes; }
+	const Vec<typename Vec<T>::size_type>& basisIndexes() { return s_ctx.basisIndexes; }
 	bool maximize() const { return s_maximize; }
 	bool optimal() const { return s_ctx.optimal; }
 	bool unbounded() const { return s_ctx.unbounded; }

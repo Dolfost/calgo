@@ -2,7 +2,6 @@
 #define _CALGO_QT_SIMPLEX_WIDGET_HPP_
 
 #include <calgo/qt/systemWidget.hpp>
-#include <calgo/qt/vecWidget.hpp>
 
 #include <QWidget>
 #include <QLayout>
@@ -20,14 +19,20 @@ class SimplexWidget: public SystemWidget {
 public:
 	SimplexWidget(QWidget* parent = nullptr);
 
-	// const ca::Vec<double> function() { return m_constraints->vector(); };
 
-	bool max() {
-		return m_minmax->currentIndex() == 0;
-	}
+	void setVariables(const ca::MatView<double>& vars) override;
+	void setConstraints(const ca::VecView<double>& constr) override;
+	void setFunction(const ca::VecView<double>& vars);
+	const ca::MatView<double> variables() const override;
+	const ca::VecView<double> constraints() const override;
+	virtual const ca::VecView<double> function() const;
+
+	bool maximize() { return m_minmax->currentIndex() == 0; }
+
+protected slots:
+	void rowCountChanged() override;
 
 protected:
-	VecWidget* m_funciton = new VecWidget;
 	QComboBox* m_minmax = new QComboBox;
 };
 

@@ -27,31 +27,37 @@ SystemWidget::SystemWidget(
 		m_cols, &QSpinBox::editingFinished,
 		this, &SystemWidget::columnCountChanged
 	);
-	connect(
-		m_rows, &QSpinBox::valueChanged,
-		[this]() { emit systemChanged(); }
-	);
-	connect(
-		m_cols, &QSpinBox::valueChanged,
-		[this]() { emit systemChanged(); }
-	);
-
 	m_lay->addWidget(m_variables);
 
-	auto controlslay = new QHBoxLayout;
-	controlslay->addWidget(m_rowsLabel);
-	controlslay->addWidget(m_rows);
-	controlslay->addSpacerItem(new QSpacerItem(10, 0));
-	controlslay->addWidget(m_colsLabel);
-	controlslay->addWidget(m_cols);
-	controlslay->addSpacerItem(new QSpacerItem(20, 0, QSizePolicy::Expanding));
-	m_lay->addLayout(controlslay);
+	m_controlslay->addWidget(m_rowsLabel);
+	m_controlslay->addWidget(m_rows);
+	m_controlslay->addSpacerItem(new QSpacerItem(10, 0));
+	m_controlslay->addWidget(m_colsLabel);
+	m_controlslay->addWidget(m_cols);
+	m_controlslay->addSpacerItem(new QSpacerItem(10, 0, QSizePolicy::Expanding));
+	m_lay->addLayout(m_controlslay);
 
 	auto emitSystemChanged = [this]() {
 		emit systemChanged();
 	};
 	connect(
 		m_variables->model(), &ca::qt::MatModel::dataChanged,
+		emitSystemChanged
+	);
+	connect(
+		m_variables->model(), &ca::qt::MatModel::rowsInserted,
+		emitSystemChanged
+	);
+	connect(
+		m_variables->model(), &ca::qt::MatModel::rowsRemoved,
+		emitSystemChanged
+	);
+	connect(
+		m_variables->model(), &ca::qt::MatModel::columnsInserted,
+		emitSystemChanged
+	);
+	connect(
+		m_variables->model(), &ca::qt::MatModel::columnsRemoved,
 		emitSystemChanged
 	);
 }
@@ -71,27 +77,45 @@ void SystemWidget::columnCountChanged() {
 }
 
 void SystemWidget::setConstraints(const ca::VecView<double>& constr) { 
+	const QSignalBlocker blocker_r(m_rows);
 	m_rows->setValue(constr.n());
 	rowCountChanged();
+	const QSignalBlocker blocker_s(m_variables->model());
 	std::size_t col = m_variables->matrix().cols()-1;
 	for (ca::MatView<double>::size_type i = 0; i < constr.n(); i++)
 		m_variables->model()->setData(
 			m_variables->model()->index(i, col),
 			constr[i]
 		);
+	emit systemChanged();
 };
 
 void SystemWidget::setVariables(const ca::MatView<double>& vars )  { 
+	const QSignalBlocker blocker_r(m_rows);
+	const QSignalBlocker blocker_c(m_cols);
 	m_rows->setValue(vars.rows());
 	rowCountChanged();
 	m_cols->setValue(vars.cols());
 	columnCountChanged();
+	const QSignalBlocker blocker_s(m_variables->model());
 	for (ca::MatView<double>::size_type i = 0; i < vars.rows(); i++)
 		for (ca::MatView<double>::size_type j = 0; j < vars.cols(); j++)
 			m_variables->model()->setData(
 				m_variables->model()->index(i, j),
 				vars(i, j)
 			);
+	emit systemChanged();
+};
+
+const MatView<double> SystemWidget::variables() const {
+	return m_variables->matrix().mat(
+		0, 0, m_variables->matrix().rows(),
+		m_variables->matrix().cols() - 1
+	);
+}
+
+const ca::VecView<double> SystemWidget::constraints() const { 
+	return m_variables->matrix().col(m_variables->matrix().cols()-1);
 };
 
 }

@@ -12,7 +12,7 @@
 namespace ca::qt {
 
 /**
- * @brief System of equations widget
+ * @brief System of equations
  *
  */
 class SystemWidget: public QWidget {
@@ -25,31 +25,27 @@ public:
 	QString colsLabel() { return m_colsLabel->text(); }
 	QString rowsLabel() { return m_rowsLabel->text(); };
 
-	const ca::MatView<double> variables() const { 
-		return m_variables->matrix().mat(
-			0, 0, m_variables->matrix().rows(),
-			m_variables->matrix().cols() - 1
-		);
-	};
-	const ca::VecView<double> constraints() const { 
-		return m_variables->matrix().col(m_variables->matrix().cols()-1);
-	};
+	virtual const ca::MatView<double> variables() const;
+	virtual const ca::VecView<double> constraints() const;
 
-	void setVariables(const ca::MatView<double>& vars);
-	void setConstraints(const ca::VecView<double>& constr);
+	virtual void setVariables(const ca::MatView<double>& vars);
+	virtual void setConstraints(const ca::VecView<double>& constr);
+
+	QHBoxLayout* controlsLayout() { return m_controlslay; };
 
 signals:
 	void systemChanged();
 
-private slots:
-	void columnCountChanged();
-	void rowCountChanged();
+protected slots:
+	void virtual columnCountChanged();
+	void virtual rowCountChanged();
 
 protected:
 	MatWidget* m_variables = new MatWidget;
 	QSpinBox* m_rows = new QSpinBox;
 	QSpinBox* m_cols = new QSpinBox;
 	QVBoxLayout* m_lay = new QVBoxLayout;
+	QHBoxLayout* m_controlslay = new QHBoxLayout;
 	QLabel* m_rowsLabel = new QLabel("rows");
 	QLabel* m_colsLabel = new QLabel("cols");
 };

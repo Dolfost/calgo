@@ -94,11 +94,10 @@ public:
 	T f() const { return s_ctx.f; }
 	Vec<T>* constraints() { return s_ctx.constr;  }
 	Mat<T>* variables()   { return s_ctx.vars;    };
-	Vec<T>* function()    { return s_ctx.func;    };
+	const Vec<T>* function() const { return s_ctx.func;    };
 	Vec<T>& netChange()   { return s_ctx.netEval; }
 	const Vec<T>* constraints() const { return s_ctx.constr;  }
 	const Mat<T>* variables()   const { return s_ctx.vars;    };
-	const Vec<T>* function()    const { return s_ctx.func;    };
 	const Vec<T>& netChange()   const { return s_ctx.netEval; }
 	bool maximize() const { return s_maximize; }
 	bool optimal() const { return s_ctx.optimal; }

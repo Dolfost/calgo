@@ -72,6 +72,8 @@ public:
 	const interval_type& b() { return m_b; }
 	const size_type& n() { return m_n; }
 
+	virtual ~Nodes() = default;
+
 protected:
 	virtual void calculate() = 0;
 

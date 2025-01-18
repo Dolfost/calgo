@@ -6,7 +6,6 @@ target_sources(ca_interpolation
 		src/cubicParametric.cpp
 		src/lagrange.cpp
 		src/newtonBackward.cpp
-		src/nodes.cpp
 	PUBLIC FILE_SET HEADERS
 		BASE_DIRS include/ FILES
 			include/calgo/in/cubic.hpp

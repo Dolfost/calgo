@@ -7,6 +7,7 @@ target_sources(ca_numeric
 			BASE_DIRS include/
 			FILES 
 				include/calgo/num/simpson.hpp
+				include/calgo/num/nystromFredholm.hpp
 )
 set_target_properties(ca_numeric PROPERTIES
 	OUTPUT_NAME canumeric
@@ -14,7 +15,7 @@ set_target_properties(ca_numeric PROPERTIES
 )
 
 target_link_libraries(ca_numeric
-	PUBLIC ca::calgo
+	PUBLIC ca::calgo ca::linear ca::interpolation
 )
 
 if (CALGO_TESTING)

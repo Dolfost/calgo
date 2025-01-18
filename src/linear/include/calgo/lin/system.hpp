@@ -18,7 +18,7 @@ public:
 	virtual void solve() = 0;
 	void solve_safe() { check(); solve(); };
 
-	VecView<value_type> solution() { return m_solution; };
+	Vec<value_type>& solution() { return m_solution; };
 
 protected:
 	virtual void check() = 0;

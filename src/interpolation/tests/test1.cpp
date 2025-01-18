@@ -2,35 +2,34 @@
 #include <iostream>
 
 #include <calgo/in/interpolation.hpp>
+#include <calgo/vec.hpp>
 
 bool comp(
-	const std::vector<double>& a, 
-	const std::vector<double>& b, 
+	const ca::Vec<double>& a, 
+	const ca::Vec<double>& b, 
 	double delta = 0.01) {
-	if (a.size() != b.size())
+	if (a.n() != b.n())
 		return false;
 
-	for (auto ait = a.begin(), bit = b.begin(); ait != a.end(); ait++, bit++)
-		if (std::abs(*ait - *bit) > delta)
+	for (std::size_t i = 0; i < a.n(); i++)
+		if (std::abs(a[i] - b[i]) > delta)
 			return false;
 
 	return true;
 }
 
 int main() {
-
-	std::vector<double> 
-	sol = ca::in::Nodes::chebyshev(0, 10, 5),
-	expect = {0.245, 2.06, 5, 7.94, 9.76};
+	ca::Vec<double>	expect = {0.245, 2.06, 5, 7.94, 9.76};
+	ca::in::ChebyshevNodes<double> n(0, 10, 5);
 
 	std::cout << "expected: ";
-	for (auto const& x : expect) {
-		std::cout << std::setw(6) << std::setprecision(3) << x << " ";
+	for (std::size_t i = 0; i < expect.n(); i++) {
+		std::cout << std::setw(6) << std::setprecision(3) << expect[i] << " ";
 	}
 	std::cout << "\nres:      ";
-	for (auto const& x : sol) {
-		std::cout << std::setw(6) << std::setprecision(3) << x << " ";
+	for (std::size_t i = 0; i < n.nodes().n(); i++) {
+		std::cout << std::setw(6) << std::setprecision(3) << n.nodes()[i] << " ";
 	}
 
-	return !comp(sol, expect);
+	return !comp(n.nodes(), expect);
 }

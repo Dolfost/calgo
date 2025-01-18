@@ -1,3 +1,5 @@
+add_subdirectory(testutils)
+
 file(GLOB TESTS CONFIGURE_DEPENDS
 	*.cpp 
 )
@@ -10,7 +12,7 @@ foreach(T ${TESTS})
 	target_compile_definitions(lin_${TNAME} 
 		PRIVATE TESTPATH="${CMAKE_CURRENT_LIST_DIR}"
 	)
-	target_link_libraries(lin_${TNAME} ca::linear)
+	target_link_libraries(lin_${TNAME} ca::linear calgo_lin_testutils)
 	add_test(NAME lin_${TNAME}
 		COMMAND lin_${TNAME}
 	)

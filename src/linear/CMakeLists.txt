@@ -7,6 +7,8 @@ target_sources(ca_linear
 	PUBLIC FILE_SET HEADERS 
 			BASE_DIRS include/
 			FILES
+				include/calgo/lin/system.hpp
+				include/calgo/lin/gauss.hpp
 				include/calgo/lin/cyclicThomas.hpp
 				include/calgo/lin/thomas.hpp
 )

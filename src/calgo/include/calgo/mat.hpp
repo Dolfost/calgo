@@ -292,7 +292,7 @@ public:
 	 */
 	Mat& operator=(const MatView<value_type>& other);
 	Mat& operator=(const Mat& other) {
-		return static_cast<const MatView<value_type>&>(other);
+		return operator=(static_cast<const MatView<value_type>&>(other));
 	};
 	/**
 	 * @brief Move assignment operator

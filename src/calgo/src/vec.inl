@@ -80,6 +80,14 @@ typename VecView<T>::size_type VecView<T>::n() const {
 }
 
 template<typename T>
+typename VecView<T>::value_type VecView<T>::sum() const {
+	value_type sum = 0;
+	for (size_type i = 0; i < m_len; i++)
+		sum += el(i);
+	return sum;
+}
+
+template<typename T>
 void VecView<T>::set(const value_type& val) {
 	for (size_type i = 0; i < m_len; i++) {
 		el(i) = val;

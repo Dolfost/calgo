@@ -52,6 +52,13 @@ public:
 	size_type n() const;
 
 	/**
+	 * @brief Sum of all elements
+	 *
+	 * @return sum of all elements
+	 */
+	value_type sum() const;
+
+	/**
 	 * @brief Dot product
 	 *
 	 * If `other` is not the same size, then

@@ -65,13 +65,6 @@ Mat<T>::Mat(
 }
 
 template<typename T>
-Mat<T>::Mat(const Mat<value_type>& other): Mat(other.m_rows, other.m_cols) {
-	for (size_type i = 0; i < this->m_rows; i++)
-		for (size_type j = 0; j < this->m_cols; j++)
-			 this->el(i, j) = other.el(i, j);
-}
-
-template<typename T>
 Mat<T>::Mat(const MatView<value_type>& other): Mat(other.m_rows, other.m_cols) {
 	for (size_type i = 0; i < this->m_rows; i++)
 		for (size_type j = 0; j < this->m_cols; j++)
@@ -79,7 +72,15 @@ Mat<T>::Mat(const MatView<value_type>& other): Mat(other.m_rows, other.m_cols) {
 }
 
 template<typename T>
-Mat<T>& Mat<T>::operator=(const Mat<T>& other) {
+Mat<T>::Mat(MatView<value_type>&& other): Mat(other.m_mat, other.m_rows, other.m_cols, other.m_dist) {
+	other.m_mat = nullptr;
+	other.m_rows = 0;
+	other.m_cols = 0;
+	other.m_dist = 1;
+}
+
+template<typename T>
+Mat<T>& Mat<T>::operator=(const MatView<value_type>& other) {
 	delete[] this->m_mat;
 	this->m_cols = other.m_cols;
 	this->m_rows = other.m_rows;
@@ -87,6 +88,21 @@ Mat<T>& Mat<T>::operator=(const Mat<T>& other) {
 	for (size_type i = 0; i < this->m_rows; i++)
 		for (size_type j = 0; j < this->m_cols; j++)
 			 this->el(i, j) = other.el(i, j);
+	return *this;
+
+}
+
+template<typename T>
+Mat<T>& Mat<T>::operator=(MatView<value_type>&& other) {
+	delete[] this->m_mat;
+	this->m_cols = other.m_cols;
+	this->m_rows = other.m_rows;
+	this->m_mat = other.m_mat;
+	this->m_dist = other.m_dist;
+	other.m_mat = nullptr;
+	other.m_rows = 0;
+	other.m_cols = 0;
+	other.m_dist = 1;
 	return *this;
 }
 

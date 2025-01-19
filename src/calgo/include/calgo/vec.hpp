@@ -42,7 +42,7 @@ public:
 	 * @param len data length
 	 * @param dist distance between neighboring elements
 	 */
-	VecView(value_type* data, const size_type& len, const size_type& dist = 1);
+	VecView(value_type* data = nullptr, const size_type& len = 0, const size_type& dist = 1);
 
 	/**
 	 * @brief Array length
@@ -149,8 +149,8 @@ protected:
 template<typename T>
 class Vec: public VecView<T> {
 public:
-	using value_type = typename VecView<T>::value_type;
-	using size_type = typename VecView<T>::size_type;
+	using typename VecView<T>::value_type;
+	using typename VecView<T>::size_type;
 
 	using VecView<T>::VecView;
 
@@ -171,19 +171,36 @@ public:
 	 *
 	 * @param other other object
 	 */
-	Vec(const Vec<value_type>& other);
-	/**
-	 * @brief View copy constructor
-	 *
-	 * @param other other object
-	 */
+	Vec(const Vec<value_type>& other): Vec(static_cast<const VecView<value_type>&>(other)) {};
 	Vec(const VecView<value_type>& other);
+	/**
+	 * @brief Move constructor
+	 *
+	 * @warning Do not move-costruct Vec from VecView if You don't know what You
+	 * are doing. Data pointer that were stolen from VecView may be owned by
+	 * onther Vec, so on destruction pointer will be freed two times.
+	 *
+	 * @param other other object rvalue reference
+	 */
+	Vec(VecView<value_type>&& other);
+	Vec(Vec<value_type>&& other): Vec(static_cast<VecView<value_type>&&>(other)) {};
 	/**
 	 * @brief Copy assignment operator
 	 *
 	 * @param other other object
 	 */
-	Vec& operator=(const Vec& other);
+	Vec& operator=(const VecView<value_type>& other);
+	Vec& operator=(const Vec<value_type>& other) { 
+		return operator=(static_cast<const VecView<value_type>&>(other)); 
+	}
+	/**
+	 * @brief Move assignment operator
+	 * @copydetails Vec(const VecView<value_type>&& other)
+	 */
+	Vec& operator=(VecView<value_type>&& other);
+	Vec& operator=(Vec<value_type>&& other) { 
+		return operator=(static_cast<VecView<value_type>&&>(other)); 
+	}
 	/**
 	 * @brief Resize array
 	 *

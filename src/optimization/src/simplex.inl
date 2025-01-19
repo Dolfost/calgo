@@ -10,7 +10,7 @@ void Simplex<T>::init() {
 	s_r = s_ctx.vars->rows();
 	s_c = s_ctx.vars->cols();
 
-	if (s_maximize)
+	if (m_maximize)
 		s_comparator = [](auto a, auto b) {
 			return a > b;
 		};

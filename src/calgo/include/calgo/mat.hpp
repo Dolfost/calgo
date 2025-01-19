@@ -39,9 +39,9 @@ public:
 	 * next one
 	 */
 	MatView(
-		value_type* data, 
-		const size_type& rows, 
-		const size_type& cols, 
+		value_type* data = nullptr, 
+		const size_type& rows = 0, 
+		const size_type& cols = 0, 
 		const size_type& dist = 1
 	);
 
@@ -278,18 +278,30 @@ public:
 	 * @brief Copy constructor
 	 * @param other other matrix
 	 */
-	Mat(const Mat<value_type>& other);
+	Mat(const MatView<value_type>& other);
+	Mat(const Mat<value_type>& other): Mat(static_cast<const MatView<value_type>&>(other)) {};
 	/**
-	 * @brief View copy constructor
+	 * @brief Move constructor
 	 * @param other other matrix
 	 */
-	Mat(const MatView<value_type>& other);
+	Mat(MatView<value_type>&& other);
+	Mat(Mat<value_type>&& other): Mat(static_cast<MatView<value_type>&&>(other)) {};
 	/**
 	 * @brief Copy assignment operator
 	 * @param other other matrix
-	 * @return lvalue
 	 */
-	Mat& operator=(const Mat& other);
+	Mat& operator=(const MatView<value_type>& other);
+	Mat& operator=(const Mat& other) {
+		return static_cast<const MatView<value_type>&>(other);
+	};
+	/**
+	 * @brief Move assignment operator
+	 * @param other other matrix
+	 */
+	Mat& operator=(MatView<value_type>&& other);
+	Mat& operator=(Mat&& other) {
+		return static_cast<MatView<value_type>&&>(other);
+	};
 
 	/**
 	 * @brief Resize matrix

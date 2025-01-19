@@ -80,7 +80,7 @@ public:
 	 *
 	 * @param m `true` if maximize, `false` if minimise
 	 */
-	void setMaximize(bool m) { s_maximize = m; };
+	void setMaximize(bool m) { m_maximize = m; };
 
 	/**
 	 * @brief Get maximization(minimization) result
@@ -98,7 +98,7 @@ public:
 	const Vec<T>& netEvaluation() const { return s_ctx.netEval; }
 	const Vec<T>& basis() { return s_ctx.basis; }
 	const Vec<typename Vec<T>::size_type>& basisIndexes() { return s_ctx.basisIndexes; }
-	bool maximize() const { return s_maximize; }
+	bool maximize() const { return m_maximize; }
 	bool optimal() const { return s_ctx.optimal; }
 	bool unbounded() const { return s_ctx.unbounded; }
 	bool degenerated() const { return s_ctx.unbounded; }
@@ -206,7 +206,7 @@ protected:
 	Context s_ctx;
 
 	std::size_t s_r, s_c;
-	bool s_maximize = true;
+	bool m_maximize = true;
 	bool (*s_comparator)(const T& a, const T& b);
 };
 

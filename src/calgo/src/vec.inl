@@ -24,11 +24,6 @@ Vec<T>::Vec(
 	const size_type& len
 ): VecView<T>(new value_type[len], len) {}
 
-template<typename T>
-Vec<T>::Vec(const Vec<value_type>& other): Vec(other.m_len) {
-	for (size_type i = 0; i < this->m_len; i++)
-		this->el(i) = other[i];
-}
 
 template<typename T>
 Vec<T>::Vec(const VecView<value_type>& other): Vec(other.m_len) {
@@ -37,7 +32,16 @@ Vec<T>::Vec(const VecView<value_type>& other): Vec(other.m_len) {
 }
 
 template<typename T>
-Vec<T>& Vec<T>::operator=(const Vec<T>& other) {
+Vec<T>::Vec(VecView<value_type>&& other) {
+	delete[] this->m_vec;
+	Vec<T>::operator=(other); // assign other.<x> to this-><x>
+	other.m_vec = nullptr;
+	other.m_len = 0;
+	other.m_dist = 1;
+}
+
+template<typename T>
+Vec<T>& Vec<T>::operator=(const VecView<value_type>& other) {
 	if (other.m_len != this->m_len) {
 		delete[] this->m_vec;
 		this->m_len = other.m_len;

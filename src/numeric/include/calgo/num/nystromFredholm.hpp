@@ -43,7 +43,7 @@ public:
 		return phi(x);
 	};
 	value_type operator()(value_type x) {
-			return phi(x);
+		return phi(x);
 	}
 
 public:

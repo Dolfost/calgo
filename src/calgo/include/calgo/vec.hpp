@@ -5,6 +5,7 @@
 
 #include <cstddef>
 #include <ostream>
+#include <iostream>
 #include <type_traits>
 #include <initializer_list>
 #include <cstddef>
@@ -132,6 +133,13 @@ public:
 	 */
 	template<typename D>
 	friend std::ostream& operator<<(std::ostream& os, const VecView<D>& v);
+	/**
+	 * @brief Print vector as array
+	 *
+	 * @param os output stream
+	 * @return passes `os` object
+	 */
+	std::ostream& asArray(std::ostream& os = std::cout) const;
 
 protected:
 	inline value_type* addr(const size_type& idx) const noexcept;

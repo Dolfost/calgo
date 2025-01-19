@@ -63,7 +63,18 @@ public:
 	size_type cols() const { return this->m_cols; }
 
 	/**
-	 * @brief Get data
+	 * @brief Equality operator
+	 *
+	 * @param other other MatView
+	 * @return `true` if size of matrices and corresponding elements are equal
+	 */
+	bool operator==(const MatView<value_type>& other);
+	bool operator!=(const MatView<value_type>& other) {
+		return not (*this == other);
+	};
+
+	/**
+	 * @brief Get data pointer
 	 * @return internal data pointer
 	 */
 	value_type* data() { return this->m_mat; }
@@ -77,6 +88,25 @@ public:
 	*/
 	template<typename D>
 	friend std::ostream& operator<<(std::ostream& os, const MatView<D>& m);
+	/**
+	 * @brief Print matrix as array of initializer lists
+	 *
+	 * @tparam D matrix `value_type`
+	 * @param os stream for output
+	 * @return passed `os` stream reference
+	 */
+	std::ostream& asArray(std::ostream& os = std::cout) const;
+	/**
+	 * @brief Print matrix as system of equations
+	 *
+	 * @tparam D vector `value_type`
+	 * @param v system constraints
+	 * @param os stream for output
+	 * @return passed `os` stream reference
+	 */
+	template<typename D>
+	std::ostream& showSystem(const VecView<D>& v, std::ostream& os = std::cout) const;
+
 
 	/** @name Direct acces methods and operators
 	 * When accessing matrix elements with methods of this group, out of range
@@ -218,17 +248,6 @@ public:
 		const size_type& cols
 	) const noexcept;
 	/// @}
-
-	/**
-	 * @brief Print matrix as system of equations
-	 *
-	 * @tparam D vector `value_type`
-	 * @param v system constraints
-	 * @param os stream for output
-	 * @return passed `os` stream reference
-	 */
-	template<typename D>
-	std::ostream& showSystem(const VecView<D>& v, std::ostream& os = std::cout) const;
 
 	friend Mat<T>;
 

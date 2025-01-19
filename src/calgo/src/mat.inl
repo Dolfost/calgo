@@ -220,6 +220,15 @@ std::ostream& MatView<T>::showSystem(const VecView<D>& v, std::ostream& os) cons
 	return os;
 }
 
+template<typename T>
+std::ostream& MatView<T>::asArray(std::ostream& os) const {
+	for (size_type i = 0; i < m_rows; i++) {
+		row(i).asArray(os); 
+		os << ",\n";
+	}
+	return os;
+}
+
 template<typename D>
 std::ostream& operator<<(std::ostream& os, const MatView<D>& m) {
 	for (typename MatView<D>::size_type i = 0; i < m.m_rows; i++)
@@ -326,6 +335,17 @@ void ca::Mat<T>::removeCols(const size_type& col, const size_type& count) {
 	this->m_mat = newMat;
 	this->m_cols = newCols;
 	this->m_dist = 1;
+}
+
+template<typename T>
+bool MatView<T>::operator==(const MatView<value_type>& other) {
+	if (m_rows != other.m_rows or m_cols != other.m_cols)
+		return false;
+	for (size_type i = 0; i < m_rows; i++)
+		for (size_type j = 0; j < m_cols; j++)
+			if (el(i, j) != other.el(i, j))
+				return false;
+	return true;
 }
 
 template<typename T>

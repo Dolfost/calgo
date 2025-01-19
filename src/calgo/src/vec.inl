@@ -183,6 +183,14 @@ std::ostream& operator<<(std::ostream& os, const VecView<D>& v) {
 }
 
 template<typename T>
+std::ostream& VecView<T>::asArray(std::ostream& os) const {
+	os << '{';
+	for (size_type i = 0; i < m_len; i++)
+		os << el(i) << ", ";
+	return os << "\b\b}";
+}
+
+template<typename T>
 void Vec<T>::insert(const size_type& where, const size_type& count, const value_type& init) {
 	if (where > this->m_len)
 		throw std::out_of_range("ca::Vec: insertion index out of range");

@@ -125,11 +125,11 @@ void Mat<T>::resize(const size_type& rows, const size_type& cols, bool copy) {
 		size_type stopCol = std::min(cols, this->m_cols);
 		for (size_type i = 0; i < stopRow; i++)
 			for (size_type j = 0; j < stopCol; j++)
-				*CALGO_MAT_INDEX(newMat, cols, 0, i, j) = 
+				*CALGO_MAT_INDEX(newMat, cols, 1, i, j) = 
 					this->el(i, j);
 		for (size_type i = 0; i < rows - stopRow; i++)
 			for (size_type j = 0; j < cols - stopCol; j++)
-				*CALGO_MAT_INDEX(newMat, cols, 0, i, j) = 0;
+				*CALGO_MAT_INDEX(newMat, cols, 1, i, j) = 0;
 		delete[] this->m_mat;
 		this->m_mat = newMat;
 	} else {

@@ -300,7 +300,7 @@ public:
 	 */
 	Mat& operator=(MatView<value_type>&& other);
 	Mat& operator=(Mat&& other) {
-		return static_cast<MatView<value_type>&&>(other);
+		return operator=(static_cast<MatView<value_type>&&>(other));
 	};
 
 	/**

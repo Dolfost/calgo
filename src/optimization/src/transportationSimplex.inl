@@ -4,6 +4,8 @@
 #include <stdexcept>
 #include <utility>
 #include <cassert>
+#include <list>
+#include <algorithm>
 
 namespace ca::opt {
 
@@ -11,6 +13,13 @@ namespace ca::opt {
 
 template<typename T>
 void TransportationSimplex<T>::init() {
+	m_optimal = false;
+
+	if (m_maximize)
+		m_comparator = [](auto a, auto b) { return a <= b; };
+	else
+		m_comparator = [](auto a, auto b) { return a >= b; };
+
 	m_distribution = addSlack(m_cost, m_demand, m_supply);
 
 	m_basisCells.resize(m_cost.rows()+m_cost.cols()-1);
@@ -43,17 +52,39 @@ void TransportationSimplex<T>::check() {
 
 template<typename T>
 bool TransportationSimplex<T>::iterate() {
-	calculatePotentials();
+	calculateUV();
+
+	// optimality test
+	std::list<Cell> basis(m_basisCells.begin(), m_basisCells.end());
+	bool optimal = true;
+	for (size_type i = 0; i < m_distribution.rows(); i++) {
+		for (size_type j = 0; j < m_distribution.cols(); j++) {
+			auto in = std::find(basis.begin(), basis.end(), Cell{i, j});
+			if (in != basis.end()) { // basic variable
+				basis.erase(in); // wont be searched for again
+				continue;
+			}
+
+			if (not m_comparator(m_distribution(i, j) - m_u[i] - m_v[j], 0)) {
+				optimal = false;
+				break;
+			}
+		}
+		if (not optimal) 
+			break;
+	}
+
 	static size_type i = 1;
 	return i--; //  WARN: only 1 iteration
 }
 
 template<typename T>
-void TransportationSimplex<T>::calculatePotentials() {
+void TransportationSimplex<T>::calculateUV() {
 	std::vector<bool> u(m_u.n(), false), v(m_v.n(), false);
 	m_u[0] = 0; u[0] = true;
 	do {
 		for (const auto& b: m_basisCells) {
+			assert(b.i < u.size()), assert(b.j < v.size());
 			if (u[b.i] and not v[b.j]) { // m_u[b.i] is known but m_v[b.j] is not
 				m_v[b.j] = m_distribution(b.i, b.j) - m_u[b.i];
 				v[b.j] = true; // mark as found
@@ -67,6 +98,7 @@ void TransportationSimplex<T>::calculatePotentials() {
 		not std::all_of(v.begin(), v.end(), [](auto i){ return i; })
 	);
 }
+
 template<typename T>
 ca::Mat<typename TransportationSimplex<T>::value_type> 
 TransportationSimplex<T>::addSlack(
@@ -105,8 +137,8 @@ void TransportationSimplex<T>::northWest(
 	for (size_type i = 0; i < supply.n(); i++)
 		for (size_type j = nextDemand; j < demand.n(); j++) {
 			distribution(i, j) = std::min(supply[i] - used, demand[j] - supplied);
-				assert(b < basisCells.size());
-				basisCells[b++] = {i, j};
+			assert(b < basisCells.size());
+			basisCells[b++] = {i, j};
 			if (distribution(i, j) > 0) {
 				supplied += distribution(i, j);
 				used += distribution(i, j);

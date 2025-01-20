@@ -99,7 +99,7 @@ protected:
 	 */
 	bool iterate();
 
-	void calculatePotentials();
+	void calculateUV();
 
 	/**
 	 * @brief Initialize simplex tableau
@@ -111,7 +111,9 @@ protected:
 	ca::Vec<value_type> m_demand;
 	ca::Vec<value_type> m_supply;
 	ca::Mat<value_type> m_cost;
+
 	value_type m_f;
+	bool m_optimal;
 
 	ca::Vec<value_type> m_u, m_v;
 	ca::Mat<value_type> m_distribution;

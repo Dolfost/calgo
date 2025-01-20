@@ -20,9 +20,13 @@ int main(int argc, char** argv) { \
 	simplex.setSupply(c); \
 	simplex.setCost(v); \
 	simplex.iterationCallback([&simplex](auto ctx, auto it) { \
-		std::cout << "--->> ITEEATION No " << it << std::endl \
+		std::cout << "--->> ITERATION No " << it << std::endl \
 			<< simplex << "\ndistribution:\n" << ctx.distribution \
-			<< "u: " << ctx.u << "\nv: " << ctx.v << std::endl << std::endl; \
+			<< "u: " << ctx.u << "\nv: " << ctx.v << std::endl << "basis: "; \
+		for (auto& x: ctx.basisCells) { \
+			std::cout << '{' << x.i << ',' << x.j << "} "; \
+		} \
+		std::cout << std::endl << std::endl; \
 	}); \
 	__VA_OPT__(__VA_ARGS__();) \
 	simplex.optimize_safe(); \

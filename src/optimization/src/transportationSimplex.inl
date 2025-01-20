@@ -3,6 +3,7 @@
 
 #include <stdexcept>
 #include <utility>
+#include <cassert>
 
 namespace ca::opt {
 
@@ -10,15 +11,13 @@ namespace ca::opt {
 
 template<typename T>
 void TransportationSimplex<T>::init() {
+	m_distribution = addSlack(m_cost, m_demand, m_supply);
+
+	m_basisCells.resize(m_cost.rows()+m_cost.cols()-1);
 	m_u.resize(m_cost.rows());
 	m_v.resize(m_cost.cols());
-	m_distribution.resize(
-		m_cost.rows(),
-		m_cost.cols()
-	);
-	m_basisCells.resize(m_cost.rows()+m_cost.cols()-1);
 
-	m_distribution = northWest(m_cost, m_demand, m_supply, m_basisCells);
+	northWest(m_cost, m_demand, m_supply, m_basisCells, m_distribution);
 }
 
 template<typename T>
@@ -44,10 +43,30 @@ void TransportationSimplex<T>::check() {
 
 template<typename T>
 bool TransportationSimplex<T>::iterate() {
+	// calculatePotentials();
 	static size_type i = 1;
-	return i--;
+	return i--; //  WARN: only 1 iteration
 }
 
+template<typename T>
+void TransportationSimplex<T>::calculatePotentials() {
+	std::vector<bool> u(m_u.n(), false), v(m_v.n(), false);
+	m_u[0] = 0; u[0] = true;
+	do {
+		for (const auto& b: m_basisCells) {
+			if (u[b.i] and not v[b.j]) { // m_u[b.i] is known but m_v[b.j] is not
+				m_v[b.j] = m_distribution(b.i, b.j) - m_u[b.i];
+				v[b.j] = true; // mark as found
+			} else if (v[b.j] and not u[b.i]) { // opposite
+				m_u[b.i] = m_distribution(b.i, b.j) - m_v[b.j];
+				u[b.i] = true; // mark as found
+			}
+		}
+	} while ( // still have unknowns
+		std::any_of(u.begin(), u.end(), [](auto i){ return i; }) or
+		std::any_of(v.begin(), v.end(), [](auto i){ return i; })
+	);
+}
 template<typename T>
 ca::Mat<typename TransportationSimplex<T>::value_type> 
 TransportationSimplex<T>::addSlack(
@@ -73,56 +92,32 @@ TransportationSimplex<T>::addSlack(
 }
 
 template<typename T>
-ca::Mat<typename TransportationSimplex<T>::value_type> 
-TransportationSimplex<T>::northWest(
+void TransportationSimplex<T>::northWest(
 	ca::Mat<value_type>& cost,
 	ca::Vec<value_type>& demand,
 	ca::Vec<value_type>& supply,
-	cells_type& basisCells
+	cells_type& basisCells,
+	ca::Mat<value_type>& distribution
 ) {
-	ca::Mat<value_type> distribution = addSlack(cost, demand, supply);
+	size_type nextDemand = 0, b = 0;
+	value_type supplied = 0, used = 0;
 
-	size_type i = 0, j = 0, b = 0;
-	value_type used = 0, supplied = 0;
-	while (i < distribution.rows() and j < distribution.cols()) {
-		distribution(i, j) = std::min(supply[i] - used, demand[j] - supplied);
-		used += distribution(i, j);
-		supplied += distribution(i, j);
-
-		const value_type suppliesLeft = supply[i] - used;
-		if (suppliesLeft > 0) {
-			if (supplied == demand[j]) {
-				j++;
-				supplied = 0;
-			} else {
-				throw std::runtime_error(
-					"ca::TransportationSimplex::northWest: "
-					"supplied more than demanded (rem!=0)"
-				);
+	for (size_type i = 0; i < supply.n(); i++)
+		for (size_type j = nextDemand; j < demand.n(); j++) {
+			distribution(i, j) = std::min(supply[i] - used, demand[j] - supplied);
+			if (distribution(i, j) > 0) {
+				supplied += distribution(i, j);
+				used += distribution(i, j);
+				assert(b < basisCells.size());
+				basisCells[b++] = {i, j};
+				if (supply[i] - used == 0) {
+					used = 0;
+					nextDemand = j;
+					break;
+				}
 			}
-		} else if (suppliesLeft == 0) {
-			if (supplied < demand[j]) {
-				i++;
-				used = 0;
-			} else if (supplied == demand[j]) {
-				basisCells[b++] = {++i, j++};
-				used = supplied = distribution(i, j-1) = 0;
-			} else {
-				throw std::runtime_error(
-					"ca::TransportationSimplex::northWest: "
-					"supplied more than demanded (rem=0)"
-				);
-			}
-		} else
-			throw std::runtime_error(
-				"ca::TransportationSimplex::northWest: "
-				"negative remainder"
-			);
-
-		basisCells[b++] = {i, j};
-	}
-
-	return std::move(distribution);
+			supplied = 0;
+		}
 }
 
 template<typename D>

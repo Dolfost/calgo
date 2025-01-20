@@ -61,8 +61,8 @@ public:
 
 	enum class BFS {
 		Northwest,
-		VogelApprox,
-		RusselApprox
+		Vogel,
+		Russel
 	};
 
 	void check();
@@ -80,11 +80,12 @@ public:
 		ca::Vec<value_type>& demand,
 		ca::Vec<value_type>& supply
 	);
-	static ca::Mat<value_type> northWest(
+	static void northWest(
 		ca::Mat<value_type>& costs,
 		ca::Vec<value_type>& demand,
 		ca::Vec<value_type>& supply,
-		cells_type& basisCells
+		cells_type& basisCells,
+		ca::Mat<value_type>& distribution
 	);
 
 protected:
@@ -95,27 +96,7 @@ protected:
 	 */
 	bool iterate();
 
-	/**
-	 * @brief Find next pivot column
-	 *
-	 * @return column index
-	 */
-	std::size_t pivotCol();
-
-	/**
-	 * @brief Find next pivot row
-	 *
-	 * @return row index
-	 */
-	std::size_t pivotRow(std::size_t col);
-
-	/**
-	 * @brief Perform pivoting
-	 *
-	 * @param row pivot row
-	 * @param col pivot col
-	 */
-	void pivot(std::size_t row, std::size_t col);
+	void calculatePotentials();
 
 	/**
 	 * @brief Initialize simplex tableau

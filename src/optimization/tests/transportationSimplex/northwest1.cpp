@@ -17,13 +17,14 @@ ca::Mat<double> res = {
 };
 
 int main(int argc, char** argv) {
+	ca::Mat<double> dist = 
+		ca::opt::TransportationSimplex<double>::addSlack(cost, demand, supply);
 	ca::opt::TransportationSimplex<double>::cells_type cells(
 		cost.rows()+cost.cols()-1
 	);
-	ca::Mat<double> dist = 
-		ca::opt::TransportationSimplex<double>::northWest(
-			cost, demand, supply, cells
-		);
+	ca::opt::TransportationSimplex<double>::northWest(
+		cost, demand, supply, cells, dist
+	);
 
 	std::cout << "expected:\n" << res << "got: \n" << dist;
 

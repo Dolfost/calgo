@@ -15,6 +15,9 @@ ca::Mat<double> res = {
 	{0, 0, 10, 30, 10},
 	{0, 0, 0, 0, 50},
 };
+ca::opt::TransportationSimplex<double>::cells_type bas = {
+	{0, 0}, {0, 1}, {1, 1}, {1, 2}, {2, 2}, {2, 3}, {2, 4}, {3, 4}
+};
 
 int main(int argc, char** argv) {
 	ca::Mat<double> dist = 
@@ -26,7 +29,15 @@ int main(int argc, char** argv) {
 		cost, demand, supply, cells, dist
 	);
 
-	std::cout << "expected:\n" << res << "got: \n" << dist;
+	std::cout << "expected:\n" << res << "bas: ";
+	for (auto& x: bas) {
+		std::cout << '{' << x.i << ',' << x.j << "} ";
+	}
+	std::cout << "\n\ngot:\n" << dist << "bas: ";
+	for (auto& x: cells) {
+		std::cout << '{' << x.i << ',' << x.j << "} ";
+	}
+	std::cout << std::endl;
 
-	return res != dist;
+	return (res != dist) or (bas != cells);
 }

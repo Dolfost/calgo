@@ -57,6 +57,9 @@ public:
 	struct Cell {
 		size_type i = 0;
 		size_type j = 0;
+		bool operator==(const Cell& other) const {
+			return i == other.i and j == other.j;
+		}
 	};
 
 	enum class BFS {

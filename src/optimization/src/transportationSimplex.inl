@@ -43,7 +43,7 @@ void TransportationSimplex<T>::check() {
 
 template<typename T>
 bool TransportationSimplex<T>::iterate() {
-	// calculatePotentials();
+	calculatePotentials();
 	static size_type i = 1;
 	return i--; //  WARN: only 1 iteration
 }
@@ -63,8 +63,8 @@ void TransportationSimplex<T>::calculatePotentials() {
 			}
 		}
 	} while ( // still have unknowns
-		std::any_of(u.begin(), u.end(), [](auto i){ return i; }) or
-		std::any_of(v.begin(), v.end(), [](auto i){ return i; })
+		not std::all_of(u.begin(), u.end(), [](auto i){ return i; }) or
+		not std::all_of(v.begin(), v.end(), [](auto i){ return i; })
 	);
 }
 template<typename T>
@@ -105,11 +105,11 @@ void TransportationSimplex<T>::northWest(
 	for (size_type i = 0; i < supply.n(); i++)
 		for (size_type j = nextDemand; j < demand.n(); j++) {
 			distribution(i, j) = std::min(supply[i] - used, demand[j] - supplied);
+				assert(b < basisCells.size());
+				basisCells[b++] = {i, j};
 			if (distribution(i, j) > 0) {
 				supplied += distribution(i, j);
 				used += distribution(i, j);
-				assert(b < basisCells.size());
-				basisCells[b++] = {i, j};
 				if (supply[i] - used == 0) {
 					used = 0;
 					nextDemand = j;

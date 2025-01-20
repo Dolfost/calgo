@@ -41,11 +41,11 @@ void NystromFredholmSecondKind<T, I>::check() {
 	if (not m_f)
 		throw std::runtime_error("ca::Nystrom: f(x) not defined");
 	if (not m_k)
-		throw std::runtime_error("ca::Nystrom: k(a, b) not defined");
+		throw std::runtime_error("ca::Nystrom: K(a, b) not defined");
 	if (m_nodes->b() < m_nodes->a())
-		throw std::runtime_error("ca::Nystrom: b is less than a");
+		throw std::out_of_range("ca::Nystrom: b is less than a");
 	if (m_nodes->n() < 2)
-		throw std::runtime_error("ca::Nystrom: n is less than 2");
+		throw std::out_of_range("ca::Nystrom: n is less than 2");
 }
 
 }

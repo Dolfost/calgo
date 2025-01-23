@@ -41,6 +41,15 @@ Vec<T>::Vec(VecView<value_type>&& other) {
 }
 
 template<typename T>
+Vec<T>& Vec<T>::operator=(VecView<value_type>&& other) {
+	delete[] this->m_vec;
+	Vec<T>::operator=(other); // assign other.<x> to this-><x>
+	other.m_vec = nullptr;
+	other.m_len = 0;
+	other.m_dist = 1;
+}
+
+template<typename T>
 Vec<T>& Vec<T>::operator=(const VecView<value_type>& other) {
 	if (other.m_len != this->m_len) {
 		delete[] this->m_vec;

@@ -6,6 +6,7 @@
 #include <cassert>
 #include <list>
 #include <algorithm>
+#include <limits>
 
 namespace ca::opt {
 
@@ -13,8 +14,6 @@ namespace ca::opt {
 
 template<typename T>
 void TransportationSimplex<T>::init() {
-	m_optimal = false;
-
 	if (m_maximize)
 		m_comparator = [](auto a, auto b) { return a <= b; };
 	else
@@ -27,6 +26,14 @@ void TransportationSimplex<T>::init() {
 	m_v.resize(m_cost.cols());
 
 	northWest(m_cost, m_demand, m_supply, m_basisCells, m_distribution);
+
+	m_f = 0;
+	for (const auto& b: m_basisCells) {
+		m_f += m_cost(b.i, b.j)*m_distribution(b.i, b.j);
+	}
+
+	if (p_initCallback)
+		p_initCallback(CALL_STRUCT);
 }
 
 template<typename T>
@@ -37,6 +44,7 @@ void TransportationSimplex<T>::optimize() {
 		size_type it = 0;
 		while (iterate())
 			p_iterationCallback(CALL_STRUCT, it++);
+		p_iterationCallback(CALL_STRUCT, it);
 	} else while(iterate());
 }
 
@@ -54,28 +62,118 @@ template<typename T>
 bool TransportationSimplex<T>::iterate() {
 	calculateUV();
 
-	// optimality test
+	if (isOptimal())
+		return false;
+
+	Cell entering = findEnteringVariable();
+	cells_type cycle = findCycle(entering);
+
+	Cell leaving;
+	value_type delta = m_maximize ? std::numeric_limits<double>::min() : std::numeric_limits<double>::max();
+	// += 2 bacause only donor cells can share allocation
+	for (typename cells_type::size_type i = 1; i < cycle.size(); i += 2) {
+		if (not m_comparator(m_distribution(cycle[i].i, cycle[i].j), delta)) {
+			delta = m_distribution(cycle[i].i, cycle[i].j);
+			leaving = cycle[i];
+		}
+	}
+
+	if (p_cycleFoundCallback)
+		p_cycleFoundCallback(CALL_STRUCT, cycle, entering, leaving);
+
+	if (cycle.size() < 4)
+		throw std::runtime_error("ca::TransportationSimplex: cycle not found");
+
+	for (typename cells_type::size_type i = 0; i < cycle.size(); i++)
+		m_distribution(cycle[i].i, cycle[i].j) += ((i+1) % 2 ? -delta : delta);
+
+	m_f += delta*(m_cost(entering.i, entering.j) - m_u[entering.i] - m_v[entering.j]);
+
+	assert(std::find(m_basisCells.begin(), m_basisCells.end(), leaving) != m_basisCells.end());
+	(*std::find(m_basisCells.begin(), m_basisCells.end(), leaving)) = entering;
+
+	// static size_type i = 1;
+	// return i--; //  WARN: only 1 iteration
+	return true;
+}
+
+template<typename T>
+typename TransportationSimplex<T>::cells_type 
+TransportationSimplex<T>::findCycle(const Cell& entering) {
+	cells_type cycle = {entering};
+	findCycleRow(entering, cycle);
+	return std::move(cycle);
+}
+
+template<typename T>
+bool TransportationSimplex<T>::findCycleRow(const Cell& cell, cells_type& cycle) {
+	for (const auto& b: m_basisCells) {
+		if (b.j != cell.j or b == cell)
+			continue;
+		if (findCycleCol(b, cycle)) {
+			cycle.push_back(b);
+			return true;
+		}
+	}
+	return false;
+}
+
+template<typename T>
+bool TransportationSimplex<T>::findCycleCol(const Cell& cell, cells_type& cycle) {
+	if (cell.i == cycle.front().i) // if in same row as entering variable
+		return true;
+	for (const auto& b: m_basisCells) {
+		if (b.i != cell.i or b == cell)
+			continue;
+		if (findCycleRow(b, cycle)) {
+			cycle.push_back(b);
+			return true;
+		}
+	}
+	return false;
+}
+
+template<typename T>
+typename TransportationSimplex<T>::Cell 
+TransportationSimplex<T>::findEnteringVariable() {
+	Cell entering = {0, 0};
+	value_type diff = 0;
+
+	std::list<Cell> basis(m_basisCells.begin(), m_basisCells.end());
+	for (size_type i = 0; i < m_distribution.rows(); i++) {
+		for (size_type j = 0; j < m_distribution.cols(); j++) {
+			auto in = std::find(basis.begin(), basis.end(), Cell{i, j});
+			if (in != basis.end()) { // ij is a basic variable
+				basis.erase(in); // won't be searched for again
+				continue;
+			}
+			if (not m_comparator(m_distribution(i, j), diff)) {
+				diff = m_distribution(i, j);
+				entering = {i, j};
+			}
+		}
+	}
+	return std::move(entering);
+}
+
+template<typename T>
+bool TransportationSimplex<T>::isOptimal() {
 	std::list<Cell> basis(m_basisCells.begin(), m_basisCells.end());
 	bool optimal = true;
 	for (size_type i = 0; i < m_distribution.rows(); i++) {
 		for (size_type j = 0; j < m_distribution.cols(); j++) {
 			auto in = std::find(basis.begin(), basis.end(), Cell{i, j});
-			if (in != basis.end()) { // basic variable
-				basis.erase(in); // wont be searched for again
+			if (in != basis.end()) { // ij is a basic variable
+				basis.erase(in); // won't be searched for again
 				continue;
 			}
 
-			if (not m_comparator(m_distribution(i, j) - m_u[i] - m_v[j], 0)) {
+			m_distribution(i, j) = m_cost(i, j) - m_u[i] - m_v[j];
+			if (not m_comparator(m_distribution(i, j), 0))
 				optimal = false;
-				break;
-			}
 		}
-		if (not optimal) 
-			break;
 	}
-
-	static size_type i = 1;
-	return i--; //  WARN: only 1 iteration
+	return optimal;
 }
 
 template<typename T>
@@ -86,10 +184,10 @@ void TransportationSimplex<T>::calculateUV() {
 		for (const auto& b: m_basisCells) {
 			assert(b.i < u.size()), assert(b.j < v.size());
 			if (u[b.i] and not v[b.j]) { // m_u[b.i] is known but m_v[b.j] is not
-				m_v[b.j] = m_distribution(b.i, b.j) - m_u[b.i];
+				m_v[b.j] = m_cost(b.i, b.j) - m_u[b.i];
 				v[b.j] = true; // mark as found
 			} else if (v[b.j] and not u[b.i]) { // opposite
-				m_u[b.i] = m_distribution(b.i, b.j) - m_v[b.j];
+				m_u[b.i] = m_cost(b.i, b.j) - m_v[b.j];
 				u[b.i] = true; // mark as found
 			}
 		}

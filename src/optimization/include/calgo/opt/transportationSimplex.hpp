@@ -35,6 +35,11 @@ public:
 	std::enable_if<std::is_assignable<ca::Mat<value_type>, P>::value>::type setCost(P && cost) {
 		m_cost = std::forward<P>(cost);
 	}
+
+	void setMaximize(bool m) { m_maximize = m; }
+	bool maximize() { return m_maximize; }
+
+
 	ca::Vec<value_type>& demand() { return m_demand; };
 	const ca::Vec<value_type>& demand() const { return m_demand; };
 	ca::Vec<value_type>& supply() { return m_supply; };
@@ -60,6 +65,9 @@ public:
 		bool operator==(const Cell& other) const {
 			return i == other.i and j == other.j;
 		}
+		friend std::ostream& operator<<(std::ostream& os, const Cell& c) {
+			return os << '(' << c.i << ',' << c.j << ')';
+		}
 	};
 
 	enum class BFS {
@@ -73,9 +81,20 @@ public:
 	void optimize_safe() { check(); optimize(); };
 
 	CA_CALLBACK(
+		init,
+		CallbackContext
+	)
+	CA_CALLBACK(
 		iteration,
 		CallbackContext,
 		size_type ///< iteration No
+	)
+	CA_CALLBACK(
+		cycleFound,
+		CallbackContext,
+		const cells_type&, ///< cycle
+		const Cell&, ///< entering variable
+		const Cell& ///< leaving variable
 	)
 
 	static ca::Mat<value_type> addSlack(
@@ -100,6 +119,11 @@ protected:
 	bool iterate();
 
 	void calculateUV();
+	bool isOptimal();
+	Cell findEnteringVariable();
+	cells_type findCycle(const Cell& entering);
+	bool findCycleRow(const Cell& cell, cells_type& cycle);
+	bool findCycleCol(const Cell& cell, cells_type& cycle);
 
 	/**
 	 * @brief Initialize simplex tableau
@@ -113,7 +137,6 @@ protected:
 	ca::Mat<value_type> m_cost;
 
 	value_type m_f;
-	bool m_optimal;
 
 	ca::Vec<value_type> m_u, m_v;
 	ca::Mat<value_type> m_distribution;

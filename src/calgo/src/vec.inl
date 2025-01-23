@@ -47,6 +47,7 @@ Vec<T>& Vec<T>::operator=(VecView<value_type>&& other) {
 	other.m_vec = nullptr;
 	other.m_len = 0;
 	other.m_dist = 1;
+	return *this;
 }
 
 template<typename T>

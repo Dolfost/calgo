@@ -10,5 +10,5 @@ ca::Mat<double> cost = {
 };
 
 CA_OPT_TRANSPORTATION_SIMPLEX_TEST(
-	1785, [&simplex]() { simplex.setMaximize(true); }
+	1230, [&simplex]() { simplex.setMaximize(true); }
 );

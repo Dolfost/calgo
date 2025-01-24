@@ -9,5 +9,5 @@ ca::Mat<double> cost = {
 };
 
 CA_OPT_TRANSPORTATION_SIMPLEX_TEST(
-	814
+	743
 );

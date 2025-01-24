@@ -69,7 +69,8 @@ bool TransportationSimplex<T>::iterate() {
 	cells_type cycle = findCycle(entering);
 
 	Cell leaving;
-	value_type delta = m_maximize ? std::numeric_limits<double>::min() : std::numeric_limits<double>::max();
+	value_type delta = m_maximize ? 
+		std::numeric_limits<double>::min() : std::numeric_limits<double>::max();
 	// += 2 bacause only donor cells can share allocation
 	for (typename cells_type::size_type i = 1; i < cycle.size(); i += 2) {
 		if (not m_comparator(m_distribution(cycle[i].i, cycle[i].j), delta)) {
@@ -85,7 +86,7 @@ bool TransportationSimplex<T>::iterate() {
 		throw std::runtime_error("ca::TransportationSimplex: cycle not found");
 
 	for (typename cells_type::size_type i = 0; i < cycle.size(); i++)
-		m_distribution(cycle[i].i, cycle[i].j) += ((i+1) % 2 ? -delta : delta);
+		m_distribution(cycle[i].i, cycle[i].j) += ((i+2) % 2 ? -delta : delta);
 
 	m_f += delta*(m_cost(entering.i, entering.j) - m_u[entering.i] - m_v[entering.j]);
 
@@ -179,7 +180,7 @@ bool TransportationSimplex<T>::isOptimal() {
 template<typename T>
 void TransportationSimplex<T>::calculateUV() {
 	std::vector<bool> u(m_u.n(), false), v(m_v.n(), false);
-	m_u[0] = 0; u[0] = true;
+	m_u[0] = 0; u[0] = true; // let u_0 = 0
 	do {
 		for (const auto& b: m_basisCells) {
 			assert(b.i < u.size()), assert(b.j < v.size());

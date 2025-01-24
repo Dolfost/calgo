@@ -17,7 +17,10 @@ namespace ca::opt {
 /**
  * @brief Transportation Simplex 
  *
- * Solves tranportation problem using streamlined simplex method
+ * Solves minimization tranportation problem using streamlined simplex method.
+ * @note Corresponding maximization problem could be solved by 
+ * substituting const matrix with \f(C_{ij}=M-C_{ij}\f) where
+ * \f(M\f) is a maximum cost in input matrix.
  *
  * @tparam T `value_type`
  */
@@ -25,6 +28,7 @@ template<typename T>
 class TransportationSimplex {
 public:
 	struct Cell;
+	enum class BFS;
 	using value_type = typename ca::Vec<T>::value_type; ///< Value type
 	using size_type = typename ca::Vec<T>::size_type; ///< Size type
 	using cells_type = std::vector<Cell>; ///< Cell index list type
@@ -52,13 +56,8 @@ public:
 		m_cost = std::forward<P>(cost);
 	}
 
-	/**
-	 * @brief Set maximization or minimization
-	 *
-	 * @param m `true` if want to maximize
-	 */
-	void setMaximize(bool m) { m_maximize = m; }
-	bool maximize() { return m_maximize; }
+	void setBfs(BFS b) { m_BFSmethod = b; };
+	BFS bfs() { return m_BFSmethod; };
 
 
 	/**
@@ -121,8 +120,8 @@ public:
 
 	enum class BFS {
 		Northwest,
-		// Vogel, //  TODO: implemet Vogel and Russel
-		// Russel
+		Vogel,
+		// Russel //  TODO: implemet Russel
 	};
 
 	/**
@@ -198,6 +197,14 @@ public:
 		ca::Mat<value_type>& distribution
 	);
 
+	static void vogel(
+		ca::Mat<value_type>& costs,
+		ca::Vec<value_type>& demand,
+		ca::Vec<value_type>& supply,
+		cells_type& basisCells,
+		ca::Mat<value_type>& distribution
+	);
+
 protected:
 	/**
 	 * @brief Main iteration function
@@ -241,7 +248,6 @@ protected:
 	void init();
 
 protected:
-	bool m_maximize = false;
 	ca::Vec<value_type> m_demand; ///< Demand
 	ca::Vec<value_type> m_supply; ///< Supply
 	ca::Mat<value_type> m_cost; ///< Costs
@@ -259,8 +265,6 @@ protected:
 	cells_type m_basisCells; ///< Indecies of basic variables
 
 	BFS m_BFSmethod = BFS::Northwest; ///< Current method to find basic feasible solution
-
-	bool (*m_comparator)(const value_type& a, const value_type& b); ///< Comparator function
 };
 
 }

@@ -14,18 +14,22 @@ namespace ca::opt {
 
 template<typename T>
 void TransportationSimplex<T>::init() {
-	if (m_maximize)
-		m_comparator = [](auto a, auto b) { return a <= b; };
-	else
-		m_comparator = [](auto a, auto b) { return a >= b; };
-
 	m_distribution = addSlack(m_cost, m_demand, m_supply);
 
 	m_basisCells.resize(m_cost.rows()+m_cost.cols()-1);
 	m_u.resize(m_cost.rows());
 	m_v.resize(m_cost.cols());
 
-	northWest(m_cost, m_demand, m_supply, m_basisCells, m_distribution);
+	switch (m_BFSmethod) {
+		case BFS::Northwest: {
+			northWest(m_cost, m_demand, m_supply, m_basisCells, m_distribution);
+			break;
+		}
+		case BFS::Vogel: {
+			vogel(m_cost, m_demand, m_supply, m_basisCells, m_distribution);
+			break;
+		}
+	}
 
 	m_f = 0;
 	for (const auto& b: m_basisCells) {
@@ -69,11 +73,10 @@ bool TransportationSimplex<T>::iterate() {
 	cells_type cycle = findCycle(entering);
 
 	Cell leaving;
-	value_type delta = m_maximize ? 
-		std::numeric_limits<double>::min() : std::numeric_limits<double>::max();
+	value_type delta = std::numeric_limits<double>::max();
 	// += 2 bacause only donor cells can share allocation
 	for (typename cells_type::size_type i = 1; i < cycle.size(); i += 2) {
-		if (not m_comparator(m_distribution(cycle[i].i, cycle[i].j), delta)) {
+		if (not (m_distribution(cycle[i].i, cycle[i].j) >= delta)) {
 			delta = m_distribution(cycle[i].i, cycle[i].j);
 			leaving = cycle[i];
 		}
@@ -86,7 +89,7 @@ bool TransportationSimplex<T>::iterate() {
 		throw std::runtime_error("ca::TransportationSimplex: cycle not found");
 
 	for (typename cells_type::size_type i = 0; i < cycle.size(); i++)
-		m_distribution(cycle[i].i, cycle[i].j) += ((i+2) % 2 ? -delta : delta);
+		m_distribution(cycle[i].i, cycle[i].j) += (i % 2 ? -delta : delta);
 
 	m_f += delta*(m_cost(entering.i, entering.j) - m_u[entering.i] - m_v[entering.j]);
 
@@ -148,7 +151,7 @@ TransportationSimplex<T>::findEnteringVariable() {
 				basis.erase(in); // won't be searched for again
 				continue;
 			}
-			if (not m_comparator(m_distribution(i, j), diff)) {
+			if (not (m_distribution(i, j) >= diff)) {
 				diff = m_distribution(i, j);
 				entering = {i, j};
 			}
@@ -170,7 +173,7 @@ bool TransportationSimplex<T>::isOptimal() {
 			}
 
 			m_distribution(i, j) = m_cost(i, j) - m_u[i] - m_v[j];
-			if (not m_comparator(m_distribution(i, j), 0))
+			if (not (m_distribution(i, j) >= 0))
 				optimal = false;
 		}
 	}
@@ -249,6 +252,101 @@ void TransportationSimplex<T>::northWest(
 			}
 			supplied = 0;
 		}
+}
+
+template<typename T>
+void TransportationSimplex<T>::vogel(
+	ca::Mat<value_type>& cost,
+	ca::Vec<value_type>& demand,
+	ca::Vec<value_type>& supply,
+	cells_type& basisCells,
+	ca::Mat<value_type>& distribution
+) {
+	std::vector<bool> rowDone(supply.n(), false);
+	std::vector<bool> colDone(demand.n(), false);
+
+	value_type totalSupply = supply.sum();
+	value_type totalDemand = demand.sum();
+
+	size_type b = 0; // basis cell counter
+
+	while (totalSupply > 0 && totalDemand > 0) {
+		std::vector<value_type> rowPenalty(supply.n(), 0);
+		std::vector<value_type> colPenalty(demand.n(), 0);
+
+		for (size_type i = 0; i < supply.n(); ++i)
+			if (!rowDone[i]) {
+				std::vector<value_type> rowCosts;
+				for (size_type j = 0; j < demand.n(); ++j)
+					if (!colDone[j]) 
+						rowCosts.push_back(cost(i, j));
+				if (rowCosts.size() >= 2) {
+					std::sort(rowCosts.begin(), rowCosts.end());
+					rowPenalty[i] = rowCosts[1] - rowCosts[0];
+				}
+			}
+
+		for (size_type j = 0; j < demand.n(); ++j)
+			if (!colDone[j]) {
+				std::vector<value_type> colCosts;
+				for (size_type i = 0; i < supply.n(); ++i)
+					if (!rowDone[i]) 
+						colCosts.push_back(cost(i, j));
+				if (colCosts.size() >= 2) {
+					std::sort(colCosts.begin(), colCosts.end());
+					colPenalty[j] = colCosts[1] - colCosts[0];
+				}
+			}
+
+		size_type selectedRow = 0, selectedCol = 0;
+		value_type maxPenalty = -1;
+
+		for (size_type i = 0; i < supply.n(); ++i)
+			if (!rowDone[i] && rowPenalty[i] > maxPenalty) {
+				maxPenalty = rowPenalty[i];
+				selectedRow = i;
+			}
+
+		for (size_type j = 0; j < demand.n(); ++j)
+			if (!colDone[j] && colPenalty[j] > maxPenalty) {
+				maxPenalty = colPenalty[j];
+				selectedRow = -1; // reset to focus on column
+				selectedCol = j;
+			}
+
+		size_type allocationRow = 0, allocationCol = 0;
+		if (selectedRow != -1) {
+			allocationRow = selectedRow;
+			value_type minCost = std::numeric_limits<value_type>::max();
+			for (size_type j = 0; j < demand.n(); ++j)
+				if (!colDone[j] && cost(allocationRow, j) < minCost) {
+					minCost = cost(allocationRow, j);
+					allocationCol = j;
+				}
+		} else {
+			allocationCol = selectedCol;
+			value_type minCost = std::numeric_limits<value_type>::max();
+			for (size_type i = 0; i < supply.n(); ++i)
+				if (!rowDone[i] && cost(i, allocationCol) < minCost) {
+					minCost = cost(i, allocationCol);
+					allocationRow = i;
+				}
+		}
+
+		value_type allocation = std::min(supply[allocationRow], demand[allocationCol]);
+		distribution(allocationRow, allocationCol) = allocation;
+		basisCells[b++] = {allocationRow, allocationCol};
+
+		supply[allocationRow] -= allocation;
+		demand[allocationCol] -= allocation;
+		totalSupply -= allocation;
+		totalDemand -= allocation;
+
+		if (supply[allocationRow] == 0) 
+			rowDone[allocationRow] = true;
+		if (demand[allocationCol] == 0) 
+			colDone[allocationCol] = true;
+	}
 }
 
 template<typename D>

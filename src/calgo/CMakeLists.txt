@@ -8,6 +8,7 @@ target_sources(ca_calgo
 			include/calgo/calgo.hpp
 			include/calgo/vec.hpp
 			include/calgo/mat.hpp
+			include/calgo/interval.hpp
 			# utilities
 			include/calgo/macros.hpp
 			include/calgo/nomacros.hpp

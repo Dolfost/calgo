@@ -8,7 +8,11 @@ target_sources(ca_numeric
 			FILES 
 				include/calgo/num/simpson.hpp
 				include/calgo/num/nystromFredholm.hpp
+				include/calgo/num/intervalMinimum.hpp
+				include/calgo/num/fibonachiMinimum.hpp
+				include/calgo/num/goldenRatioMinimum.hpp
 )
+
 set_target_properties(ca_numeric PROPERTIES
 	OUTPUT_NAME canumeric
 	EXPORT_NAME numeric

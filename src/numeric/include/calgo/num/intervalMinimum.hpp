@@ -40,6 +40,7 @@ public:
 	virtual void check() const;
 	void find_safe() { check(); find(); }
 
+	virtual ~IntervalMinimum() {};
 protected:
 	interval_type m_int;
 	function_type m_func;

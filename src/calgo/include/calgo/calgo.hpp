@@ -2,6 +2,7 @@
 #define _CALGO_CALGO_HPP_
 
 #include <vector>
+#include <cmath>
 
 namespace ca {
 

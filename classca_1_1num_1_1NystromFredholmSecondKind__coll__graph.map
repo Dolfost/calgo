@@ -1,0 +1,16 @@
+<map id="ca::num::NystromFredholmSecondKind&lt; T, I &gt;" name="ca::num::NystromFredholmSecondKind&lt; T, I &gt;">
+<area shape="rect" id="Node000001" title="Solves Fredholm equation of second kind using Nystrom method." alt="" coords="952,111,1151,151"/>
+<area shape="rect" id="Node000002" href="/home/runner/work/calgo/calgo/doc/cppreference-doxygen-web.tag.xml$cpp/utility/functional/function.html" title=" " alt="" coords="673,5,828,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="822,47,994,108,992,113,821,52"/>
+<area shape="rect" id="Node000003" href="/home/runner/work/calgo/calgo/doc/cppreference-doxygen-web.tag.xml$cpp/utility/functional/function.html" title=" " alt="" coords="661,70,840,125"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="854,106,952,117,951,122,853,111"/>
+<area shape="rect" id="Node000004" href="$classca_1_1Vec.html" title=" " alt="" coords="379,182,549,207"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="563,181,952,139,952,144,564,187"/>
+<area shape="rect" id="Node000007" href="$classca_1_1in_1_1Nodes.html" title=" " alt="" coords="673,213,829,238"/>
+<area shape="poly" id="edge7_Node000007_Node000004" title=" " alt="" coords="563,203,673,214,672,220,563,208"/>
+<area shape="rect" id="Node000005" href="$classca_1_1VecView.html" title="Array viev." alt="" coords="191,182,329,207"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="343,192,379,192,379,197,343,197"/>
+<area shape="rect" id="Node000006" href="/home/runner/work/calgo/calgo/doc/cppreference-doxygen-web.tag.xml$cpp/types/size_t.html" title=" " alt="" coords="5,182,93,207"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="107,192,191,192,191,197,107,197"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="842,214,885,206,927,195,976,173,1019,148,1022,153,979,178,929,200,886,212,843,220"/>
+</map>

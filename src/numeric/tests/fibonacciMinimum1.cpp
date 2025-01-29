@@ -1,4 +1,4 @@
-#include <calgo/num/fibonachiMinimum.hpp>
+#include <calgo/num/fibonacciMinimum.hpp>
 
 #include <iostream>
 
@@ -8,7 +8,7 @@ int main(int argc, char** argv) {
 			return -x/(1.2 - std::sin(2*x));
 		};
 
-	FibonachiMinimum<double> f;
+	FibonacciMinimum<double> f;
 	f.setFunction(fx);
 	f.setInterval({-1, 1});
 	f.setEpsilon(0.0001);

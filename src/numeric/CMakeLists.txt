@@ -9,7 +9,7 @@ target_sources(ca_numeric
 				include/calgo/num/simpson.hpp
 				include/calgo/num/nystromFredholm.hpp
 				include/calgo/num/intervalMinimum.hpp
-				include/calgo/num/fibonachiMinimum.hpp
+				include/calgo/num/fibonacciMinimum.hpp
 				include/calgo/num/goldenRatioMinimum.hpp
 )
 

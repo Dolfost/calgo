@@ -1,5 +1,5 @@
 #pragma once
-#include <calgo/num/fibonachiMinimum.hpp>
+#include <calgo/num/fibonacciMinimum.hpp>
 
 #include <cmath>
 #include <utility>
@@ -7,14 +7,14 @@
 namespace ca::num {
 
 template<typename T> 
-typename FibonachiMinimum<T>::value_type FibonachiMinimum<T>::fib(value_type n) {
+typename FibonacciMinimum<T>::value_type FibonacciMinimum<T>::fib(value_type n) {
 	if (n == 0 or n == 1)
 		return 1;
-	return FibonachiMinimum<T>::fib(n-1)+ FibonachiMinimum<T>::fib(n-2);
+	return FibonacciMinimum<T>::fib(n-1)+ FibonacciMinimum<T>::fib(n-2);
 }
 
 template<typename T>
-void FibonachiMinimum<T>::find() {
+void FibonacciMinimum<T>::find() {
 	value_type fibIt = fib(m_it);
 	value_type d = (fib(m_it - 1) / fibIt)*this->m_int.length() + ((m_it % 2 ? -1 : 1)/fibIt)*this->m_eps;
 

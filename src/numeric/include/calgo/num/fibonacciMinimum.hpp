@@ -1,5 +1,5 @@
-#ifndef _CALGO_NUM_FIBONACHI_MINIMUM_HPP_
-#define _CALGO_NUM_FIBONACHI_MINIMUM_HPP_
+#ifndef _CALGO_NUM_FIBONACCI_MINIMUM_HPP_
+#define _CALGO_NUM_FIBONACCI_MINIMUM_HPP_
 
 #include <calgo/num/intervalMinimum.hpp>
 #include <calgo/macros.hpp>
@@ -9,12 +9,12 @@
 namespace ca::num {
 
 /**
- * @brief Find minimum of function on interval using Fibonachi sequence in fixed number of iterations
+ * @brief Find minimum of function on interval using Fibonacci sequence in fixed number of iterations
  *
  * @tparam `value_type`
  */
 template<typename T>
-class FibonachiMinimum: public IntervalMinimum<T> {
+class FibonacciMinimum: public IntervalMinimum<T> {
 public:
 	using typename IntervalMinimum<T>::value_type;
 	using typename IntervalMinimum<T>::function_type;
@@ -43,6 +43,6 @@ protected:
 
 }
 
-#include "../../../src/fibonachiMinimum.inl"
+#include "../../../src/fibonacciMinimum.inl"
 
-#endif // !_CALGO_NUM_FIBONACHI_MINIMUM_HPP_
+#endif // !_CALGO_NUM_FIBONACCI_MINIMUM_HPP_

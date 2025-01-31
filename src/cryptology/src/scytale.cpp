@@ -1,26 +1,40 @@
 #include <calgo/cr/scytale.hpp>
 
 #include <calgo/cr/freq_analysis.hpp>
+#include <cassert>
 
 namespace ca::cr {
 
 void scytale::encrypt() {
+	const size_type padding = (m_faces - m_decrypted.length() % m_faces) % m_faces;
+	m_decrypted.resize(m_decrypted.length() + padding, ' ');
 	m_encrypted.resize(m_decrypted.length());
 
-	// matrix width
-	const size_type w = (m_decrypted.length() + m_faces - 1) / m_faces;
-	for (size_type i = 0; i < m_decrypted.length(); i++)
-		m_encrypted[(i % w) * m_faces + (i / w)] = m_decrypted[i];
+	// width
+	const size_type b = m_decrypted.length() / m_faces;
+	for (string_type::size_type i = 0; i < m_decrypted.length(); i++) {
+		const size_type idx = (i % m_faces) * b + i / m_faces;
+
+		assert(idx < m_encrypted.length());
+
+		m_encrypted[i] = m_decrypted[idx];
+	}
 }
 
 void scytale::decrypt() {
+	const size_type padding = (m_faces - m_encrypted.length() % m_faces) % m_faces;
+	m_encrypted.resize(m_encrypted.length() + padding, ' ');
 	m_decrypted.resize(m_encrypted.length());
 
-	// matrix width
-	const size_type w = (m_encrypted.length() + m_faces - 1) / m_faces;
-	// opposite to encryption
-	for (size_type i = 0; i < m_encrypted.length(); i++)
-		m_decrypted[(i % m_faces) * w + (i / m_faces)] = m_encrypted[i];
+	const size_type b = m_encrypted.length() / m_faces;
+	// reverse of encrypted
+	for (string_type::size_type i = 0; i < m_encrypted.length(); i++) {
+		const size_type idx = (i % m_faces) * b + i / m_faces;
+
+		assert(idx < m_decrypted.length());
+
+		m_decrypted[idx] = m_encrypted[i];
+	}
 }
 
 std::list<scytale_brute::key_type> scytale_brute::brute(const key_type& from, const key_type& to, const size_type& max) {

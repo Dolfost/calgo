@@ -11,9 +11,9 @@ namespace ca::cr {
 void freq::fill(const std::filesystem::path& p) {
 	clear();
 	std::ifstream f(p, std::ios::in);
-	f.seekg(0, std::ios::seekdir::end);
+	f.seekg(0, std::ios_base::seekdir::end);
 	size_type count = f.tellg();
-	f.seekg(0, std::ios::seekdir::beg);
+	f.seekg(0, std::ios_base::seekdir::beg);
 
 	while (not f.eof()) 
 		operator[](std::tolower(f.get()))++;

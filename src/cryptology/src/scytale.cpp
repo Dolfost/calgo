@@ -7,19 +7,20 @@ namespace ca::cr {
 void scytale::encrypt() {
 	m_encrypted.resize(m_decrypted.length());
 
-	// width of full text matrix
-	const size_type w = (m_decrypted.length() + m_decrypted.length() % m_faces)/m_faces;
-	for (string_type::size_type i = 0; i < m_encrypted.length(); i++)
-		m_encrypted[i] = m_decrypted[(i*w)%m_decrypted.length() + i/m_faces];
+	// matrix width
+	const size_type w = (m_decrypted.length() + m_faces - 1) / m_faces;
+	for (size_type i = 0; i < m_decrypted.length(); i++)
+		m_encrypted[(i % w) * m_faces + (i / w)] = m_decrypted[i];
 }
 
 void scytale::decrypt() {
 	m_decrypted.resize(m_encrypted.length());
 
-	// just opposite to encryption
-	const size_type w = (m_encrypted.length() + m_encrypted.length() % m_faces)/m_faces;
-	for (string_type::size_type i = 0; i < m_encrypted.length(); i++)
-		m_decrypted[(i*w)%m_encrypted.length() + i/m_faces] = m_encrypted[i];
+	// matrix width
+	const size_type w = (m_encrypted.length() + m_faces - 1) / m_faces;
+	// opposite to encryption
+	for (size_type i = 0; i < m_encrypted.length(); i++)
+		m_decrypted[(i % m_faces) * w + (i / m_faces)] = m_encrypted[i];
 }
 
 std::list<scytale_brute::key_type> scytale_brute::brute(const key_type& from, const key_type& to, const size_type& max) {

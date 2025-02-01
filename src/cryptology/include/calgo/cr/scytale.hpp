@@ -74,16 +74,16 @@ public:
 
 	CA_CALLBACK(
 		iteration,
-		const key_type&,
-		const string_type&,
-		const string_type&
+		const key_type& key,
+		const string_type& enc,
+		const string_type& dec
 	)
 
 	CA_CALLBACK(
 		found,
-		const key_type&,
-		const string_type&,
-		const string_type&
+		const key_type& key,
+		const string_type& enc,
+		const string_type& dec
 	)
 
 protected:

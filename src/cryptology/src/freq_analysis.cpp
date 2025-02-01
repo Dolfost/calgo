@@ -1,8 +1,7 @@
 #include <calgo/cr/freq_analysis.hpp> 
 
 #include <fstream> 
-#include <iostream>
-#include <iomanip>
+#include <ios> 
 #include <limits>
 #include <cctype>
 

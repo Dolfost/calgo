@@ -30,9 +30,9 @@ void scytale::decrypt() {
 	// width
 	const size_type b = (m_encrypted.length() + padding) / m_faces;
 	for (string_type::size_type i = 0; i < m_encrypted.length() + padding; i++) {
-		const size_type idx = (i % m_faces) * b + i / m_faces;
+		const size_type idx = (i / b) + (i % b) * m_faces;
 
-		assert(idx < m_decrypted.length());
+		assert(idx < m_encrypted.length() + padding);
 
 		if (idx >= m_encrypted.length())
 			m_decrypted[i] = ' ';

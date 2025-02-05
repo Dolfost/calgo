@@ -50,7 +50,7 @@ public:
 	 *
 	 * @param val value of each element
 	 */
-	void set(const value_type& val);
+	virtual void set(const value_type& val);
 	/**
 	 * @brief Row count
 	 * @return row count
@@ -267,7 +267,7 @@ protected:
  * @sa mat_view
  */
 template<typename T>
-class mat: public mat_view<T> {
+class mat: public virtual mat_view<T> {
 	static_assert(std::is_arithmetic<T>(), "Not an arithmetic type");
 public:
 	using value_type = typename mat_view<T>::value_type;

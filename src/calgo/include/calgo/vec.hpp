@@ -99,7 +99,7 @@ public:
 	 *
 	 * @param val value of each element
 	 */
-	void set(const value_type& val);
+	virtual void set(const value_type& val);
 
 	/**
 	 * @brief Scalar multiplication
@@ -162,7 +162,7 @@ protected:
  * @sa vec_view
  */
 template<typename T>
-class vec: public vec_view<T> {
+class vec: public virtual vec_view<T> {
 public:
 	using typename vec_view<T>::value_type;
 	using typename vec_view<T>::size_type;
@@ -227,7 +227,7 @@ public:
 	 * @param rows new length
 	 * @param copy will copy old matrix to new if `true`
 	 */
-	void resize(const size_type& len, bool copy = false);
+	virtual void resize(const size_type& len, bool copy = false);
 
 	/** @name Qt-styled MVC-like element manipulator functions
 	 *
@@ -246,7 +246,7 @@ public:
 	 * @param count new element count
 	 * @param init default element value
 	 */
-	void insert(const size_type& where, const size_type& count, const value_type& init = 0);
+	virtual void insert(const size_type& where, const size_type& count, const value_type& init = 0);
 	/**
 	 * @brief Remove elements
 	 * Removes `count` rows starting with the given `row`.
@@ -254,7 +254,7 @@ public:
 	 * @param from first element
 	 * @param count element count
 	 */
-	void remove(const size_type& from, const size_type& count);
+	virtual void remove(const size_type& from, const size_type& count);
 	/// @}
 
 	friend ca::mat<T>;

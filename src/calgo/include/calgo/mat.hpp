@@ -10,8 +10,8 @@
 
 namespace ca {
 
-template<typename T>
-class Mat;
+// template<typename T>
+// class mat;
 
 /**
  * @brief Matrix view
@@ -20,10 +20,10 @@ class Mat;
  * realocate or free it.
  *
  * @tparam T `value_type`
- * @sa Mat
+ * @sa mat
  */
 template<typename T>
-class MatView {
+class mat_view {
 	static_assert(std::is_arithmetic<T>(), "Not an arithmetic type");
 public:
 	using value_type = T;
@@ -38,7 +38,7 @@ public:
 	 * @param dist distance between last element of one row and first element of
 	 * next one
 	 */
-	MatView(
+	mat_view(
 		value_type* data = nullptr, 
 		const size_type& rows = 0, 
 		const size_type& cols = 0, 
@@ -65,11 +65,11 @@ public:
 	/**
 	 * @brief Equality operator
 	 *
-	 * @param other other MatView
+	 * @param other other mat_view
 	 * @return `true` if size of matrices and corresponding elements are equal
 	 */
-	bool operator==(const MatView<value_type>& other);
-	bool operator!=(const MatView<value_type>& other) {
+	bool operator==(const mat_view<value_type>& other);
+	bool operator!=(const mat_view<value_type>& other) {
 		return not (*this == other);
 	};
 
@@ -87,7 +87,7 @@ public:
 	* @return passes `os` object reference
 	*/
 	template<typename D>
-	friend std::ostream& operator<<(std::ostream& os, const MatView<D>& m);
+	friend std::ostream& operator<<(std::ostream& os, const mat_view<D>& m);
 	/**
 	 * @brief Print matrix as array of initializer lists
 	 *
@@ -95,7 +95,7 @@ public:
 	 * @param os stream for output
 	 * @return passed `os` stream reference
 	 */
-	std::ostream& asArray(std::ostream& os = std::cout) const;
+	std::ostream& as_array(std::ostream& os = std::cout) const;
 	/**
 	 * @brief Print matrix as system of equations
 	 *
@@ -105,7 +105,7 @@ public:
 	 * @return passed `os` stream reference
 	 */
 	template<typename D>
-	std::ostream& showSystem(const VecView<D>& v, std::ostream& os = std::cout) const;
+	std::ostream& showSystem(const vec_view<D>& v, std::ostream& os = std::cout) const;
 
 
 	/** @name Direct acces methods and operators
@@ -120,8 +120,8 @@ public:
 	 * @param col matrix col
 	*/
 	/// @{
-	inline VecView<value_type> operator[](const size_type& row) noexcept;
-	inline const VecView<value_type> operator[](const size_type& row) const noexcept;
+	inline vec_view<value_type> operator[](const size_type& row) noexcept;
+	inline const vec_view<value_type> operator[](const size_type& row) const noexcept;
 	inline value_type& operator()(const size_type& row, const size_type& col) noexcept;
 	inline const value_type& operator()(const size_type& row, const size_type& col) const noexcept;
 	inline value_type& el(const size_type& row, const size_type& col) noexcept;
@@ -137,8 +137,8 @@ public:
 	 * @throws std::out_of_range
 	*/
 	/// @{
-	VecView<value_type> at(const size_type& row);
-	const VecView<value_type> at(const size_type& row) const;
+	vec_view<value_type> at(const size_type& row);
+	const vec_view<value_type> at(const size_type& row) const;
 	value_type& at(const size_type& row, const size_type& col);
 	const value_type& at(const size_type& row, const size_type& col) const;
 	/// @}
@@ -146,33 +146,32 @@ public:
 	/** @name Row/column based vector view access
 	 *
 	 * Get the vector view at `at` row(column) starting from element `from` and
-	 * spanning `len` elements. If `len` = 0, it is converted to Vec::n().
+	 * spanning `len` elements. If `len` = 0, it is converted to vec::n().
 	 * Any access out of range will lead to undefined behaivour.
 	*/
 	/// @{
 	/**
-	 * @brief Get VecView at matrix row
+	 * @brief Get vec_view at matrix row
 	 *
 	 * @param idx row index
 	 * @param from starting index
 	 * @param len view length
 	 * @return vector view on a selected row
-	 * @sa VecView<value_type> operator()(const size_type& idx)
-	 * @sa VecView<value_type> at(const size_type& idx)
+	 * @sa vec_view<value_type> operator()(const size_type& idx)
+	 * @sa vec_view<value_type> at(const size_type& idx)
 	 */
-	VecView<value_type> r(const size_type& at, const size_type& from = 0, const size_type& len = 0) noexcept;
+	vec_view<value_type> row(const size_type& at, const size_type& from = 0, const size_type& len = 0) noexcept;
 	/**
-	 * @brief Get VecView at matrix column
+	 * @brief Get vec_view at matrix column
 	 *
 	 * @param idx column index
 	 * @param from starting index
 	 * @param len view length
 	 * @return vector view on a selected column
 	 */
-	const VecView<value_type> row(const size_type& at, const size_type& from = 0, const size_type& len = 0) const noexcept;
-	const VecView<value_type> col(const size_type& at, const size_type& from = 0, const size_type& len = 0) const noexcept;
-	VecView<value_type> row(const size_type& at, const size_type& from = 0, const size_type& len = 0) noexcept;
-	VecView<value_type> col(const size_type& at, const size_type& from = 0, const size_type& len = 0) noexcept;
+	vec_view<value_type> col(const size_type& at, const size_type& from = 0, const size_type& len = 0) noexcept;
+	const vec_view<value_type> row(const size_type& at, const size_type& from = 0, const size_type& len = 0) const noexcept;
+	const vec_view<value_type> col(const size_type& at, const size_type& from = 0, const size_type& len = 0) const noexcept;
 	/// @}
 
 	/** @name Smart row/column based vector view access
@@ -181,17 +180,17 @@ public:
 	*/
 	/// @{
 	/**
-	 * @copydoc VecView<value_type> r(const size_type& at, const size_type& from = 0, const size_type& len = 0) noexcept
+	 * @copydoc vec_view<value_type> row(const size_type& at, const size_type& from = 0, const size_type& len = 0) noexcept
 	 * @throws std::out_of_range
 	 */
-	VecView<value_type> row_safe(const size_type& at, const size_type& from = 0, const size_type& len = 0);
+	vec_view<value_type> row_safe(const size_type& at, const size_type& from = 0, const size_type& len = 0);
 	/**
-	 * @copydoc VecView<value_type> c(const size_type& at, const size_type& from = 0, const size_type& len = 0) noexcept
+	 * @copydoc vec_view<value_type> col(const size_type& at, const size_type& from = 0, const size_type& len = 0) noexcept
 	 * @throws std::out_of_range
 	 */
-	VecView<value_type> col_safe(const size_type& at, const size_type& from = 0, const size_type& len = 0);
-	const VecView<value_type> row_safe(const size_type& at, const size_type& from = 0, const size_type& len = 0) const;
-	const VecView<value_type> col_safe(const size_type& at, const size_type& from = 0, const size_type& len = 0) const;
+	vec_view<value_type> col_safe(const size_type& at, const size_type& from = 0, const size_type& len = 0);
+	const vec_view<value_type> row_safe(const size_type& at, const size_type& from = 0, const size_type& len = 0) const;
+	const vec_view<value_type> col_safe(const size_type& at, const size_type& from = 0, const size_type& len = 0) const;
 	/// @}
 
 	/**
@@ -214,7 +213,7 @@ public:
 	*/
 	/// @{
 	/**
-	 * @brief Get MatView at matrix
+	 * @brief Get mat_view at matrix
 	 *
 	 * @param row starting row
 	 * @param col starting column
@@ -222,26 +221,26 @@ public:
 	 * @param cols column span size
 	 * @return matrix view on a selected area
 	 */
-	MatView<value_type> mat(
+	mat_view<value_type> submat(
 		const size_type& row,
 		const size_type& col,
 		const size_type& rows,
 		const size_type& cols
 	) noexcept;
-	const MatView<value_type> mat(
+	const mat_view<value_type> submat(
 		const size_type& row,
 		const size_type& col,
 		const size_type& rows,
 		const size_type& cols
 	) const noexcept;
 
-	MatView<value_type> mat_safe(
+	mat_view<value_type> submmat_safe(
 		const size_type& row,
 		const size_type& col,
 		const size_type& rows,
 		const size_type& cols
 	) noexcept;
-	const MatView<value_type> mat_safe(
+	const mat_view<value_type> submat_safe(
 		const size_type& row,
 		const size_type& col,
 		const size_type& rows,
@@ -249,7 +248,7 @@ public:
 	) const noexcept;
 	/// @}
 
-	friend Mat<T>;
+	friend ::ca::mat<T>;
 
 protected:
 	inline value_type* addr(const size_type& row, const size_type& col) const noexcept;
@@ -265,61 +264,61 @@ protected:
  * @brief Matrix template
  *
  * @tparam T `value_type`
- * @sa MatView
+ * @sa mat_view
  */
 template<typename T>
-class Mat: public MatView<T> {
+class mat: public mat_view<T> {
 	static_assert(std::is_arithmetic<T>(), "Not an arithmetic type");
 public:
-	using value_type = typename MatView<T>::value_type;
-	using size_type = typename MatView<T>::size_type;
+	using value_type = typename mat_view<T>::value_type;
+	using size_type = typename mat_view<T>::size_type;
 
-	using MatView<T>::MatView;
+	using mat_view<T>::mat_view;
 
 	/**
 	 * @brief Construct matrix from std::initializer_list
 	 */
-	Mat(std::initializer_list<std::initializer_list<value_type>> = {});
+	mat(std::initializer_list<std::initializer_list<value_type>> = {});
 	/**
 	 * @brief Construct matrix of know size
 	 * @param rows rows count
 	 * @param cols cols count
 	 */
-	Mat(const size_type& rows, const size_type& cols);
+	mat(const size_type& rows, const size_type& cols);
 	/**
 	 * @brief Construct matrix and initialize each element to value
 	 * @param rows rows count
 	 * @param cols cols count
 	 * @param init initialization value
 	 */
-	Mat(const size_type& rows, const size_type& cols, const value_type& init);
+	mat(const size_type& rows, const size_type& cols, const value_type& init);
 	/**
 	 * @brief Copy constructor
 	 * @param other other matrix
 	 */
-	Mat(const MatView<value_type>& other);
-	Mat(const Mat<value_type>& other): Mat(static_cast<const MatView<value_type>&>(other)) {};
+	mat(const mat_view<value_type>& other);
+	mat(const mat<value_type>& other): mat(static_cast<const mat_view<value_type>&>(other)) {};
 	/**
 	 * @brief Move constructor
 	 * @param other other matrix
 	 */
-	Mat(MatView<value_type>&& other);
-	Mat(Mat<value_type>&& other): Mat(static_cast<MatView<value_type>&&>(other)) {};
+	mat(mat_view<value_type>&& other);
+	mat(mat<value_type>&& other): mat(static_cast<mat_view<value_type>&&>(other)) {};
 	/**
 	 * @brief Copy assignment operator
 	 * @param other other matrix
 	 */
-	Mat& operator=(const MatView<value_type>& other);
-	Mat& operator=(const Mat& other) {
-		return operator=(static_cast<const MatView<value_type>&>(other));
+	mat& operator=(const mat_view<value_type>& other);
+	mat& operator=(const mat& other) {
+		return operator=(static_cast<const mat_view<value_type>&>(other));
 	};
 	/**
 	 * @brief Move assignment operator
 	 * @param other other matrix
 	 */
-	Mat& operator=(MatView<value_type>&& other);
-	Mat& operator=(Mat&& other) {
-		return operator=(static_cast<MatView<value_type>&&>(other));
+	mat& operator=(mat_view<value_type>&& other);
+	mat& operator=(mat&& other) {
+		return operator=(static_cast<mat_view<value_type>&&>(other));
 	};
 
 	/**
@@ -346,14 +345,14 @@ public:
 	 *
 	 * Inserts `count` rows into the matrix before the given `row`. If
 	 * `row` is 0, the rows are prepended to any existing rows in matrix. If
-	 * row is Mat::rows(), the rows are appended to any existing rows in the
+	 * row is mat::rows(), the rows are appended to any existing rows in the
 	 * matrix.
 	 *
 	 * @param row row to insert before
 	 * @param count new row count
 	 * @param init default element value
 	 */
-	void insertRows(const size_type& row, const size_type& count, const value_type& init = 0);
+	void insert_rows(const size_type& row, const size_type& count, const value_type& init = 0);
 	/**
 	 * @brief Remove rows
 	 * Removes `count` rows starting with the given `row`.
@@ -361,19 +360,19 @@ public:
 	 * @param row starting row
 	 * @param count row count
 	 */
-	void removeRows(const size_type& row, const size_type& count);
+	void remove_rows(const size_type& row, const size_type& count);
 	/**
 	 * @brief  Insert columns
 	 *
 	 * Inserts `count` new columns into matrix before the given `col`. If `col`
 	 * is 0, the columns are prepended to any existing columns. If column is
-	 * Mat::cols(), the columns are appended to any existing columns.
+	 * mat::cols(), the columns are appended to any existing columns.
 	 *
 	 * @param col last column (exclusive)
 	 * @param count column count
 	 * @param init default element value
 	 */
-	void insertCols(const size_type& col, const size_type& count, const value_type& init = 0);
+	void insert_cols(const size_type& col, const size_type& count, const value_type& init = 0);
 	/**
 	 * @brief Remove columns
 	 * Removes `count` columns starting with the given `col`.
@@ -381,12 +380,12 @@ public:
 	 * @param row starting column
 	 * @param count column count
 	 */
-	void removeCols(const size_type& row, const size_type& count);
+	void remove_cols(const size_type& row, const size_type& count);
 	/// @}
 
-	friend MatView<T>;
+	friend mat_view<T>;
 
-	~Mat();
+	~mat();
 };
 
 }

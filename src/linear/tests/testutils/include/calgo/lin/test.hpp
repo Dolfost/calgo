@@ -12,13 +12,13 @@
 
 template<typename T>
 bool comp(
-	const ca::VecView<T> a, 
-	const ca::VecView<T> b, 
+	const ca::vec_view<T> a, 
+	const ca::vec_view<T> b, 
 	double delta = 0.05) {
 	if (a.n() != b.n())
 		return false;
 
-	for (typename ca::Vec<T>::size_type i = 0; i < a.n(); i++)
+	for (typename ca::vec<T>::size_type i = 0; i < a.n(); i++)
 		if (std::abs(a[i] - b[i]) > delta)
 			return false;
 

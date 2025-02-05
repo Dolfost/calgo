@@ -13,24 +13,24 @@
 namespace ca {
 
 template<typename T>
-class MatView;
+class mat_view;
 template<typename T>
-class Mat;
+class mat;
 template<typename T>
-class Vec;
+class vec;
 
 /**
  * @brief Array viev
  *
  * This class kepps view on the array that can be represented as pointer to
- * `VecView::value_type` array of size VecView::n(). Data cannot be freed, but
+ * `vec_view::value_type` array of size vec_view::n(). Data cannot be freed, but
  * can be changed, though.
  *
  * @tparam T `value_type`
- * @sa Vec
+ * @sa vec
  */
 template<typename T>
-class VecView {
+class vec_view {
 	static_assert(std::is_arithmetic<T>(), "Not an arithmetic type");
 public:
 	using value_type = T;
@@ -43,7 +43,7 @@ public:
 	 * @param len data length
 	 * @param dist distance between neighboring elements
 	 */
-	VecView(value_type* data = nullptr, const size_type& len = 0, const size_type& dist = 1);
+	vec_view(value_type* data = nullptr, const size_type& len = 0, const size_type& dist = 1);
 
 	/**
 	 * @brief Array length
@@ -68,7 +68,7 @@ public:
 	 * @param array of same size
 	 * @return dot product value
 	 */
-	T operator*(const VecView<T>& other) noexcept;
+	T operator*(const vec_view<T>& other) noexcept;
 
 	/**
 	 * @brief Subscript operator
@@ -114,14 +114,14 @@ public:
 	/**
 	 * @brief Smart dot product
 	 *
-	 * @copydetails operator*(const VecView<T>&)
+	 * @copydetails operator*(const vec_view<T>&)
 	 * @throws std::runtime_error
 	 */
-	T dot(const VecView<T>& other);
+	T dot(const vec_view<T>& other);
 
-	friend ca::Mat<T>;
-	friend ca::Vec<T>;
-	friend ca::MatView<T>;
+	friend ca::mat<T>;
+	friend ca::vec<T>;
+	friend ca::mat_view<T>;
 
 	/**
 	 * @brief STL output operator
@@ -132,14 +132,14 @@ public:
 	 * @return passes `os` object
 	 */
 	template<typename D>
-	friend std::ostream& operator<<(std::ostream& os, const VecView<D>& v);
+	friend std::ostream& operator<<(std::ostream& os, const vec_view<D>& v);
 	/**
 	 * @brief Print vector as array
 	 *
 	 * @param os output stream
 	 * @return passes `os` object
 	 */
-	std::ostream& asArray(std::ostream& os = std::cout) const;
+	std::ostream& as_array(std::ostream& os = std::cout) const;
 
 protected:
 	inline value_type* addr(const size_type& idx) const noexcept;
@@ -155,66 +155,66 @@ protected:
 /**
  * @brief Array class
  *
- * This class wraps VecView and defines memory management routines. It owns
- * it's data `Vec::m_vec`, so it will be freed when object is destroyed.
+ * This class wraps vec_view and defines memory management routines. It owns
+ * it's data `vec::m_vec`, so it will be freed when object is destroyed.
  *
  * @tparam T `value_type`
- * @sa VecView
+ * @sa vec_view
  */
 template<typename T>
-class Vec: public VecView<T> {
+class vec: public vec_view<T> {
 public:
-	using typename VecView<T>::value_type;
-	using typename VecView<T>::size_type;
+	using typename vec_view<T>::value_type;
+	using typename vec_view<T>::size_type;
 
-	using VecView<T>::VecView;
+	using vec_view<T>::vec_view;
 
 	/**
 	 * @brief Make array object out of std::initializer_list
 	 *
 	 * @param data input list
 	 */
-	Vec(std::initializer_list<value_type> data = {});
+	vec(std::initializer_list<value_type> data = {});
 	/**
 	 * @brief Construct array of fixed size
 	 *
 	 * @param len array size
 	 */
-	Vec(const size_type& len);
+	vec(const size_type& len);
 	/**
 	 * @brief Copy constructor
 	 *
 	 * @param other other object
 	 */
-	Vec(const Vec<value_type>& other): Vec(static_cast<const VecView<value_type>&>(other)) {};
-	Vec(const VecView<value_type>& other);
+	vec(const vec<value_type>& other): vec(static_cast<const vec_view<value_type>&>(other)) {};
+	vec(const vec_view<value_type>& other);
 	/**
 	 * @brief Move constructor
 	 *
-	 * @warning Do not move-costruct Vec from VecView if You don't know what You
-	 * are doing. Data pointer that were stolen from VecView may be owned by
-	 * onther Vec, so on destruction pointer will be freed two times.
+	 * @warning Do not move-costruct vec from vec_view if You don't know what You
+	 * are doing. Data pointer that were stolen from vec_view may be owned by
+	 * onther vec, so on destruction pointer will be freed two times.
 	 *
 	 * @param other other object rvalue reference
 	 */
-	Vec(VecView<value_type>&& other);
-	Vec(Vec<value_type>&& other): Vec(static_cast<VecView<value_type>&&>(other)) {};
+	vec(vec_view<value_type>&& other);
+	vec(vec<value_type>&& other): vec(static_cast<vec_view<value_type>&&>(other)) {};
 	/**
 	 * @brief Copy assignment operator
 	 *
 	 * @param other other object
 	 */
-	Vec& operator=(const VecView<value_type>& other);
-	Vec& operator=(const Vec<value_type>& other) { 
-		return operator=(static_cast<const VecView<value_type>&>(other)); 
+	vec& operator=(const vec_view<value_type>& other);
+	vec& operator=(const vec<value_type>& other) { 
+		return operator=(static_cast<const vec_view<value_type>&>(other)); 
 	}
 	/**
 	 * @brief Move assignment operator
-	 * @copydetails Vec(const VecView<value_type>&& other)
+	 * @copydetails vec(const vec_view<value_type>&& other)
 	 */
-	Vec& operator=(VecView<value_type>&& other);
-	Vec& operator=(Vec<value_type>&& other) { 
-		return operator=(static_cast<VecView<value_type>&&>(other)); 
+	vec& operator=(vec_view<value_type>&& other);
+	vec& operator=(vec<value_type>&& other) { 
+		return operator=(static_cast<vec_view<value_type>&&>(other)); 
 	}
 	/**
 	 * @brief Resize array
@@ -239,7 +239,7 @@ public:
 	 *
 	 * Inserts `count` elements into the array before the given `where`. If
 	 * `where` is 0, elements are prepended to any existing elements in array. If
-	 * `where` is Vec::n(), the elements are appended to any existing in the
+	 * `where` is vec::n(), the elements are appended to any existing in the
 	 * array.
 	 *
 	 * @param where element to insert before
@@ -257,16 +257,16 @@ public:
 	void remove(const size_type& from, const size_type& count);
 	/// @}
 
-	friend ca::Mat<T>;
-	friend ca::MatView<T>;
-	friend ca::VecView<T>;
+	friend ca::mat<T>;
+	friend ca::mat_view<T>;
+	friend ca::vec_view<T>;
 
 	/**
 	 * @brief Destructor
 	 *
-	 * Deletes the data under Vec::m_vec pointer
+	 * Deletes the data under vec::m_vec pointer
 	 */
-	~Vec();
+	~vec();
 };
 
 }

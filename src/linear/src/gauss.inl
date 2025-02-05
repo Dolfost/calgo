@@ -18,23 +18,23 @@ template<typename T>
 void Gauss<T>::solve() {
 	init();
 
-	typename Mat<T>::size_type n = m_variables.rows();
+	typename mat<T>::size_type n = m_variables.rows();
 
 	const bool iteration = (bool)p_iterationCallback;
 	const bool swap = (bool)p_swapCallback;
 	const bool out = (bool)p_outCallback;
 
-	for (typename Mat<T>::size_type i = 0; i < n; i++) {
+	for (typename mat<T>::size_type i = 0; i < n; i++) {
 		value_type maxEl = std::abs(m_variables[i][i]);
-		typename Mat<T>::size_type maxRow = i;
-		for (typename Mat<T>::size_type k = i + 1; k < n; k++)
+		typename mat<T>::size_type maxRow = i;
+		for (typename mat<T>::size_type k = i + 1; k < n; k++)
 			if (std::abs(m_variables[k][i]) > maxEl) {
 				maxEl = m_variables[k][i];
 				maxRow = k;
 			}
 
 		// swap rows
-		for (typename Mat<T>::size_type k = i; k < n; k++)
+		for (typename mat<T>::size_type k = i; k < n; k++)
 			std::swap(m_variables[maxRow][k], m_variables[i][k]);
 		std::swap(this->m_constraints[maxRow], this->m_constraints[i]);
 
@@ -42,9 +42,9 @@ void Gauss<T>::solve() {
 			p_swapCallback(m_variables, m_constraints, maxRow, i);
 
 		// forward move
-		for (typename Mat<T>::size_type k = i + 1; k < n; k++) {
+		for (typename mat<T>::size_type k = i + 1; k < n; k++) {
 			value_type c = -m_variables[k][i]/m_variables[i][i];
-			for (typename Mat<T>::size_type j = i; j < n; j++)
+			for (typename mat<T>::size_type j = i; j < n; j++)
 				if (i == j)
 					m_variables[k][j] = 0;
 				else

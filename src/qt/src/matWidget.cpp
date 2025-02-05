@@ -4,17 +4,17 @@
 
 namespace ca::qt {
 
-MatWidget::MatWidget(const ca::Mat<double>& matrix, QWidget* parent):
+MatWidget::MatWidget(const ca::mat<double>& matrix, QWidget* parent):
 QTableView(parent), m_model(matrix) {
 	setModel(&m_model);
 	setSelectionMode(MatWidget::SingleSelection);
 }
 
-const ca::Mat<double>& MatWidget::matrix() {
+const ca::mat<double>& MatWidget::matrix() {
 	return m_model.matrix();
 }
 
-void MatWidget::setMatrix(const ca::Mat<double>& matrix) {
+void MatWidget::setMatrix(const ca::mat<double>& matrix) {
 	return m_model.setMatrix(matrix);
 }
 

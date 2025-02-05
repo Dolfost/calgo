@@ -2,7 +2,7 @@
 #include <calgo/vec.hpp>
 
 int main(int argc, char** argv) {
-	ca::Vec<double> v(10);
+	ca::vec<double> v(10);
 
 	std::cout << "empty: " << v << std::endl;
 

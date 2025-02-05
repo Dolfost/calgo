@@ -29,8 +29,8 @@ class TransportationSimplex {
 public:
 	struct Cell;
 	enum class BFS;
-	using value_type = typename ca::Vec<T>::value_type; ///< Value type
-	using size_type = typename ca::Vec<T>::size_type; ///< Size type
+	using value_type = typename ca::vec<T>::value_type; ///< Value type
+	using size_type = typename ca::vec<T>::size_type; ///< Size type
 	using cells_type = std::vector<Cell>; ///< Cell index list type
 
 public:
@@ -38,21 +38,21 @@ public:
 	 * @brief Set demand
 	 */
 	template<typename P> typename 
-	std::enable_if<std::is_assignable<ca::Vec<value_type>, P>::value>::type setDemand(P && demand) {
+	std::enable_if<std::is_assignable<ca::vec<value_type>, P>::value>::type setDemand(P && demand) {
 		m_demand = std::forward<P>(demand);
 	}
 	/**
 	 * @brief Set supply
 	 */
 	template<typename P> typename 
-	std::enable_if<std::is_assignable<ca::Vec<value_type>, P>::value>::type setSupply(P && supply) {
+	std::enable_if<std::is_assignable<ca::vec<value_type>, P>::value>::type setSupply(P && supply) {
 		m_supply = std::forward<P>(supply);
 	}
 	/**
 	 * @brief Set costs
 	 */
 	template<typename P> typename 
-	std::enable_if<std::is_assignable<ca::Mat<value_type>, P>::value>::type setCost(P && cost) {
+	std::enable_if<std::is_assignable<ca::mat<value_type>, P>::value>::type setCost(P && cost) {
 		m_cost = std::forward<P>(cost);
 	}
 
@@ -65,22 +65,22 @@ public:
 	 *
 	 * @return current demand
 	 */
-	ca::Vec<value_type>& demand() { return m_demand; };
-	const ca::Vec<value_type>& demand() const { return m_demand; };
+	ca::vec<value_type>& demand() { return m_demand; };
+	const ca::vec<value_type>& demand() const { return m_demand; };
 	/**
 	 * @brief Get supply
 	 *
 	 * @return current supply
 	 */
-	ca::Vec<value_type>& supply() { return m_supply; };
-	const ca::Vec<value_type>& supply() const { return m_supply; };
+	ca::vec<value_type>& supply() { return m_supply; };
+	const ca::vec<value_type>& supply() const { return m_supply; };
 	/**
 	 * @brief Get cost 
 	 *
 	 * @return current cost
 	 */
-	ca::Mat<value_type>& cost() { return m_cost; };
-	const ca::Mat<value_type>& cost() const { return m_cost; };
+	ca::mat<value_type>& cost() { return m_cost; };
+	const ca::mat<value_type>& cost() const { return m_cost; };
 
 	/**
 	 * @brief Get objective function value
@@ -97,8 +97,8 @@ public:
 	 * @brief Contains callback callback context
 	 */
 	struct CallbackContext {
-		const ca::Mat<value_type>& cost, distribution;
-		const ca::Vec<value_type>& demand, supply, u, v;
+		const ca::mat<value_type>& cost, distribution;
+		const ca::vec<value_type>& demand, supply, u, v;
 		const cells_type& basisCells;
 		const value_type& f; ///< function value
 	};
@@ -175,10 +175,10 @@ public:
 	 * @param demand demand array
 	 * @param supply supply array
 	 */
-	static ca::Mat<value_type> addSlack(
-		ca::Mat<value_type>& costs,
-		ca::Vec<value_type>& demand,
-		ca::Vec<value_type>& supply
+	static ca::mat<value_type> addSlack(
+		ca::mat<value_type>& costs,
+		ca::vec<value_type>& demand,
+		ca::vec<value_type>& supply
 	);
 	/**
 	 * @brief Get initial basic feasible solution with Northwest corner method
@@ -190,19 +190,19 @@ public:
 	 * @param distribution distribution matrix
 	 */
 	static void northWest(
-		ca::Mat<value_type>& costs,
-		ca::Vec<value_type>& demand,
-		ca::Vec<value_type>& supply,
+		ca::mat<value_type>& costs,
+		ca::vec<value_type>& demand,
+		ca::vec<value_type>& supply,
 		cells_type& basisCells,
-		ca::Mat<value_type>& distribution
+		ca::mat<value_type>& distribution
 	);
 
 	static void vogel(
-		ca::Mat<value_type>& costs,
-		ca::Vec<value_type>& demand,
-		ca::Vec<value_type>& supply,
+		ca::mat<value_type>& costs,
+		ca::vec<value_type>& demand,
+		ca::vec<value_type>& supply,
 		cells_type& basisCells,
-		ca::Mat<value_type>& distribution
+		ca::mat<value_type>& distribution
 	);
 
 protected:
@@ -248,20 +248,20 @@ protected:
 	void init();
 
 protected:
-	ca::Vec<value_type> m_demand; ///< Demand
-	ca::Vec<value_type> m_supply; ///< Supply
-	ca::Mat<value_type> m_cost; ///< Costs
+	ca::vec<value_type> m_demand; ///< Demand
+	ca::vec<value_type> m_supply; ///< Supply
+	ca::mat<value_type> m_cost; ///< Costs
 
 	value_type m_f; ///< Objective function \f(f\f)value 
 
-	ca::Vec<value_type> m_u, m_v; ///< \f(u_i,v_j\f)
+	ca::vec<value_type> m_u, m_v; ///< \f(u_i,v_j\f)
 	/**
 	 * @brief Solution matrix
 	 *
 	 * Contains current solution values on the cells that are in m_basisCells,
 	 * every non-basic cell contain value of \f(c_{ij}-u_i-v_j\f).
 	 */
-	ca::Mat<value_type> m_distribution;
+	ca::mat<value_type> m_distribution;
 	cells_type m_basisCells; ///< Indecies of basic variables
 
 	BFS m_BFSmethod = BFS::Northwest; ///< Current method to find basic feasible solution

@@ -9,7 +9,7 @@
 namespace ca {
 
 template<typename T>
-MatView<T>::MatView(
+mat_view<T>::mat_view(
 	value_type* data, 
 	const size_type& rows, 
 	const size_type& cols, 
@@ -22,9 +22,9 @@ MatView<T>::MatView(
 }
 
 template<typename T>
-Mat<T>::Mat(
+mat<T>::mat(
 	std::initializer_list<std::initializer_list<value_type>> data
-): MatView<T>(nullptr, 0, 0) {
+): mat_view<T>(nullptr, 0, 0) {
 	if (not data.size())
 		return;
 
@@ -48,31 +48,31 @@ Mat<T>::Mat(
 }
 
 template<typename T>
-Mat<T>::Mat(
+mat<T>::mat(
 	const size_type& rows, const size_type& cols
-): MatView<T>(new value_type[rows*cols], rows, cols) {
+): mat_view<T>(new value_type[rows*cols], rows, cols) {
 }
 
 template<typename T>
-Mat<T>::Mat(
+mat<T>::mat(
 	const size_type& rows, 
 	const size_type& cols, 
 	const value_type& init
-): Mat(rows, cols) {
+): mat(rows, cols) {
 	for (size_type i = 0; i < this->m_rows; i++)
 		for (size_type j = 0; j < this->m_cols; j++)
 			 this->el(i, j) = init;
 }
 
 template<typename T>
-Mat<T>::Mat(const MatView<value_type>& other): Mat(other.m_rows, other.m_cols) {
+mat<T>::mat(const mat_view<value_type>& other): mat(other.m_rows, other.m_cols) {
 	for (size_type i = 0; i < this->m_rows; i++)
 		for (size_type j = 0; j < this->m_cols; j++)
 			 this->el(i, j) = other.el(i, j);
 }
 
 template<typename T>
-Mat<T>::Mat(MatView<value_type>&& other): Mat(other.m_mat, other.m_rows, other.m_cols, other.m_dist) {
+mat<T>::mat(mat_view<value_type>&& other): mat(other.m_mat, other.m_rows, other.m_cols, other.m_dist) {
 	other.m_mat = nullptr;
 	other.m_rows = 0;
 	other.m_cols = 0;
@@ -80,7 +80,7 @@ Mat<T>::Mat(MatView<value_type>&& other): Mat(other.m_mat, other.m_rows, other.m
 }
 
 template<typename T>
-Mat<T>& Mat<T>::operator=(const MatView<value_type>& other) {
+mat<T>& mat<T>::operator=(const mat_view<value_type>& other) {
 	delete[] this->m_mat;
 	this->m_cols = other.m_cols;
 	this->m_rows = other.m_rows;
@@ -93,7 +93,7 @@ Mat<T>& Mat<T>::operator=(const MatView<value_type>& other) {
 }
 
 template<typename T>
-Mat<T>& Mat<T>::operator=(MatView<value_type>&& other) {
+mat<T>& mat<T>::operator=(mat_view<value_type>&& other) {
 	delete[] this->m_mat;
 	this->m_cols = other.m_cols;
 	this->m_rows = other.m_rows;
@@ -107,14 +107,14 @@ Mat<T>& Mat<T>::operator=(MatView<value_type>&& other) {
 }
 
 template<typename T>
-void MatView<T>::set(const value_type& val) {
+void mat_view<T>::set(const value_type& val) {
 	for (size_type i = 0; i < this->m_rows; i++)
 		for (size_type j = 0; j < this->m_cols; j++)
 			 this->el(i, j) = val;
 }
 
 template<typename T>
-void Mat<T>::resize(const size_type& rows, const size_type& cols, bool copy) {
+void mat<T>::resize(const size_type& rows, const size_type& cols, bool copy) {
 	if (rows == this->m_rows and cols == this->m_cols)
 		return;
 
@@ -143,56 +143,56 @@ void Mat<T>::resize(const size_type& rows, const size_type& cols, bool copy) {
 }
 
 template<typename T>
-VecView<typename MatView<T>::value_type> MatView<T>::operator[](const size_type& row) noexcept {
-	return VecView<value_type>(this->addr(row, 0), this->m_cols);
+vec_view<typename mat_view<T>::value_type> mat_view<T>::operator[](const size_type& row) noexcept {
+	return vec_view<value_type>(this->addr(row, 0), this->m_cols);
 }
 
 template<typename T>
-const VecView<T> MatView<T>::operator[](const size_type& row) const noexcept {
-	return VecView<value_type>(this->addr(row, 0), this->m_cols);
+const vec_view<T> mat_view<T>::operator[](const size_type& row) const noexcept {
+	return vec_view<value_type>(this->addr(row, 0), this->m_cols);
 }
 
 template<typename T>
-typename MatView<T>::value_type* MatView<T>::addr(const size_type& row, const size_type& col) const noexcept {
+typename mat_view<T>::value_type* mat_view<T>::addr(const size_type& row, const size_type& col) const noexcept {
 	return CALGO_MAT_INDEX(m_mat, m_cols, m_dist, row, col);
 }
 
 template<typename T>
-typename MatView<T>::value_type& MatView<T>::el(const size_type& row, const size_type& col) noexcept {
+typename mat_view<T>::value_type& mat_view<T>::el(const size_type& row, const size_type& col) noexcept {
 	return *addr(row, col);
 }
 
 template<typename T>
-const typename MatView<T>::value_type& MatView<T>::el(const size_type& row, const size_type& col) const noexcept {
+const typename mat_view<T>::value_type& mat_view<T>::el(const size_type& row, const size_type& col) const noexcept {
 	return *addr(row, col);
 }
 
 template<typename T>
-typename MatView<T>::value_type& MatView<T>::operator()(const size_type& row, const size_type& col) noexcept {
+typename mat_view<T>::value_type& mat_view<T>::operator()(const size_type& row, const size_type& col) noexcept {
 	return el(row, col);
 }
 
 template<typename T>
-const typename MatView<T>::value_type& MatView<T>::operator()(const size_type& row, const size_type& col) const noexcept {
+const typename mat_view<T>::value_type& mat_view<T>::operator()(const size_type& row, const size_type& col) const noexcept {
 	return el(row, col);
 }
 
 template<typename T>
-VecView<typename MatView<T>::value_type> MatView<T>::at(const size_type& row) {
+vec_view<typename mat_view<T>::value_type> mat_view<T>::at(const size_type& row) {
 	if (row >= this->m_rows)
 		throw std::out_of_range("ca::Mat row out of range");
 	return operator[](row);
 }
 
 template<typename T>
-const VecView<typename MatView<T>::value_type> MatView<T>::at(const size_type& row) const {
+const vec_view<typename mat_view<T>::value_type> mat_view<T>::at(const size_type& row) const {
 	if (row >= this->m_rows)
 		throw std::out_of_range("ca::Mat row out of range");
 	return operator[](row);
 }
 
 template<typename T>
-const typename MatView<T>::value_type& MatView<T>::at(const size_type& row, const size_type& col) const {
+const typename mat_view<T>::value_type& mat_view<T>::at(const size_type& row, const size_type& col) const {
 	if (row >= this->m_rows)
 		throw std::out_of_range("ca::Mat row out of range");
 	if (col >= this->m_cols)
@@ -201,7 +201,7 @@ const typename MatView<T>::value_type& MatView<T>::at(const size_type& row, cons
 }
 
 template<typename T>
-typename MatView<T>::value_type& MatView<T>::at(const size_type& row, const size_type& col) {
+typename mat_view<T>::value_type& mat_view<T>::at(const size_type& row, const size_type& col) {
 	if (row >= this->m_rows)
 		throw std::out_of_range("ca::Mat row out of range");
 	if (col >= this->m_cols)
@@ -211,7 +211,7 @@ typename MatView<T>::value_type& MatView<T>::at(const size_type& row, const size
 
 template<typename T>
 template<typename D>
-std::ostream& MatView<T>::showSystem(const VecView<D>& v, std::ostream& os) const {
+std::ostream& mat_view<T>::showSystem(const vec_view<D>& v, std::ostream& os) const {
 	if (this->m_rows != v.m_len)
 		throw std::runtime_error("ca::Mat: can not print system");
 
@@ -221,7 +221,7 @@ std::ostream& MatView<T>::showSystem(const VecView<D>& v, std::ostream& os) cons
 }
 
 template<typename T>
-std::ostream& MatView<T>::asArray(std::ostream& os) const {
+std::ostream& mat_view<T>::as_array(std::ostream& os) const {
 	for (size_type i = 0; i < m_rows; i++) {
 		row(i).asArray(os); 
 		os << ",\n";
@@ -230,14 +230,14 @@ std::ostream& MatView<T>::asArray(std::ostream& os) const {
 }
 
 template<typename D>
-std::ostream& operator<<(std::ostream& os, const MatView<D>& m) {
-	for (typename MatView<D>::size_type i = 0; i < m.m_rows; i++)
+std::ostream& operator<<(std::ostream& os, const mat_view<D>& m) {
+	for (typename mat_view<D>::size_type i = 0; i < m.m_rows; i++)
 		os << m[i] << '\n';
 	return os;
 }
 
 template<typename T>
-void ca::Mat<T>::insertRows(const size_type& row, const size_type& count, const value_type& init) {
+void ca::mat<T>::insert_rows(const size_type& row, const size_type& count, const value_type& init) {
 	if (row > this->m_rows)
 		throw std::out_of_range("ca::Mat: inserted row is out of bounds");
 
@@ -263,7 +263,7 @@ void ca::Mat<T>::insertRows(const size_type& row, const size_type& count, const 
 }
 
 template<typename T>
-void ca::Mat<T>::removeRows(const size_type& row, const size_type& count) {
+void ca::mat<T>::remove_rows(const size_type& row, const size_type& count) {
 	if (row + count > this->m_rows)
 		throw std::out_of_range("ca::Mat: removed row is out of bounds");
 
@@ -287,7 +287,7 @@ void ca::Mat<T>::removeRows(const size_type& row, const size_type& count) {
 }
 
 template<typename T>
-void ca::Mat<T>::insertCols(const size_type& col, const size_type& count, const value_type& init) {
+void ca::mat<T>::insert_cols(const size_type& col, const size_type& count, const value_type& init) {
 	if (col > this->m_cols)
 		throw std::out_of_range("ca::Mat: inserted columnt is out of bounds");
 
@@ -314,7 +314,7 @@ void ca::Mat<T>::insertCols(const size_type& col, const size_type& count, const 
 }
 
 template<typename T>
-void ca::Mat<T>::removeCols(const size_type& col, const size_type& count) {
+void ca::mat<T>::remove_cols(const size_type& col, const size_type& count) {
 	if (col + count > this->m_cols)
 		throw std::out_of_range("ca::Mat: removed columnt is out of bounds");
 
@@ -338,7 +338,7 @@ void ca::Mat<T>::removeCols(const size_type& col, const size_type& count) {
 }
 
 template<typename T>
-bool MatView<T>::operator==(const MatView<value_type>& other) {
+bool mat_view<T>::operator==(const mat_view<value_type>& other) {
 	if (m_rows != other.m_rows or m_cols != other.m_cols)
 		return false;
 	for (size_type i = 0; i < m_rows; i++)
@@ -349,24 +349,24 @@ bool MatView<T>::operator==(const MatView<value_type>& other) {
 }
 
 template<typename T>
-VecView<typename MatView<T>::value_type> MatView<T>::row(
+vec_view<typename mat_view<T>::value_type> mat_view<T>::row(
 	const size_type& at, 
 	const size_type& from, 
 	const size_type& len
 ) noexcept {
-	return VecView<value_type>(
+	return vec_view<value_type>(
 		this->addr(at, from),
 		len == 0 ? this->m_cols - from : len
 	);
 }
 
 template<typename T>
-VecView<typename MatView<T>::value_type> MatView<T>::col(
+vec_view<typename mat_view<T>::value_type> mat_view<T>::col(
 	const size_type& at, 
 	const size_type& from, 
 	const size_type& len
 ) noexcept {
-	return VecView<value_type>(
+	return vec_view<value_type>(
 		this->addr(from, at), 
 		len == 0 ? this->m_rows - from : len, 
 		this->m_cols
@@ -374,24 +374,24 @@ VecView<typename MatView<T>::value_type> MatView<T>::col(
 }
 
 template<typename T>
-const VecView<typename MatView<T>::value_type> MatView<T>::row(
+const vec_view<typename mat_view<T>::value_type> mat_view<T>::row(
 	const size_type& at, 
 	const size_type& from, 
 	const size_type& len
 ) const noexcept {
-	return VecView<value_type>(
+	return vec_view<value_type>(
 		this->addr(at, from), 
 		len == 0 ? this->m_cols - from : len
 	);
 }
 
 template<typename T>
-const VecView<typename MatView<T>::value_type> MatView<T>::col(
+const vec_view<typename mat_view<T>::value_type> mat_view<T>::col(
 	const size_type& at, 
 	const size_type& from, 
 	const size_type& len
 ) const noexcept {
-	return VecView<value_type>(
+	return vec_view<value_type>(
 		this->addr(from, at), 
 		len == 0 ? this->m_rows - from : len, 
 		this->m_cols
@@ -400,7 +400,7 @@ const VecView<typename MatView<T>::value_type> MatView<T>::col(
 
 
 template<typename T>
-VecView<typename MatView<T>::value_type> MatView<T>::row_safe(
+vec_view<typename mat_view<T>::value_type> mat_view<T>::row_safe(
 	const size_type& at, 
 	const size_type& from, 
 	const size_type& len
@@ -415,7 +415,7 @@ VecView<typename MatView<T>::value_type> MatView<T>::row_safe(
 }
 
 template<typename T>
-VecView<typename MatView<T>::value_type> MatView<T>::col_safe(
+vec_view<typename mat_view<T>::value_type> mat_view<T>::col_safe(
 	const size_type& at, 
 	const size_type& from, 
 	const size_type& len
@@ -430,7 +430,7 @@ VecView<typename MatView<T>::value_type> MatView<T>::col_safe(
 }
 
 template<typename T>
-const VecView<typename MatView<T>::value_type> MatView<T>::row_safe(
+const vec_view<typename mat_view<T>::value_type> mat_view<T>::row_safe(
 	const size_type& at, 
 	const size_type& from, 
 	const size_type& len
@@ -445,7 +445,7 @@ const VecView<typename MatView<T>::value_type> MatView<T>::row_safe(
 }
 
 template<typename T>
-const VecView<typename MatView<T>::value_type> MatView<T>::col_safe(
+const vec_view<typename mat_view<T>::value_type> mat_view<T>::col_safe(
 	const size_type& at, 
 	const size_type& from, 
 	const size_type& len
@@ -460,13 +460,13 @@ const VecView<typename MatView<T>::value_type> MatView<T>::col_safe(
 }
 
 template<typename T>
-MatView<typename MatView<T>::value_type> MatView<T>::mat(
+mat_view<typename mat_view<T>::value_type> mat_view<T>::submat(
 	const size_type& row,
 	const size_type& col,
 	const size_type& rows,
 	const size_type& cols
 ) noexcept {
-	return MatView<value_type>(
+	return mat_view<value_type>(
 		addr(row, col),
 		rows, cols,
 		m_cols - cols + 1
@@ -474,13 +474,13 @@ MatView<typename MatView<T>::value_type> MatView<T>::mat(
 }
 
 template<typename T>
-const MatView<typename MatView<T>::value_type> MatView<T>::mat(
+const mat_view<typename mat_view<T>::value_type> mat_view<T>::submat(
 	const size_type& row,
 	const size_type& col,
 	const size_type& rows,
 	const size_type& cols
 ) const noexcept {
-	return MatView<value_type>(
+	return mat_view<value_type>(
 		addr(row, col),
 		rows, cols,
 		m_cols - cols + 1
@@ -488,7 +488,7 @@ const MatView<typename MatView<T>::value_type> MatView<T>::mat(
 }
 
 template<typename T>
-const MatView<typename MatView<T>::value_type> MatView<T>::mat_safe(
+const mat_view<typename mat_view<T>::value_type> mat_view<T>::submat_safe(
 	const size_type& row,
 	const size_type& col,
 	const size_type& rows,
@@ -502,11 +502,11 @@ const MatView<typename MatView<T>::value_type> MatView<T>::mat_safe(
 		throw std::out_of_range("ca::Mat: column MatView offset out of range");
 	if (row + rows >= m_rows)
 		throw std::out_of_range("ca::Mat: row MatView offset out of range");
-	mat(row, col, rows, cols);
+	submat(row, col, rows, cols);
 }
 
 template<typename T>
-MatView<typename MatView<T>::value_type> MatView<T>::mat_safe(
+mat_view<typename mat_view<T>::value_type> mat_view<T>::submmat_safe(
 	const size_type& row,
 	const size_type& col,
 	const size_type& rows,
@@ -520,11 +520,11 @@ MatView<typename MatView<T>::value_type> MatView<T>::mat_safe(
 		throw std::out_of_range("ca::Mat: column MatView offset out of range");
 	if (row + rows >= m_rows)
 		throw std::out_of_range("ca::Mat: row MatView offset out of range");
-	mat(row, col, rows, cols);
+	submat(row, col, rows, cols);
 }
 
 template<typename T>
-Mat<T>::~Mat() {
+mat<T>::~mat() {
 	delete[] this->m_mat;
 }
 

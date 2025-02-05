@@ -17,15 +17,15 @@ int main(int argc, char** argv) {
 	QApplication app(argc, argv);
 	QMainWindow wnd;
 
-	ca::Mat<double> m = {
+	ca::mat<double> m = {
 		{1, 2, 3, 4, 5, 6},
 		{7, 8, 9, 10, 11, 12},
 		{13, 14, 15, 16, 17, 18},
 		{19, 20, 21, 22, 23, 24},
 	};
 
-	ca::Vec<double> h = {101, 102, 103, 104};
-	ca::Vec<double> f = {-1, -2, -3, -4, -5, -6};
+	ca::vec<double> h = {101, 102, 103, 104};
+	ca::vec<double> f = {-1, -2, -3, -4, -5, -6};
 
 	auto w = new ca::qt::SimplexWidget;
 	QObject::connect(

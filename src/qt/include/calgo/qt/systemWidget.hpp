@@ -25,11 +25,11 @@ public:
 	QString colsLabel() { return m_colsLabel->text(); }
 	QString rowsLabel() { return m_rowsLabel->text(); };
 
-	virtual const ca::MatView<double> variables() const;
-	virtual const ca::VecView<double> constraints() const;
+	virtual const ca::mat_view<double> variables() const;
+	virtual const ca::vec_view<double> constraints() const;
 
-	virtual void setVariables(const ca::MatView<double>& vars);
-	virtual void setConstraints(const ca::VecView<double>& constr);
+	virtual void setVariables(const ca::mat_view<double>& vars);
+	virtual void setConstraints(const ca::vec_view<double>& constr);
 
 	QHBoxLayout* controlsLayout() { return m_controlslay; };
 

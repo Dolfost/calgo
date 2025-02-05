@@ -56,13 +56,13 @@ template<typename T, typename I = T>
 class Nodes {
 public:
 	using value_type = T;
-	using size_type = typename Vec<T>::size_type;
+	using size_type = typename vec<T>::size_type;
 	using interval_type = I;
 
 public:
 	Nodes(interval_type a = 0, interval_type b = 1, size_type n = 10): m_a(a), m_b(b), m_n(n) {};
 
-	const Vec<value_type>& nodes() { return m_nodes; }
+	const vec<value_type>& nodes() { return m_nodes; }
 	value_type weight(size_type i) { 
 		if (i == m_n-2) 
 			i--; 
@@ -78,7 +78,7 @@ protected:
 	virtual void calculate() = 0;
 
 protected:
-	Vec<value_type> m_nodes;
+	vec<value_type> m_nodes;
 	size_type m_n;
 	interval_type m_a, m_b;
 };
@@ -88,7 +88,7 @@ template<typename T, typename I = T> \
 class CLS##Nodes: public Nodes<T, I> { \
 public: \
 	using value_type = T; \
-	using size_type = typename Vec<T>::size_type; \
+	using size_type = typename vec<T>::size_type; \
 	using interval_type = I; \
 	CLS##Nodes(interval_type a = 0, interval_type b = 1, size_type n = 10): Nodes<T, I>(a, b, n) {  \
 		calculate(); \

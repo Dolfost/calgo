@@ -15,7 +15,7 @@ namespace ca::qt {
 class MatModel: public QAbstractTableModel {
 	Q_OBJECT
 public:
-	MatModel(const ca::Mat<double>& matrix, QObject *parent = nullptr);
+	MatModel(const ca::mat<double>& matrix, QObject *parent = nullptr);
 
 	int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 	int columnCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -46,11 +46,11 @@ public:
 		const QModelIndex &index = QModelIndex()
 	) override;
 
-	const ca::Mat<double>& matrix();
-	void setMatrix(const ca::Mat<double>& matrix);
+	const ca::mat<double>& matrix();
+	void setMatrix(const ca::mat<double>& matrix);
 
 private:
-	ca::Mat<double> m_matrix;
+	ca::mat<double> m_matrix;
 };
 
 }

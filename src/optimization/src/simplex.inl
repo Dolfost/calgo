@@ -35,7 +35,7 @@ void Simplex<T>::init() {
 	s_ctx.basis.resize(s_r);
 	s_ctx.basis.set(0);
 	s_ctx.basisIndexes.resize(s_r);
-	for (typename ca::Vec<T>::size_type i = 0; i < s_ctx.basisIndexes.n(); i++)
+	for (typename ca::vec<T>::size_type i = 0; i < s_ctx.basisIndexes.n(); i++)
 		s_ctx.basisIndexes[i] = (s_c - s_r) + i;
 
 	if (p_initCallback)
@@ -165,7 +165,7 @@ void Simplex<T>::optimize() {
 		if (call)
 			p_iterationCallback(s_ctx);
 
-	for (typename Vec<T>::size_type i = 0; i < s_ctx.basis.n(); i++)
+	for (typename vec<T>::size_type i = 0; i < s_ctx.basis.n(); i++)
 		if (s_ctx.basis[i] == 0) {
 			s_ctx.degenerated = true;
 			break;
@@ -174,9 +174,9 @@ void Simplex<T>::optimize() {
 
 template<typename T>
 Simplex<T>::Simplex(
-	Mat<T>* v, 
-	Vec<T>* c, 
-	const Vec<T>* f
+	mat<T>* v, 
+	vec<T>* c, 
+	const vec<T>* f
 ) {
 	s_ctx.vars = v;
 	s_ctx.constr = c;

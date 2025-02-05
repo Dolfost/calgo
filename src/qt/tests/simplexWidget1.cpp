@@ -27,17 +27,17 @@ int main(int argc, char** argv) {
 		}
 	);
 
-	w->setFunction(ca::Vec<double>{-2, 3, 0, 0, 0});
-	w->setConstraints(ca::Vec<double>{2, 10, 4});
-	w->setVariables(ca::Mat<double>{
+	w->setFunction(ca::vec<double>{-2, 3, 0, 0, 0});
+	w->setConstraints(ca::vec<double>{2, 10, 4});
+	w->setVariables(ca::mat<double>{
 		{-1, 2, -1, 0, 0},
 		{-5, 2, 0, 1, 0},
 		{1, 2, 0, 0, -1},
 	});
 
-	ca::Mat<double> v = w->variables();
-	ca::Vec<double> c = w->constraints();
-	ca::Vec<double> f = w->function();
+	ca::mat<double> v = w->variables();
+	ca::vec<double> c = w->constraints();
+	ca::vec<double> f = w->function();
 	std::cout << "f: " << f
 		<< '\n'; 
 	v.showSystem(c);

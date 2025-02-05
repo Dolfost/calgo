@@ -10,9 +10,9 @@
 namespace ca {
 
 template<typename T>
-Vec<T>::Vec(
+vec<T>::vec(
 	std::initializer_list<value_type> data
-): VecView<T>(new value_type[data.size()], data.size()) {
+): vec_view<T>(new value_type[data.size()], data.size()) {
 	size_type i = 0;
 	for (const auto& elem: data) {
 		this->el(i++) = elem;
@@ -20,30 +20,30 @@ Vec<T>::Vec(
 }
 
 template<typename T>
-Vec<T>::Vec(
+vec<T>::vec(
 	const size_type& len
-): VecView<T>(new value_type[len], len) {}
+): vec_view<T>(new value_type[len], len) {}
 
 
 template<typename T>
-Vec<T>::Vec(const VecView<value_type>& other): Vec(other.m_len) {
+vec<T>::vec(const vec_view<value_type>& other): vec(other.m_len) {
 	for (size_type i = 0; i < this->m_len; i++)
 		this->el(i) = other[i];
 }
 
 template<typename T>
-Vec<T>::Vec(VecView<value_type>&& other) {
+vec<T>::vec(vec_view<value_type>&& other) {
 	delete[] this->m_vec;
-	Vec<T>::operator=(other); // assign other.<x> to this-><x>
+	vec<T>::operator=(other); // assign other.<x> to this-><x>
 	other.m_vec = nullptr;
 	other.m_len = 0;
 	other.m_dist = 1;
 }
 
 template<typename T>
-Vec<T>& Vec<T>::operator=(VecView<value_type>&& other) {
+vec<T>& vec<T>::operator=(vec_view<value_type>&& other) {
 	delete[] this->m_vec;
-	Vec<T>::operator=(other); // assign other.<x> to this-><x>
+	vec<T>::operator=(other); // assign other.<x> to this-><x>
 	other.m_vec = nullptr;
 	other.m_len = 0;
 	other.m_dist = 1;
@@ -51,7 +51,7 @@ Vec<T>& Vec<T>::operator=(VecView<value_type>&& other) {
 }
 
 template<typename T>
-Vec<T>& Vec<T>::operator=(const VecView<value_type>& other) {
+vec<T>& vec<T>::operator=(const vec_view<value_type>& other) {
 	if (other.m_len != this->m_len) {
 		delete[] this->m_vec;
 		this->m_len = other.m_len;
@@ -63,7 +63,7 @@ Vec<T>& Vec<T>::operator=(const VecView<value_type>& other) {
 }
 
 template<typename T>
-void Vec<T>::resize(const size_type& len, bool copy) {
+void vec<T>::resize(const size_type& len, bool copy) {
 	if (len == this->m_len)
 		return;
 
@@ -85,12 +85,12 @@ void Vec<T>::resize(const size_type& len, bool copy) {
 }
 
 template<typename T>
-typename VecView<T>::size_type VecView<T>::n() const {
+typename vec_view<T>::size_type vec_view<T>::n() const {
 	return m_len;
 }
 
 template<typename T>
-typename VecView<T>::value_type VecView<T>::sum() const {
+typename vec_view<T>::value_type vec_view<T>::sum() const {
 	value_type sum = 0;
 	for (size_type i = 0; i < m_len; i++)
 		sum += el(i);
@@ -98,50 +98,50 @@ typename VecView<T>::value_type VecView<T>::sum() const {
 }
 
 template<typename T>
-void VecView<T>::set(const value_type& val) {
+void vec_view<T>::set(const value_type& val) {
 	for (size_type i = 0; i < m_len; i++) {
 		el(i) = val;
 	}
 }
 
 template<typename T>
-VecView<T>::VecView(value_type* data, const size_type& len, const size_type& dist) {
+vec_view<T>::vec_view(value_type* data, const size_type& len, const size_type& dist) {
 	this->m_vec = data; 
 	this->m_len = len;
 	this->m_dist = dist;
 }
 
 template<typename T>
-typename VecView<T>::value_type& VecView<T>::el(const size_type& index) noexcept {
+typename vec_view<T>::value_type& vec_view<T>::el(const size_type& index) noexcept {
 	return *CALGO_VEC_INDEX(m_vec, m_dist, index);
 }
 
 template<typename T>
-const typename VecView<T>::value_type& VecView<T>::el(const size_type& index) const noexcept {
+const typename vec_view<T>::value_type& vec_view<T>::el(const size_type& index) const noexcept {
 	return *CALGO_VEC_INDEX(m_vec, m_dist, index);
 }
 
 template<typename T>
-typename VecView<T>::value_type* VecView<T>::addr(const size_type& index) const noexcept {
+typename vec_view<T>::value_type* vec_view<T>::addr(const size_type& index) const noexcept {
 	return CALGO_VEC_INDEX(m_vec, m_dist, index);
 }
 
 template<typename T>
-const typename VecView<T>::value_type& VecView<T>::operator[](
+const typename vec_view<T>::value_type& vec_view<T>::operator[](
 	const size_type& index
 ) const noexcept {
 	return el(index);
 }
 
 template<typename T>
-typename VecView<T>::value_type& VecView<T>::operator[](
+typename vec_view<T>::value_type& vec_view<T>::operator[](
 	const size_type& index
 ) noexcept {
 	return el(index);
 }
 
 template<typename T>
-const typename VecView<T>::value_type& VecView<T>::at(
+const typename vec_view<T>::value_type& vec_view<T>::at(
 	const size_type& index
 ) const {
 	if (index >= m_len)
@@ -150,7 +150,7 @@ const typename VecView<T>::value_type& VecView<T>::at(
 }
 
 template<typename T>
-typename VecView<T>::value_type& VecView<T>::at(
+typename vec_view<T>::value_type& vec_view<T>::at(
 	const size_type& index
 ) {
 	if (index >= m_len)
@@ -160,21 +160,21 @@ typename VecView<T>::value_type& VecView<T>::at(
 
 template<typename T>
 template<typename M>
-void VecView<T>::operator*=(const M& d) noexcept {
+void vec_view<T>::operator*=(const M& d) noexcept {
 	static_assert(std::is_arithmetic<M>(), "Not an arithmetic type");
 	for (size_type i = 0; i < m_len; i++)
 		el(i) *= d;
 }
 
 template<typename T>
-typename VecView<T>::value_type VecView<T>::dot(const VecView<value_type>& other) {
+typename vec_view<T>::value_type vec_view<T>::dot(const vec_view<value_type>& other) {
 	if (m_len != other.m_len)
 		throw std::runtime_error("ca::Vec: dot product not possible");
 	operator*(other);
 }
 
 template<typename T>
-typename VecView<T>::value_type VecView<T>::operator*(const VecView<value_type>& other) noexcept {
+typename vec_view<T>::value_type vec_view<T>::operator*(const vec_view<value_type>& other) noexcept {
 	value_type prod = 0;
 	for (size_type i = 0; i < m_len; i++)
 		prod += el(i)*other[i];
@@ -183,7 +183,7 @@ typename VecView<T>::value_type VecView<T>::operator*(const VecView<value_type>&
 }
 
 template<typename D>
-std::ostream& operator<<(std::ostream& os, const VecView<D>& v) {
+std::ostream& operator<<(std::ostream& os, const vec_view<D>& v) {
 	for (long long i = 0; i < (long long)v.m_len - 1; i++)
 		os << std::setw(9) << std::fixed << std::setprecision(4) << std::left <<
 			v[i];
@@ -193,7 +193,7 @@ std::ostream& operator<<(std::ostream& os, const VecView<D>& v) {
 }
 
 template<typename T>
-std::ostream& VecView<T>::asArray(std::ostream& os) const {
+std::ostream& vec_view<T>::as_array(std::ostream& os) const {
 	os << '{';
 	for (size_type i = 0; i < m_len; i++)
 		os << el(i) << ", ";
@@ -201,7 +201,7 @@ std::ostream& VecView<T>::asArray(std::ostream& os) const {
 }
 
 template<typename T>
-void Vec<T>::insert(const size_type& where, const size_type& count, const value_type& init) {
+void vec<T>::insert(const size_type& where, const size_type& count, const value_type& init) {
 	if (where > this->m_len)
 		throw std::out_of_range("ca::Vec: insertion index out of range");
 
@@ -218,7 +218,7 @@ void Vec<T>::insert(const size_type& where, const size_type& count, const value_
 }
 
 template<typename T>
-void Vec<T>::remove(const size_type& from, const size_type& count) {
+void vec<T>::remove(const size_type& from, const size_type& count) {
 	if (from >= this->m_len || from + count > this->m_len)
 		throw std::out_of_range("ca::Vec: removal index out of range");
 
@@ -234,7 +234,7 @@ void Vec<T>::remove(const size_type& from, const size_type& count) {
 }
 
 template<typename T>
-Vec<T>::~Vec() {
+vec<T>::~vec() {
 	delete[] this->m_vec;
 }
 

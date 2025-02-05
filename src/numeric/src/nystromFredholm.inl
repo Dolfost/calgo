@@ -17,8 +17,8 @@ NystromFredholmSecondKind<T, I>::phi(
 
 template<typename T, typename I>
 void NystromFredholmSecondKind<T, I>::solve() {
-	Mat<value_type> A(m_nodes->n(), m_nodes->n());
-	Vec<value_type> b(m_nodes->n());
+	mat<value_type> A(m_nodes->n(), m_nodes->n());
+	vec<value_type> b(m_nodes->n());
 
 	// fill SOLE
 	for(size_type j = 0; j < m_nodes->n(); j++) {

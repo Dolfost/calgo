@@ -15,7 +15,7 @@ namespace ca::qt {
 class VecModel: public QAbstractListModel {
 	Q_OBJECT
 public:
-	VecModel(const ca::Vec<double>& vec, QObject *parent = nullptr);
+	VecModel(const ca::vec<double>& vec, QObject *parent = nullptr);
 
 	int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 	QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
@@ -37,11 +37,11 @@ public:
 		const QModelIndex &index = QModelIndex()
 	) override;
 
-	const ca::Vec<double>& vector();
-	void setVector(const ca::Vec<double>& vector);
+	const ca::vec<double>& vector();
+	void setVector(const ca::vec<double>& vector);
 
 private:
-	ca::Vec<double> m_vec;
+	ca::vec<double> m_vec;
 };
 
 }

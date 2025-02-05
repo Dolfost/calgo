@@ -18,13 +18,13 @@ public:
 	virtual void solve() = 0;
 	void solve_safe() { check(); solve(); };
 
-	Vec<value_type>& solution() { return m_solution; };
+	vec<value_type>& solution() { return m_solution; };
 
 protected:
 	virtual void check() = 0;
 
 protected:
-	Vec<value_type> m_solution;
+	vec<value_type> m_solution;
 };
 
 }

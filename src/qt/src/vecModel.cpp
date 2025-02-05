@@ -2,7 +2,7 @@
 
 namespace ca::qt {
 
-VecModel::VecModel(const ca::Vec<double>& vector, QObject *parent)
+VecModel::VecModel(const ca::vec<double>& vector, QObject *parent)
 : QAbstractListModel(parent), m_vec(vector) 
 {}
 
@@ -75,11 +75,11 @@ bool VecModel::removeRows(int position, int rows, const QModelIndex &parent) {
 	return true;
 }
 
-const ca::Vec<double>& VecModel::vector() {
+const ca::vec<double>& VecModel::vector() {
 	return m_vec;
 }
 
-void VecModel::setVector(const ca::Vec<double>& vector) {
+void VecModel::setVector(const ca::vec<double>& vector) {
 	m_vec = vector;
 	emit dataChanged(
 		VecModel::createIndex(0, 0),

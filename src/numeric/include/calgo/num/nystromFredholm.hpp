@@ -36,7 +36,7 @@ class NystromFredholmSecondKind {
 public:
 	using value_type = T;
 	using interval_type = I;
-	using size_type = typename Vec<T>::size_type;
+	using size_type = typename vec<T>::size_type;
 	using nodes_type = in::Nodes<value_type, interval_type>;
 
 	using K = std::function<value_type(value_type, value_type)>; ///< Kernel type
@@ -116,7 +116,7 @@ protected:
 protected:
 	F m_f;
 	K m_k;
-	Vec<value_type> m_y;
+	vec<value_type> m_y;
 	nodes_type* m_nodes = nullptr;
 };
 

@@ -18,7 +18,7 @@ namespace ca::qt {
  */
 class MatWidget: public QTableView {
 public:
-	MatWidget(const ca::Mat<double>& matrix = {}, QWidget* parent = nullptr);
+	MatWidget(const ca::mat<double>& matrix = {}, QWidget* parent = nullptr);
 
 	void setRowCount(std::size_t rows);
 	void setColumnCount(std::size_t cols);
@@ -26,8 +26,8 @@ public:
 	/**
 	 * @brief Get matrix object from model
 	 */
-	const ca::Mat<double>& matrix();
-	void setMatrix(const ca::Mat<double>& matrix);
+	const ca::mat<double>& matrix();
+	void setMatrix(const ca::mat<double>& matrix);
 
 	/**
 	 * @brief Show headers

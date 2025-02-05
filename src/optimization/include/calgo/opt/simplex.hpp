@@ -42,9 +42,9 @@ template<typename T>
 class Simplex {
 public:
 	Simplex(
-		Mat<T>* v = nullptr, 
-		Vec<T>* c = nullptr, 
-		const Vec<T>* f = nullptr
+		mat<T>* v = nullptr, 
+		vec<T>* c = nullptr, 
+		const vec<T>* f = nullptr
 	); 
 
 	/**
@@ -60,19 +60,19 @@ public:
 	 * \end{bmatrix}
 	 * @f}
 	 */
-	void setVariables(Mat<T>* v) { s_ctx.vars = v; }
+	void setVariables(mat<T>* v) { s_ctx.vars = v; }
 	/**
 	 * @brief Sets constraints vector
 	 *
 	 * @param c constraints vector
 	 */
-	void setConstraints(Vec<T>* c) { s_ctx.constr = c; }
+	void setConstraints(vec<T>* c) { s_ctx.constr = c; }
 	/**
 	 * @brief Sets the function vector
 	 *
 	 * @param f function vetor
 	 */
-	void setFunction(Vec<T>* f) { s_ctx.func = f; }
+	void setFunction(vec<T>* f) { s_ctx.func = f; }
 
 
 	/**
@@ -90,14 +90,14 @@ public:
 	 * @sa setMaximize
 	 */
 	T f() const { return s_ctx.f; }
-	Vec<T>* constraints() { return s_ctx.constr;  }
-	Mat<T>* variables()   { return s_ctx.vars;    };
-	const Vec<T>* function() const { return s_ctx.func;    };
-	const Vec<T>* constraints() const { return s_ctx.constr;  }
-	const Mat<T>* variables()   const { return s_ctx.vars;    };
-	const Vec<T>& netEvaluation() const { return s_ctx.netEval; }
-	const Vec<T>& basis() { return s_ctx.basis; }
-	const Vec<typename Vec<T>::size_type>& basisIndexes() { return s_ctx.basisIndexes; }
+	vec<T>* constraints() { return s_ctx.constr;  }
+	mat<T>* variables()   { return s_ctx.vars;    };
+	const vec<T>* function() const { return s_ctx.func;    };
+	const vec<T>* constraints() const { return s_ctx.constr;  }
+	const mat<T>* variables()   const { return s_ctx.vars;    };
+	const vec<T>& netEvaluation() const { return s_ctx.netEval; }
+	const vec<T>& basis() { return s_ctx.basis; }
+	const vec<typename vec<T>::size_type>& basisIndexes() { return s_ctx.basisIndexes; }
 	bool maximize() const { return m_maximize; }
 	bool optimal() const { return s_ctx.optimal; }
 	bool unbounded() const { return s_ctx.unbounded; }
@@ -112,12 +112,12 @@ public:
 	 * @brief Simplex calculation context
 	 */
 	struct Context {
-		Mat<T>* vars; ///< variables
-		Vec<T>* constr; ///< constraints
-		const Vec<T>* func; ///< function
-		Vec<T> netEval; ///< net evaluation
-		Vec<T> basis; ///< basis
-		Vec<typename Vec<T>::size_type> basisIndexes; ///< indexes of basis variables
+		mat<T>* vars; ///< variables
+		vec<T>* constr; ///< constraints
+		const vec<T>* func; ///< function
+		vec<T> netEval; ///< net evaluation
+		vec<T> basis; ///< basis
+		vec<typename vec<T>::size_type> basisIndexes; ///< indexes of basis variables
 
 		T f; ///< function value
 

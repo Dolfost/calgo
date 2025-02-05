@@ -18,15 +18,15 @@ namespace ca::qt {
  */
 class VecWidget: public QListView {
 public:
-	VecWidget(const ca::Vec<double>& vec = {}, QWidget* parent = nullptr);
+	VecWidget(const ca::vec<double>& vec = {}, QWidget* parent = nullptr);
 
 	void setSize(std::size_t size);
 
 	/**
 	 * @brief Get array object from model
 	 */
-	const ca::Vec<double>& vector();
-	void setVector(const ca::Vec<double>& vector);
+	const ca::vec<double>& vector();
+	void setVector(const ca::vec<double>& vector);
 
 private:
 	VecModel m_model;

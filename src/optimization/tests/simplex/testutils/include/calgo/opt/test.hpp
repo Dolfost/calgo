@@ -10,10 +10,10 @@
 #define CA_OPT_SIMPLEX_TEST(SOL, ...) \
 int main(int argc, char** argv) { \
  \
-	ca::Vec<double> f = func; \
-	ca::Vec<double> c = constr; \
+	ca::vec<double> f = func; \
+	ca::vec<double> c = constr; \
  \
-	ca::Mat<double> v = vals; \
+	ca::mat<double> v = vals; \
  \
 	ca::opt::Simplex<double> simplex(&v, &c, &f); \
 	simplex.validCallback([](auto ctx) { \

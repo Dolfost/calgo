@@ -20,12 +20,12 @@ public:
 	SimplexWidget(QWidget* parent = nullptr);
 
 
-	void setVariables(const ca::MatView<double>& vars) override;
-	void setConstraints(const ca::VecView<double>& constr) override;
-	void setFunction(const ca::VecView<double>& vars);
-	const ca::MatView<double> variables() const override;
-	const ca::VecView<double> constraints() const override;
-	virtual const ca::VecView<double> function() const;
+	void setVariables(const ca::mat_view<double>& vars) override;
+	void setConstraints(const ca::vec_view<double>& constr) override;
+	void setFunction(const ca::vec_view<double>& vars);
+	const ca::mat_view<double> variables() const override;
+	const ca::vec_view<double> constraints() const override;
+	virtual const ca::vec_view<double> function() const;
 
 	bool maximize() { return m_minmax->currentIndex() == 0; }
 	void setMaximize(bool m) { m_minmax->setCurrentIndex(!m); }

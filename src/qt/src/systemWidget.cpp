@@ -9,7 +9,7 @@ SystemWidget::SystemWidget(
 ): QWidget(parent) {
 	setLayout(m_lay);
 
-	ca::Mat<double>::size_type size = 3;
+	ca::mat<double>::size_type size = 3;
 	m_variables->setRowCount(size);
 	m_variables->setColumnCount(size+1);
 
@@ -76,13 +76,13 @@ void SystemWidget::columnCountChanged() {
 	}
 }
 
-void SystemWidget::setConstraints(const ca::VecView<double>& constr) { 
+void SystemWidget::setConstraints(const ca::vec_view<double>& constr) { 
 	const QSignalBlocker blocker_r(m_rows);
 	m_rows->setValue(constr.n());
 	rowCountChanged();
 	const QSignalBlocker blocker_s(m_variables->model());
 	std::size_t col = m_variables->matrix().cols()-1;
-	for (ca::MatView<double>::size_type i = 0; i < constr.n(); i++)
+	for (ca::mat_view<double>::size_type i = 0; i < constr.n(); i++)
 		m_variables->model()->setData(
 			m_variables->model()->index(i, col),
 			constr[i]
@@ -90,7 +90,7 @@ void SystemWidget::setConstraints(const ca::VecView<double>& constr) {
 	emit systemChanged();
 };
 
-void SystemWidget::setVariables(const ca::MatView<double>& vars )  { 
+void SystemWidget::setVariables(const ca::mat_view<double>& vars )  { 
 	const QSignalBlocker blocker_r(m_rows);
 	const QSignalBlocker blocker_c(m_cols);
 	m_rows->setValue(vars.rows());
@@ -98,8 +98,8 @@ void SystemWidget::setVariables(const ca::MatView<double>& vars )  {
 	m_cols->setValue(vars.cols());
 	columnCountChanged();
 	const QSignalBlocker blocker_s(m_variables->model());
-	for (ca::MatView<double>::size_type i = 0; i < vars.rows(); i++)
-		for (ca::MatView<double>::size_type j = 0; j < vars.cols(); j++)
+	for (ca::mat_view<double>::size_type i = 0; i < vars.rows(); i++)
+		for (ca::mat_view<double>::size_type j = 0; j < vars.cols(); j++)
 			m_variables->model()->setData(
 				m_variables->model()->index(i, j),
 				vars(i, j)
@@ -107,14 +107,14 @@ void SystemWidget::setVariables(const ca::MatView<double>& vars )  {
 	emit systemChanged();
 };
 
-const MatView<double> SystemWidget::variables() const {
-	return m_variables->matrix().mat(
+const mat_view<double> SystemWidget::variables() const {
+	return m_variables->matrix().submat(
 		0, 0, m_variables->matrix().rows(),
 		m_variables->matrix().cols() - 1
 	);
 }
 
-const ca::VecView<double> SystemWidget::constraints() const { 
+const ca::vec_view<double> SystemWidget::constraints() const { 
 	return m_variables->matrix().col(m_variables->matrix().cols()-1);
 };
 

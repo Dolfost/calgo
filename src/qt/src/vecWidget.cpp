@@ -2,17 +2,17 @@
 
 namespace ca::qt {
 
-VecWidget::VecWidget(const ca::Vec<double>& vector, QWidget* parent):
+VecWidget::VecWidget(const ca::vec<double>& vector, QWidget* parent):
 	QListView(parent), m_model(vector) {
 	setModel(&m_model);
 	setSelectionMode(VecWidget::SingleSelection);
 }
 
-const ca::Vec<double>& VecWidget::vector() {
+const ca::vec<double>& VecWidget::vector() {
 	return m_model.vector();
 }
 
-void VecWidget::setVector(const ca::Vec<double>& vector) {
+void VecWidget::setVector(const ca::vec<double>& vector) {
 	return m_model.setVector(vector);
 }
 

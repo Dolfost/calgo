@@ -10,9 +10,9 @@
 #define CA_OPT_TRANSPORTATION_SIMPLEX_TEST(SOL, ...) \
 int main(int argc, char** argv) { \
  \
-	ca::Vec<double> f = demand; \
-	ca::Vec<double> c = supply; \
-	ca::Mat<double> v = cost; \
+	ca::vec<double> f = demand; \
+	ca::vec<double> c = supply; \
+	ca::mat<double> v = cost; \
 	ca::opt::TransportationSimplex<double> simplex; \
 	simplex.setDemand(f); \
 	simplex.setSupply(c); \

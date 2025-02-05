@@ -17,14 +17,14 @@ int main(int argc, char** argv) {
 	QApplication app(argc, argv);
 	QMainWindow wnd;
 
-	ca::Mat<double> m = {
+	ca::mat<double> m = {
 		{1, 2, 3, 4, 5, 6},
 		{3, 4, 5, 6, 7, 8},
 		{1, 4, 3, 6, 5, 7},
 		{4, 5, 6, 5, 9, 9},
 	};
 
-	ca::Vec<double> h = {9, 8, 9, 11};
+	ca::vec<double> h = {9, 8, 9, 11};
 
 	auto w = new ca::qt::SystemWidget;
 	w->setVariables(m);

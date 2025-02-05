@@ -202,13 +202,13 @@ void TransportationSimplex<T>::calculateUV() {
 }
 
 template<typename T>
-ca::Mat<typename TransportationSimplex<T>::value_type> 
+ca::mat<typename TransportationSimplex<T>::value_type> 
 TransportationSimplex<T>::addSlack(
-	ca::Mat<value_type>& cost,
-	ca::Vec<value_type>& demand,
-	ca::Vec<value_type>& supply
+	ca::mat<value_type>& cost,
+	ca::vec<value_type>& demand,
+	ca::vec<value_type>& supply
 ) {
-	ca::Mat<value_type> distribution;
+	ca::mat<value_type> distribution;
 	value_type d = demand.sum(), s = supply.sum();
 	size_type r = cost.rows(), c = cost.cols();
 	if (d < s) {
@@ -227,11 +227,11 @@ TransportationSimplex<T>::addSlack(
 
 template<typename T>
 void TransportationSimplex<T>::northWest(
-	ca::Mat<value_type>& cost,
-	ca::Vec<value_type>& demand,
-	ca::Vec<value_type>& supply,
+	ca::mat<value_type>& cost,
+	ca::vec<value_type>& demand,
+	ca::vec<value_type>& supply,
 	cells_type& basisCells,
-	ca::Mat<value_type>& distribution
+	ca::mat<value_type>& distribution
 ) {
 	size_type nextDemand = 0, b = 0;
 	value_type supplied = 0, used = 0;
@@ -256,11 +256,11 @@ void TransportationSimplex<T>::northWest(
 
 template<typename T>
 void TransportationSimplex<T>::vogel(
-	ca::Mat<value_type>& cost,
-	ca::Vec<value_type>& demand,
-	ca::Vec<value_type>& supply,
+	ca::mat<value_type>& cost,
+	ca::vec<value_type>& demand,
+	ca::vec<value_type>& supply,
 	cells_type& basisCells,
-	ca::Mat<value_type>& distribution
+	ca::mat<value_type>& distribution
 ) {
 	std::vector<bool> rowDone(supply.n(), false);
 	std::vector<bool> colDone(demand.n(), false);

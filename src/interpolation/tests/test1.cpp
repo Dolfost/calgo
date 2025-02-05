@@ -5,8 +5,8 @@
 #include <calgo/vec.hpp>
 
 bool comp(
-	const ca::Vec<double>& a, 
-	const ca::Vec<double>& b, 
+	const ca::vec<double>& a, 
+	const ca::vec<double>& b, 
 	double delta = 0.01) {
 	if (a.n() != b.n())
 		return false;
@@ -19,7 +19,7 @@ bool comp(
 }
 
 int main() {
-	ca::Vec<double>	expect = {0.245, 2.06, 5, 7.94, 9.76};
+	ca::vec<double>	expect = {0.245, 2.06, 5, 7.94, 9.76};
 	ca::in::ChebyshevNodes<double> n(0, 10, 5);
 
 	std::cout << "expected: ";

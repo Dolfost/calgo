@@ -1,17 +1,17 @@
 #include <calgo/lin/test.hpp>
 
-ca::Vec<double> solution = {
+ca::vec<double> solution = {
 	-268.0/97,
 	143.0/97,
 	58.0/97,
 	257.0/194
 };
 
-ca::Vec<double> constraints = {
+ca::vec<double> constraints = {
 	3, -4, -1, 7
 };
 
-ca::Mat<double> variables = {
+ca::mat<double> variables = {
 	{5,	7, 2, 4},
 	{7,	2, 3, 8},
 	{6, 9, -5, 4},

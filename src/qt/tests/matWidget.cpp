@@ -9,7 +9,7 @@
 #include <QSpinBox>
 #include <QLabel>
 
-ca::Mat<double> mat = {
+ca::mat<double> mat = {
 	{5, 7, 11},
 	{8, 3, 15},
 	{12, 9, 2}

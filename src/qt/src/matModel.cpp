@@ -2,7 +2,7 @@
 
 namespace ca::qt {
 
-MatModel::MatModel(const ca::Mat<double>& matrix, QObject *parent)
+MatModel::MatModel(const ca::mat<double>& matrix, QObject *parent)
 : QAbstractTableModel(parent), m_matrix(matrix) 
 {}
 
@@ -62,7 +62,7 @@ bool MatModel::setData(
 bool MatModel::insertRows(int position, int rows, const QModelIndex &parent) {
 	beginInsertRows(QModelIndex(), position, position + rows - 1);
 
-	m_matrix.insertRows(position, rows);
+	m_matrix.insert_rows(position, rows);
 
 	endInsertRows();
 	return true;
@@ -72,7 +72,7 @@ bool MatModel::insertRows(int position, int rows, const QModelIndex &parent) {
 bool MatModel::removeRows(int position, int rows, const QModelIndex &parent) {
 	beginRemoveRows(QModelIndex(), position, position + rows - 1);
 
-	m_matrix.removeRows(position, rows);
+	m_matrix.remove_rows(position, rows);
 
 	endRemoveRows();
 	return true;
@@ -81,7 +81,7 @@ bool MatModel::removeRows(int position, int rows, const QModelIndex &parent) {
 bool MatModel::insertColumns(int position, int cols, const QModelIndex &parent) {
 	beginInsertColumns(QModelIndex(), position, position + cols - 1);
 
-	m_matrix.insertCols(position, cols);
+	m_matrix.insert_cols(position, cols);
 
 	endInsertColumns();
 	return true;
@@ -90,17 +90,17 @@ bool MatModel::insertColumns(int position, int cols, const QModelIndex &parent) 
 bool MatModel::removeColumns(int position, int cols, const QModelIndex &parent) {
 	beginRemoveColumns(QModelIndex(), position, position+cols-1);
 
-	m_matrix.removeCols(position, cols);
+	m_matrix.remove_cols(position, cols);
 
 	endRemoveColumns();
 	return true;
 }
 
-const ca::Mat<double>& MatModel::matrix() {
+const ca::mat<double>& MatModel::matrix() {
 	return m_matrix;
 }
 
-void MatModel::setMatrix(const ca::Mat<double>& matrix) {
+void MatModel::setMatrix(const ca::mat<double>& matrix) {
 	m_matrix = matrix;
 	emit dataChanged(
 		MatModel::createIndex(0, 0),

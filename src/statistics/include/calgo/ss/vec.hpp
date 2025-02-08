@@ -59,7 +59,7 @@ public:
 	 * \f[ \hat E = \frac{\hat\mu_4}{\hat\sigma^4}\text{ - biased} \f]
 	 * \f[ \bar E = \frac{N^2-1}{(N-2)(N-3)}\left(\hat E-3)+\frac{6}{N+1}\right)\text{ - unbiased} \f]
 	 */
-	SINGLE_STAT(kurtosis, bias<value_type>);
+	SINGLE_STAT(kurtosis, bias<::ca::ss::vec_view<T>::value_type>);
 
 };
 

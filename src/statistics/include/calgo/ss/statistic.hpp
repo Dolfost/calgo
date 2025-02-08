@@ -139,8 +139,8 @@ struct bias {
 	class NAME##_impl: public ::ca::ss::single_statistic<OWNER, TYPE> { \
 	public: \
 		using base_type = ::ca::ss::single_statistic<OWNER, TYPE>; \
-		using typename base_type::owner_type; \
 		using typename base_type::value_type; \
+		using typename base_type::owner_type; \
 		using typename base_type::size_type; \
 	public: \
 		using base_type::base_type; \
@@ -152,9 +152,9 @@ struct bias {
 	class NAME##_impl: public ::ca::ss::map_statistic<OWNER, TYPE __VA_OPT__(,) __VA_ARGS__> { \
 	public: \
 		using base_type = typename ::ca::ss::map_statistic<OWNER, TYPE __VA_OPT__(,) __VA_ARGS__>; \
+		using typename base_type::value_type; \
 		using typename base_type::key_type; \
 		using typename base_type::owner_type; \
-		using typename base_type::value_type; \
 		using typename base_type::size_type; \
 	public: \
 		using base_type::base_type; \

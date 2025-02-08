@@ -4,8 +4,8 @@
 #include <calgo/vec.hpp>
 #include <calgo/ss/statistic.hpp>
 
-#define MAP_STAT(NAME, TYPE, ...) CALGO_SS_MAP_STAT(NAME, vec_view<value_type>, TYPE __VA_OPT__(,) __VA_ARGS__)
-#define SINGLE_STAT(NAME, TYPE) CALGO_SS_SINGLE_STAT(NAME, vec_view<value_type>, TYPE)
+#define MAP_STAT(NAME, TYPE, ...) CALGO_SS_MAP_STAT(NAME, vec_view<T>, TYPE __VA_OPT__(,) __VA_ARGS__)
+#define SINGLE_STAT(NAME, TYPE) CALGO_SS_SINGLE_STAT(NAME, vec_view<T>, TYPE)
 
 namespace ca::ss {
 
@@ -30,7 +30,7 @@ public:
 	
 public:
 	/// @brief Raw moment of \f(n\f)-th degree \f[ m_i = \sum_{i=1}^N\frac{x_i^n}{N} \f]
-	MAP_STAT(raw_moment, value_type);
+	MAP_STAT(raw_moment, ::ca::ss::vec_view<T>::value_type);
 	value_type mean() { return raw_moment(1); };
 
 	/**
@@ -38,7 +38,7 @@ public:
 	 * \f[ \hat c_i = \frac{1}{N}\sum_{i=1}^N(x_i - \bar x)^n \text{ - biased} \f]
 	 * \f[ c_i = \frac{1}{N-1}\sum_{i=1}^N(x_i - \bar x)^n \text{ - unbiased} \f]
 	 */
-	MAP_STAT(central_moment, bias<value_type>, value_type);
+	MAP_STAT(central_moment, bias<::ca::ss::vec_view<T>::value_type>, ::ca::ss::vec_view<T>::value_type);
 	bias<value_type> variance() { return central_moment(2); };
 
 	/**
@@ -46,14 +46,14 @@ public:
 	 * \f[ \hat \sigma = \sqrt{\frac{1}{N}\sum_{i=1}^N(x_i - \bar x)^2} \text{ - biased} \f]
 	 * \f[ \sigma = \sqrt{\frac{1}{N-1}\sum_{i=1}^N(x_i - \bar x)^2} \text{ - unbiased} \f]
 	 */
-	SINGLE_STAT(std_dev, bias<value_type>);
+	SINGLE_STAT(std_dev, bias<::ca::ss::vec_view<T>::value_type>);
 
 	/**
 	 * @brief Skewness (also known as Assymetry)
 	 * \f[ \hat A = \frac{1}{N\hat\sigma^3}\sum_{i=1}^N(x_i-\bar x)^3\text{ - biased} \f]
 	 * \f[ \bar A = \frac{\sqrt{N(N-1)}}{N-2}\hat A \text{ - unbiased} \f]
 	 */
-	SINGLE_STAT(skew, bias<value_type>);
+	SINGLE_STAT(skew, bias<::ca::ss::vec_view<T>::value_type>);
 	/**
 	 * @brief Kurtosis (also known as Excess)
 	 * \f[ \hat E = \frac{\hat\mu_4}{\hat\sigma^4}\text{ - biased} \f]

@@ -20,7 +20,7 @@ template<typename T>
 class vec;
 
 /**
- * @brief Array viev
+ * @brief Array view
  *
  * This class kepps view on the array that can be represented as pointer to
  * `vec_view::value_type` array of size vec_view::n(). Data cannot be freed, but
@@ -57,7 +57,7 @@ public:
 	 *
 	 * @return sum of all elements
 	 */
-	value_type sum() const;
+	virtual value_type sum() const;
 
 	/**
 	 * @brief Dot product

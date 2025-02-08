@@ -22,7 +22,7 @@ vec<T>::vec(
 template<typename T>
 vec<T>::vec(
 	const size_type& len
-): vec_view<T>(new value_type[len], len) {}
+): vec_view<T>(new value_type[len], len) { }
 
 
 template<typename T>

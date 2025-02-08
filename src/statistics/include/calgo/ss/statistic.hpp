@@ -45,7 +45,7 @@ template<class Owner, typename Type>
 class single_statistic: public statistic<Owner> {
 public:
 	using value_type = Type;
-	using owner_type = typename statistic<Owner>::owner_type;
+	using typename statistic<Owner>::owner_type;
 	using size_type = typename owner_type::size_type;
 
 public:
@@ -89,8 +89,8 @@ class map_statistic: public statistic<Owner> {
 public:
 	using value_type = Type;
 	using key_type = Key;
-	using owner_type = typename statistic<Owner>::owner_type;
-	using size_type = typename statistic<Owner>::size_type;
+	using typename statistic<Owner>::owner_type;
+	using typename statistic<Owner>::size_type;
 
 public:
 	using statistic<Owner>::statistic;
@@ -119,6 +119,13 @@ protected:
 	std::unordered_map<key_type, value_type> m_values;
 };
 
+/**
+ * @brief Biased/unbiased pair
+ *
+ * Represents biased and unbiased pair of statistical value
+ *
+ * @tparam T `value_type`
+ */
 template<typename T>
 struct bias {
 	using value_type = T;
@@ -132,9 +139,9 @@ struct bias {
 	class NAME##_impl: public ::ca::ss::single_statistic<OWNER, TYPE> { \
 	public: \
 		using base_type = ::ca::ss::single_statistic<OWNER, TYPE>; \
-		using owner_type = typename base_type::owner_type; \
-		using value_type = typename base_type::value_type; \
-		using size_type = typename base_type::size_type; \
+		using typename base_type::owner_type; \
+		using typename base_type::value_type; \
+		using typename base_type::size_type; \
 	public: \
 		using base_type::base_type; \
 	protected: \
@@ -145,10 +152,10 @@ struct bias {
 	class NAME##_impl: public ::ca::ss::map_statistic<OWNER, TYPE __VA_OPT__(,) __VA_ARGS__> { \
 	public: \
 		using base_type = typename ::ca::ss::map_statistic<OWNER, TYPE __VA_OPT__(,) __VA_ARGS__>; \
-		using key_type = typename base_type::key_type; \
-		using owner_type = typename base_type::owner_type; \
-		using value_type = typename base_type::value_type; \
-		using size_type = typename base_type::size_type; \
+		using typename base_type::key_type; \
+		using typename base_type::owner_type; \
+		using typename base_type::value_type; \
+		using typename base_type::size_type; \
 	public: \
 		using base_type::base_type; \
 	protected: \

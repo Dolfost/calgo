@@ -27,7 +27,7 @@ class BoundingPhase {
 	static_assert(std::is_signed<T>::value, "value_type should be signed");
 public:
 	using value_type = T;
-	using interval_type = Interval<T>;
+	using interval_type = interval<T>;
 	using function_type = std::function<value_type(value_type)>;
 	using size_type = std::size_t;
 

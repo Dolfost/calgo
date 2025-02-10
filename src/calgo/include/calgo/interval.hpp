@@ -9,7 +9,7 @@
 namespace ca {
 
 template<typename T>
-struct Interval {
+struct interval {
 	static_assert(std::is_arithmetic<T>::value, "value_type should be arithmetic");
 	using value_type = T;
 	value_type a;
@@ -18,10 +18,11 @@ struct Interval {
 	void swap() { std::swap(a, b); }
 	value_type length() const { return std::abs(a-b); }
 	value_type middle() const { return (a+b)/2; }
-	bool inverted() const { return a > b; }
+	bool is_inverted() const { return a > b; }
+	inline bool contains(const value_type& c) const { return a <= c and c <= b; }
+	inline bool strictly_contains(const value_type& c) const { return a < c and c < b; }
 
-	template<typename O>
-	friend std::ostream& operator<<(std::ostream& os, const Interval<O>& i) {
+	friend std::ostream& operator<<(std::ostream& os, const interval<T>& i) {
 		return os << '[' << i.a << ", " << i.b << ']';
 	}
 };

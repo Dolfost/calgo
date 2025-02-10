@@ -16,7 +16,7 @@ template<typename T>
 class IntervalMinimum {
 public:
 	using value_type = T;
-	using interval_type = Interval<value_type>;
+	using interval_type = interval<value_type>;
 	using function_type = std::function<value_type(value_type)>;
 
 public:

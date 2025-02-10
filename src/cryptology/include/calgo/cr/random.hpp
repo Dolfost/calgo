@@ -156,6 +156,9 @@ public:
 		this->m_previous = (seed*seed) % m_n;
 	}
 
+	const value_type& p() { return m_p; };
+	const value_type& q() { return m_q; };
+
 protected:
 	value_type m_p, m_q, m_n;
 };

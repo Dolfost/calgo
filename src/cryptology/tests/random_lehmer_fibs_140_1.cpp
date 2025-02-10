@@ -5,9 +5,7 @@
 int main(int argc, char** argv) {
 	using T = unsigned int;
 	ca::cr::lehmer<T> l;
-	l.set_multiplier(543);
-	l.set_gain(0);
-	l.set_seed(859234652);
+	l.set_seed(654873, 3, 754398);
 
 	std::uint8_t data[ca::cr::FIBS_140_1::sample_size];
 	for (std::size_t i = 0; i < ca::cr::FIBS_140_1::sample_size/sizeof(T); i += 1) {

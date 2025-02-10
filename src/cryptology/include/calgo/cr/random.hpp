@@ -2,6 +2,7 @@
 #define _CALGO_CRYPTOLOGY_RANDOM_HPP_
 
 #include <calgo/interval.hpp>
+#include <calgo/prime.hpp>
 
 #include <stdexcept>
 #include <limits>
@@ -29,19 +30,20 @@ public:
 	/**
 	 * @brief Set seed
 	 *
-	 * Default seed is 42
+	 * Default seed in child classes is 42
 	 *
 	 * @param seed seed value
 	 */
-	virtual void set_seed(const value_type& seed) { m_seed = seed; }
 	const value_type& seed() const { return m_seed; }
+	const value_type& previous() const { return m_previous; };
+	virtual void reset() { m_previous = m_seed; };
 
 protected:
-	value_type m_seed = 42;
+	value_type m_seed, m_previous;
 };
 
 /**
- * @brief Lehmer random generator
+ * @brief Lehmer RNG
  *
  * @tparam T `value_type`
  */
@@ -49,75 +51,115 @@ template<typename T>
 class lehmer: public random<T> {
 public:
 	using typename random<T>::value_type;
+
+	lehmer() {
+		set_seed(42);
+	}
+
 public:
 	const value_type& modulus() const { return m_modulus; };
 	const value_type& multiplier() const { return m_multiplier; };
 	const value_type& gain() const { return m_gain; };
-	const value_type& previous() const { return m_previous; };
 
 	/**
-	 * @brief Set modulus \f(0 < m\f)
+	 * @brief Seed the RNG
 	 *
-	 * Default modulus value is `std::numeric_limits<value_type>::max() - 1`
-	 *
-	 * @param m new modulus value
-	 * @throws std::out_of_range
+	 * @param seed seed \f(0<x_0<m\f)
+	 * @param modulus modulum value \f(0<m\f)
+	 * @param multiplier multiplier value \f(0 < a<m\f)
+	 * @param gain gain value \f(0 \leq c < m\f).
 	 */
-	void set_modulus(const value_type& m) { 
-		if (m <= 0) 
-			throw std::out_of_range("ca::cr::lehmer: modulus is 0"); 
-		m_modulus = m; 
-	};
-	/**
-	 * @brief Set multiplier \f(0 < a < m\f)
-	 *
-	 * Default multiplier value is 16807.
-	 *
-	 * @param a new multiplier value
-	 * @throws std::out_of_range
-	 */
-	void set_multiplier(const value_type& a) { 
-		if (a >= m_modulus) 
-			throw std::out_of_range("ca::cr::lehmer: modulus > multiplier"); 
-		if (a <= 0) 
-			throw std::out_of_range("ca::cr::lehmer: multiplier is 0"); 
-		m_multiplier = a;
-	};
-	/**
-	 * @brief Set gain value \f(0 \leq c < m\f)
-	 *
-	 * Default gain value is 0.
-	 *
-	 * @param c new gain value
-	 * @throws std::out_of_range
-	 */
-	void set_gain(const value_type& c) {
-		if (c >= m_modulus) 
-			throw std::out_of_range("ca::cr::lehmer: modulus > gain"); 
-		m_gain = c;
-	};
-	void set_previous(const value_type& prev) {
-		m_previous = prev;
-	};
+	void set_seed(
+		const value_type& seed, 
+		const value_type& multiplier = 16807, 
+		const value_type& gain = 0, 
+		const value_type& modulus = std::numeric_limits<value_type>::max()
+	) { 
+		if (modulus <= 0) 
+			throw std::out_of_range("ca::cr::lehmer: modulus <= 0"); 
+		if (multiplier <= 0) 
+			throw std::out_of_range("ca::cr::lehmer: multiplier <= 0"); 
+		if (gain < 0) 
+			throw std::out_of_range("ca::cr::lehmer: gain < 0"); 
+		if (multiplier >= modulus) 
+			throw std::out_of_range("ca::cr::lehmer: multiplier >= modulus"); 
+		if (gain >= modulus) 
+			throw std::out_of_range("ca::cr::lehmer: gain >= modulus"); 
 
-	/**
-	 * @brief Set the seed
-	 * Also the m_previous is beeing set to `seed`
-	 * @param seed new seed value
-	 */
-	void set_seed(const value_type& seed) override {
-		random<T>::set_seed(seed);
-		set_previous(m_previous);
-	}
+		m_multiplier = multiplier;
+		m_modulus = modulus;
+		m_gain = gain;
+		this->m_seed = seed;
+		this->m_previous = seed;
+	};
 
 	value_type generate() override {
-		return (m_previous = (m_multiplier*m_previous + m_gain) % m_modulus);
+		return (this->m_previous = (m_multiplier*this->m_previous + m_gain) % m_modulus);
 	};
 
 protected:
-	value_type m_modulus = std::numeric_limits<value_type>::max() - 1;
-	value_type m_multiplier = 16807, m_gain = 0, m_previous = this->m_seed; 
+	value_type m_modulus, m_multiplier, m_gain;
 };
+
+/**
+ * @brief BBS RNG implementation
+ *
+ * @tparam T `value_type`
+ */
+template<typename T>
+class bbs: public random<T> {
+public:
+	using typename random<T>::value_type;
+
+	bbs() {
+		set_seed(42);
+	}
+
+public:
+	value_type generate() override {
+		value_type res = 0;
+		for (std::size_t i = 0; i < 8*sizeof(value_type); i++)
+			res |= (static_cast<value_type>(generate_bit()) << i);
+		return res;
+	};
+
+	/**
+	 * @brief Generate random bit
+	 * @return random bit
+	 */
+	inline bool generate_bit() {
+		return (this->m_previous = (this->m_previous*this->m_previous) % m_n) % 2;
+	}
+
+	/**
+	 * @brief Seed the RNG
+	 *
+	 * @param seed seed value
+	 * @param p prime \f(p\f) parameter
+	 * @param q prime \f(q\f) parameter
+	 * @throw std::runtime_error
+	 */
+	void set_seed(
+		const value_type& seed, 
+		const value_type& p = 7919, 
+		const value_type& q = 6367
+	) { 
+		if ((p % 4) != 3)
+			throw std::runtime_error("ca::cr::bbs: (p mod 4) != 3");
+		if ((q % 4) != 3)
+			throw std::runtime_error("ca::cr::bbs: (q mod 4) != 3");
+		if (not ca::is_prime(p))
+			throw std::runtime_error("ca::cr::bbs: p is not a prime");
+		if (not ca::is_prime(q))
+			throw std::runtime_error("ca::cr::bbs: q is not a prime");
+		this->m_seed = seed, m_n = p*q, m_p = p, m_q = q;
+		this->m_previous = (seed*seed) % m_n;
+	}
+
+protected:
+	value_type m_p, m_q, m_n;
+};
+
 
 namespace FIBS_140_1 {
 

@@ -15,7 +15,7 @@ template<typename T>
 bool BoundingPhase<T>::localize() {
 	m_found = false;
 
-	value_type x0 = m_startingPoint, x1 = x0 + m_step, x2;
+	value_type x0 = m_starting_point, x1 = x0 + m_step, x2;
 	value_type f0 = m_func(x0), f1 = m_func(x1), f2;
 	value_type direction;
 
@@ -29,7 +29,7 @@ bool BoundingPhase<T>::localize() {
 	const bool call = (bool)p_iterationCallback;
 	unsigned long long mult = 1;
 	size_type i;
-	for (i = 0; i < m_iterationLimit; i++) { 
+	for (i = 0; i < m_iteration_limit; i++) { 
 		mult = mult << 1;
 		x2 = x1 + direction*mult*m_step;
 		f2 = m_func(x2);

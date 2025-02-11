@@ -46,16 +46,16 @@ public:
 	}
 	const function_type& function() const { return m_func; };
 
-	const interval_type& interval() const { return m_int; }
+	const interval_type& local_interval() const { return m_int; }
 	bool found() const { return m_found; }
 
-	size_type iterationLimit() const { return m_iterationLimit; }
-	void setIterationLimit(const size_type& il) { m_iterationLimit = il; }
+	size_type iterationLimit() const { return m_iteration_limit; }
+	void set_iteration_limit(const size_type& il) { m_iteration_limit = il; }
 
-	void setStartingPoint(const value_type& sp) { m_startingPoint = sp; }
-	value_type startingPoint() const { return m_startingPoint; }
+	void set_starting_point(const value_type& sp) { m_starting_point = sp; }
+	value_type starting_point() const { return m_starting_point; }
 
-	void setStep(const value_type& s) { m_step = s; }
+	void set_step(const value_type& s) { m_step = s; }
 	value_type step() const { return m_step; }
 
 	CA_CALLBACK(
@@ -75,11 +75,11 @@ protected:
 	interval_type m_int;
 	bool m_found;
 
-	value_type m_startingPoint = 0;
+	value_type m_starting_point = 0;
 	value_type m_step = 0.1;
 
 
-	size_type m_iterationLimit = 16;
+	size_type m_iteration_limit = 16;
 };
 
 }

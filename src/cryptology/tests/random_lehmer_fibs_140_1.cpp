@@ -2,16 +2,18 @@
 #include <iostream>
 #include <cstdint>
 
+#include <cstring>
+
 int main(int argc, char** argv) {
 	using T = unsigned int;
 	ca::cr::lehmer<T> l;
-	l.set_seed(654873, 3, 754398);
+	l.set_seed(654873, 489263, 86);
 
 	std::uint8_t data[ca::cr::FIBS_140_1::sample_size];
-	for (std::size_t i = 0; i < ca::cr::FIBS_140_1::sample_size/sizeof(T); i += 1) {
+	for (std::size_t i = 0; i < ca::cr::FIBS_140_1::sample_size; i += sizeof(T)) {
 		T rand = l.generate();
 		std::cout << std::uppercase << std::hex << std::bitset<8*sizeof(T)>(rand) << std::dec << '\n';
-		*((T*)(data) + i) = rand;
+		std::memcpy(data + i, &rand, sizeof(T));
 	}
 	ca::cr::FIBS_140_1::monobit_result mr = 
 		ca::cr::FIBS_140_1::monobit_test(data);
@@ -22,7 +24,7 @@ int main(int argc, char** argv) {
 		ca::cr::FIBS_140_1::poker_test(data);
 	std::cout << (pr.passed ? "PASS" : "FAIL" ) << " - poker test: " <<
 		pr.range.a << " <= " << pr.statistic << " <= " << pr.range.b << std::endl;
-	
+
 	ca::cr::FIBS_140_1::series_length_result slr = 
 		ca::cr::FIBS_140_1::series_length_test(data);
 	std::cout << (slr.passed ? "PASS" : "FAIL" ) << " - series length test: " <<

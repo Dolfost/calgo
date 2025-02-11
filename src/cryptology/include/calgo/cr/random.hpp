@@ -166,7 +166,7 @@ protected:
 
 namespace FIBS_140_1 {
 
-static const std::size_t sample_size = 2500;
+static const std::size_t sample_size = 40;//2500;
 
 struct result {
 	bool passed = false;

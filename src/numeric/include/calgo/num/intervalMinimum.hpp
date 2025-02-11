@@ -22,7 +22,7 @@ public:
 public:
 	IntervalMinimum(const interval_type& inter = {0, 1}): m_int(inter) {}
 
-	const interval_type& interval() const { return m_int; };
+	const interval_type& bounds() const { return m_int; };
 	void setInterval(const interval_type& i) { m_int = i; };
 
 	const value_type& epsilon() const { return m_eps; };

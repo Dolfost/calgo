@@ -1,6 +1,7 @@
 #include <calgo/cr/random.hpp>
 #include <iostream>
 #include <cstdint>
+#include <bitset>
 
 #include <cstring>
 

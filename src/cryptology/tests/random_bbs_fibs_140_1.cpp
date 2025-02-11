@@ -1,6 +1,7 @@
 #include <calgo/cr/random.hpp>
 #include <iostream>
 #include <cstdint>
+#include <bitset>
 
 int main(int argc, char** argv) {
 	using T = unsigned int;

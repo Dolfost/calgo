@@ -164,9 +164,9 @@ protected:
 };
 
 
-namespace FIBS_140_1 {
+namespace FIPS_140_2 {
 
-static const std::size_t sample_size = 40;//2500;
+static const std::size_t sample_size = 2500;
 
 struct result {
 	bool passed = false;
@@ -174,34 +174,37 @@ struct result {
 
 struct monobit_result: public result {
 	std::size_t ones = 0;
-	static const std::size_t ones_from = 9654;
-	static const std::size_t ones_to = 10346;
+	constexpr static const ca::interval<std::size_t> range = {
+		9654,
+		10346
+	};
 };
 monobit_result monobit_test(const std::uint8_t* data);
 
 struct poker_result: public result {
-	constexpr static const ca::interval<double> range = {1.03, 57.4};
+	constexpr static const ca::interval<double> range = {2.16, 46.17};
 	double statistic = 0;
 };
 poker_result poker_test(const std::uint8_t* data);
 
-struct series_length_result: public result {
-	static const std::size_t max_length = 34;
+struct long_run_result: public result {
+	static const std::size_t max_length = 26;
 	std::size_t length = 0;
 };
-series_length_result series_length_test(const std::uint8_t* data);
+long_run_result long_run_test(const std::uint8_t* data);
 
-struct series_result: public result {
+struct runs_result: public result {
 	constexpr static const ca::interval<std::size_t> ranges[] = {
+		{2315, 2685}, 
 		{1114, 1386}, 
 		{527, 723}, 
 		{240, 384}, 
 		{103, 209}, 
 		{103, 209}, 
 	}; /// Expected counts for 2, 3, 4, 5 and 6 bit series
-	std::size_t quantities[5] = {0};
+	std::size_t quantities[6] = {0};
 };
-series_result series_test(const std::uint8_t* data);
+runs_result runs_test(const std::uint8_t* data);
 
 }
 

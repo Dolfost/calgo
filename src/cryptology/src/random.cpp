@@ -3,14 +3,14 @@
 #include <cmath>
 #include <algorithm>
 
-namespace ca::cr::FIBS_140_1 {
+namespace ca::cr::FIPS_140_2 {
 
 monobit_result monobit_test(const std::uint8_t* data) {
 	monobit_result res;
 	for (std::size_t i = 0; i < sample_size*8; i++)
 		if (data[i/8] & (1 << i%8))
 			res.ones++;
-	if (not (res.ones < res.ones_from or res.ones > res.ones_to))
+	if (res.range.contains(res.ones))
 		res.passed = true;
 
 	return res;
@@ -20,18 +20,19 @@ poker_result poker_test(const std::uint8_t* data) {
 	poker_result res;
 	std::size_t freqs[16] = {0};
 	for (std::size_t i = 0; i < sample_size*2; i++)
-		freqs[(data[i/2] >> 4*(i%2)) & 0x0F]++;
+		freqs[(data[i/2] >> (4*(i%2))) & 0x0F]++;
 
 	for (std::size_t i = 0; i < 16; i++)
-		res.statistic += std::pow(freqs[i], 2);
-	res.statistic *= 16/5000.0;
-	if (res.statistic > res.range.a and res.statistic < res.range.b)
+		res.statistic += (std::pow(freqs[i], 2));
+	res.statistic *= (16/5000.0);
+	res.statistic -= 5000;
+	if (res.range.contains(res.statistic))
 		res.passed = true;
 	return res;
 }
 
-series_length_result series_length_test(const std::uint8_t* data) {
-	series_length_result res;
+long_run_result long_run_test(const std::uint8_t* data) {
+	long_run_result res;
 	bool current = data[0] & 1;
 	std::size_t tmp = 0;
 	for (std::size_t i = 0; i < sample_size*8; i++)
@@ -50,31 +51,28 @@ series_length_result series_length_test(const std::uint8_t* data) {
 }
 
 // 	BUG: counts are wrong
-series_result series_test(const std::uint8_t* data) {
-	series_result res;
+runs_result runs_test(const std::uint8_t* data) {
+	runs_result res;
 	bool current = data[0] & 1;
-	std::size_t current_len = 0;
-	for (std::size_t i = 0; i < sample_size*8; i++)
+	std::size_t current_len = 1;
+	for (std::size_t i = 1; i < sample_size*8; i++)
 		if (current_len < 6) {
-			if ((data[i/8] & (1 << i%8)) xor current) { // if different
-				res.quantities[current_len-2]++;
+			if (bool(data[i/8] & (1 << (i%8))) != current) { // if different
+				res.quantities[current_len-1]++;
 				current = not current;
-				current_len = 0;
-			} else // same
+				current_len = 1;
+			} else // if same
 				current_len++;
-		} else { // current_len >= 6
-			i++;
-			if (i < sample_size*8 and (data[i/8] & (1 << i%8)) == current)
-				while (i < sample_size*8 and (data[i/8] & (1 << i%8)) == current)
-					i++;
-			else
-				res.quantities[current_len - 2]++;
+		} else { // current_len == 6
+			while (i < sample_size*8 and bool(data[i/8] & (1 << (i%8))) == current)
+				i++;
+			res.quantities[6-1]++;
 			current = not current;
-			current_len = 0;
+			current_len = 1;
 		}
 
 	res.passed = true;
-	for (std::size_t i = 0; i < 5; i++)
+	for (std::size_t i = 0; i < sizeof(res.quantities)/sizeof(std::size_t); i++)
 		if (not res.ranges[i].contains(res.quantities[i])) {
 			res.passed = false;
 			break;

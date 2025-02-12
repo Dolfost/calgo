@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <bitset>
 #include <random>
+#include <cstring>
 
 int main(int argc, char** argv) {
 	using T = unsigned int;

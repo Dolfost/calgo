@@ -62,15 +62,15 @@ public:
 public:
 	Nodes(interval_type a = 0, interval_type b = 1, size_type n = 10): m_a(a), m_b(b), m_n(n) {};
 
-	const vec<value_type>& nodes() { return m_nodes; }
+	const vec<value_type>& nodes() const { return m_nodes; }
 	value_type weight(size_type i) { 
 		if (i == m_n-2) 
 			i--; 
 		return m_nodes[i+1] - m_nodes[i]; 
 	}
-	const interval_type& a() { return m_a; }
-	const interval_type& b() { return m_b; }
-	const size_type& n() { return m_n; }
+	const interval_type& a() const { return m_a; }
+	const interval_type& b() const { return m_b; }
+	const size_type& n() const { return m_n; }
 
 	virtual ~Nodes() = default;
 

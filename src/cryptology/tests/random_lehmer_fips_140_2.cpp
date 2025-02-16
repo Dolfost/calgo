@@ -14,7 +14,7 @@ int main(int argc, char** argv) {
 	std::uint8_t data[ca::cr::FIPS_140_2::sample_size];
 	for (std::size_t i = 0; i < ca::cr::FIPS_140_2::sample_size; i += sizeof(T)) {
 		T rand = d() xor l.generate() xor clock();
-		std::cout << std::uppercase << std::hex << std::bitset<8*sizeof(T)>(rand) << std::dec << '\n';
+		std::cout << std::uppercase << std::bitset<8*sizeof(T)>(rand) << '\n';
 		std::memcpy(data + i, &rand, sizeof(T));
 	}
 	ca::cr::FIPS_140_2::monobit_result mr = 
@@ -35,10 +35,12 @@ int main(int argc, char** argv) {
 	ca::cr::FIPS_140_2::runs_result sr = 
 		ca::cr::FIPS_140_2::runs_test(data);
 	std::cout << (sr.passed ? "PASS" : "FAIL" ) << " - series test: \n";
-	for (std::size_t i = 0; i < std::size(ca::cr::FIPS_140_2::runs_result::ranges); i++) {
-		std::cout << "    " << (sr.ranges[i].contains(sr.quantities[i]) ? "PASS" : "FAIL" ) 
-			<< " - count of series of " << i + 1 << " " << sr.ranges[i].a << " <= " << sr.quantities[i] << " <= " << sr.ranges[i].b << "\n";
-	}
+	for (std::size_t i = 0; i < std::size(ca::cr::FIPS_140_2::runs_result::ranges); i++)
+		std::cout << "    " << (sr.ranges[i].contains(sr.quantities[i][0]) ? "PASS" : "FAIL" ) 
+			<< " - count of series of " << i + 1 << " zeroes " << sr.ranges[i].a << " <= " << sr.quantities[i][0] << " <= " << sr.ranges[i].b << "\n";
+	for (std::size_t i = 0; i < std::size(ca::cr::FIPS_140_2::runs_result::ranges); i++)
+		std::cout << "    " << (sr.ranges[i].contains(sr.quantities[i][1]) ? "PASS" : "FAIL" ) 
+			<< " - count of series of " << i + 1 << " ones " << sr.ranges[i].a << " <= " << sr.quantities[i][1] << " <= " << sr.ranges[i].b << "\n";
 
-	return 0;
+	return not (mr.passed and pr.passed and slr.passed and sr.passed);
 }

@@ -36,7 +36,7 @@ long_run_result long_run_test(const std::uint8_t* data) {
 	bool current = data[0] & 1;
 	std::size_t tmp = 0;
 	for (std::size_t i = 0; i < sample_size*8; i++)
-		if ((data[i/8] & (1 << i%8)) xor current) {
+		if (bool(data[i/8] & (1 << i%8)) != current) {
 			res.length = std::max(tmp, res.length);
 			current = !current;
 			tmp = 0;
@@ -50,7 +50,6 @@ long_run_result long_run_test(const std::uint8_t* data) {
 	return res;
 }
 
-// 	BUG: counts are wrong
 runs_result runs_test(const std::uint8_t* data) {
 	runs_result res;
 	bool current = data[0] & 1;
@@ -58,7 +57,7 @@ runs_result runs_test(const std::uint8_t* data) {
 	for (std::size_t i = 1; i < sample_size*8; i++)
 		if (current_len < 6) {
 			if (bool(data[i/8] & (1 << (i%8))) != current) { // if different
-				res.quantities[current_len-1]++;
+				res.quantities[current_len-1][current]++;
 				current = not current;
 				current_len = 1;
 			} else // if same
@@ -66,17 +65,20 @@ runs_result runs_test(const std::uint8_t* data) {
 		} else { // current_len == 6
 			while (i < sample_size*8 and bool(data[i/8] & (1 << (i%8))) == current)
 				i++;
-			res.quantities[6-1]++;
+			res.quantities[6-1][current]++;
 			current = not current;
 			current_len = 1;
 		}
 
 	res.passed = true;
-	for (std::size_t i = 0; i < sizeof(res.quantities)/sizeof(std::size_t); i++)
-		if (not res.ranges[i].contains(res.quantities[i])) {
+	for (std::size_t i = 0; i < sizeof(res.quantities)/(2*sizeof(std::size_t)); i++) {
+		if (not res.ranges[i].contains(res.quantities[i][0]) or 
+			not res.ranges[i].contains(res.quantities[i][1])
+		) {
 			res.passed = false;
 			break;
 		}
+	}
 
 	return res;
 }

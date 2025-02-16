@@ -202,7 +202,7 @@ struct runs_result: public result {
 		{103, 209}, 
 		{103, 209}, 
 	}; /// Expected counts for 2, 3, 4, 5 and 6 bit series
-	std::size_t quantities[6] = {0};
+	std::size_t quantities[6][2] = {0};
 };
 runs_result runs_test(const std::uint8_t* data);
 

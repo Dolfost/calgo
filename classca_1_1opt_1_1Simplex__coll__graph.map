@@ -1,0 +1,12 @@
+<map id="ca::opt::Simplex&lt; T &gt;" name="ca::opt::Simplex&lt; T &gt;">
+<area shape="rect" id="Node000001" title="Simplex method." alt="" coords="5,388,171,413"/>
+<area shape="rect" id="Node000002" href="$structca_1_1opt_1_1Simplex_1_1Context.html" title="Simplex calculation context." alt="" coords="97,285,247,325"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="148,338,101,389,97,386,144,334"/>
+<area shape="rect" id="Node000003" href="$classca_1_1vec.html" title=" " alt="" coords="96,183,272,223"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="183,236,177,286,172,285,177,236"/>
+<area shape="rect" id="Node000004" href="$classca_1_1vec__view.html" title="Array view." alt="" coords="97,108,241,133"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="177,146,183,182,178,183,171,147"/>
+<area shape="rect" id="Node000005" href="/home/runner/work/calgo/calgo/doc/cppreference-doxygen-web.tag.xml$cpp/types/size_t.html" title=" " alt="" coords="24,5,112,31"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="62,44,54,80,49,119,49,306,53,329,61,351,81,386,77,389,56,354,47,331,44,307,44,119,48,79,57,43"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="91,39,160,106,156,110,88,42"/>
+</map>

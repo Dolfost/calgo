@@ -1,0 +1,9 @@
+<map id="ca::mat_view&lt; T &gt;" name="ca::mat_view&lt; T &gt;">
+<area shape="rect" id="Node000001" title="Matrix view." alt="" coords="203,5,349,31"/>
+<area shape="rect" id="Node000002" href="$classca_1_1mat.html" title=" " alt="" coords="5,79,179,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="235,38,123,81,121,76,233,33"/>
+<area shape="rect" id="Node000003" href="$classca_1_1mat.html" title=" " alt="" coords="203,79,349,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="279,44,279,79,273,79,273,44"/>
+<area shape="rect" id="Node000004" href="$classca_1_1mat.html" title="Matrix template." alt="" coords="373,79,483,104"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="314,34,404,76,402,81,311,39"/>
+</map>

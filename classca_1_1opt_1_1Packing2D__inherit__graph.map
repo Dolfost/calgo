@@ -1,0 +1,11 @@
+<map id="ca::opt::Packing2D&lt; T &gt;" name="ca::opt::Packing2D&lt; T &gt;">
+<area shape="rect" id="Node000001" title=" " alt="" coords="203,79,383,104"/>
+<area shape="rect" id="Node000003" href="$classca_1_1opt_1_1FirstFit2D.html" title=" " alt="" coords="5,152,180,177"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="248,111,126,154,124,149,247,106"/>
+<area shape="rect" id="Node000004" href="$classca_1_1opt_1_1NextFit2D.html" title=" " alt="" coords="204,152,381,177"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="295,118,295,152,290,152,290,118"/>
+<area shape="rect" id="Node000005" href="$classca_1_1opt_1_1TreeFit2D.html" title=" " alt="" coords="406,152,579,177"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="339,106,461,149,459,154,337,111"/>
+<area shape="rect" id="Node000002" href="$classca_1_1opt_1_1Bin2D.html" title=" " alt="" coords="217,5,368,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="295,44,295,79,290,79,290,44"/>
+</map>

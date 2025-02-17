@@ -118,6 +118,16 @@ public:
 	 * @throws std::runtime_error
 	 */
 	T dot(const vec_view<T>& other);
+	/**
+	 * @brief Comparison operator
+	 *
+	 * @param other other object to compare to 
+	 * @return `true` if lengths and elements are same, `false` otherwise
+	 */
+	bool operator==(const vec_view<value_type>& other);
+	inline bool operator!=(const vec_view<value_type>& other) {
+		return not operator==(other);
+	}
 
 	friend ca::mat<T>;
 	friend ca::vec<T>;

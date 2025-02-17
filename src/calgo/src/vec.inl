@@ -172,6 +172,15 @@ typename vec_view<T>::value_type vec_view<T>::dot(const vec_view<value_type>& ot
 		throw std::runtime_error("ca::Vec: dot product not possible");
 	operator*(other);
 }
+template<typename T>
+bool vec_view<T>::operator==(const vec_view<value_type>& other) {
+	if (m_len != other.m_len)
+		return false;
+	for (size_type i = 0; i < m_len; i++) 
+		if (el(i) != other.el(i))
+			return false;
+	return true;
+}
 
 template<typename T>
 typename vec_view<T>::value_type vec_view<T>::operator*(const vec_view<value_type>& other) noexcept {

@@ -248,6 +248,14 @@ public:
 	) const noexcept;
 	/// @}
 
+	/**
+	 * @brief Check if matrix is square matrix
+	 * @return `true` if matrix is square, `false` otherwise
+	 */
+	bool is_square() const {
+		return m_rows == m_cols;
+	}
+
 	friend ::ca::mat<T>;
 
 protected:

@@ -37,7 +37,6 @@ public:
 	}
 
 	inline void check(const ca::mat<distance_type>& adjacency);
-	inline void solve_safe(const ca::mat<distance_type>& adjacency) { ; }
 	template<typename P> typename 
 	std::enable_if<std::is_assignable<ca::mat<distance_type>, P>::value>::type solve(P && adjacency) {
 		m_distances = std::forward<P>(adjacency);

@@ -1,25 +1,29 @@
-#ifndef _CALGO_NUMERIC_EULER_CAUCHY_HPP_
-#define _CALGO_NUMERIC_EULER_CAUCHY_HPP_
+#ifndef _CALGO_NUMERIC_RUNGE_KUTTA_HPP_
+#define _CALGO_NUMERIC_RUNGE_KUTTA_HPP_
 
 #include <calgo/in/interpolation.hpp>
 #include <calgo/vec.hpp>
 
 #include <functional>
 
-namespace ca::num {
+namespace ca::num { 
 
 // TODO: joint the euler_cauchy with runge_kutta with same base
 
 /**
- * @brief Euler-Cauchy method for Cauchy poblem
+ * @brief Runge-Kutta method for Cauchy poblem (3th order)
  *
- * Problem is given in form 
- * \f[ \frac{\mathrm d u}{\mathrm d t}=f(t,u(t)),\quad u(t_0) = u_0,\quad t_0\leq t \leq t_1.\f]
+ * Butcher tableau is given in form:
+ * \f[
+ * \alpha_1 = 0,\ \alpha_2 = \frac{2}{5},\ \alpha_3 = 1,\\
+ * \beta_{21} = \frac{2}{5},\ \beta_{31} = -\frac{7}{8},\ \beta_{32} = 1\frac{7}{8}, \beta_{33} = 0,\\
+ * p_1 = \frac{1}{12},\ p_2 = \frac{25}{36},\ p_3 = \frac{2}{9}.
+ * \f]
  *
- * @tparam T `value_type`
+ * @copydetails ca::num::euler_cauchy
  */
 template<typename T>
-class euler_cauchy {
+class runge_kutta {
 public:
 	using value_type = T;
 	using nodes_type = in::Nodes<value_type>;
@@ -86,6 +90,6 @@ protected:
 
 }
 
-#include "../../../src/euler_cauchy.inl"
+#include "../../../src/runge_kutta.inl"
 
-#endif // !_CALGO_NUMERIC_EULER_CAUCHY_HPP_
+#endif // !_CALGO_NUMERIC_RUNGE_KUTTA_HPP_

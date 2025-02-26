@@ -12,6 +12,7 @@ target_sources(ca_numeric
 				include/calgo/num/fibonacciMinimum.hpp
 				include/calgo/num/goldenRatioMinimum.hpp
 				include/calgo/num/euler_cauchy.hpp
+				include/calgo/num/runge_kutta.hpp
 )
 
 set_target_properties(ca_numeric PROPERTIES

@@ -49,8 +49,8 @@ public:
 	const ca::mat<double>& matrix();
 	void setMatrix(const ca::mat<double>& matrix);
 
-private:
-	ca::mat<double> m_matrix;
+protected:
+	ca::mat<double> m_matrix; /// matrix itself
 };
 
 }

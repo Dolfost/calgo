@@ -1,4 +1,4 @@
-#include <calgo/qt/matWidget.hpp>
+#include <calgo/qt/matModel.hpp>
 
 namespace ca::qt {
 

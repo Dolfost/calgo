@@ -8,6 +8,7 @@ qt_add_library(ca_qt
 	src/vecModel.cpp
 	src/vecWidget.cpp
 	src/matModel.cpp
+	src/symmetricMatModel.cpp
 	src/matWidget.cpp
 	src/systemWidget.cpp
 	src/simplexWidget.cpp
@@ -20,6 +21,7 @@ target_sources(ca_qt
 				include/calgo/qt/vecModel.hpp
 				include/calgo/qt/vecWidget.hpp
 				include/calgo/qt/matModel.hpp
+				include/calgo/qt/symmetricMatModel.hpp
 				include/calgo/qt/matWidget.hpp
 				include/calgo/qt/systemWidget.hpp
 				include/calgo/qt/simplexWidget.hpp

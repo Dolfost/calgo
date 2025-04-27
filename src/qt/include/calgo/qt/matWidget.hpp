@@ -38,8 +38,18 @@ public:
 	 */
 	void hideIndices();
 
-private:
-	MatModel m_model;
+	/**
+	 * @brief Set the table model
+	 *
+	 * @param model the model pointer
+	 */
+	void setModel(QAbstractTableModel* model);
+	/**
+	 * @brief Get the table model
+	 *
+	 * @return model pointer
+	 */
+	QAbstractTableModel* model();
 };
 
 }

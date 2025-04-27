@@ -1,0 +1,7 @@
+<map id="ca::ss::map_statistic&lt; Owner, Type, Key &gt;" name="ca::ss::map_statistic&lt; Owner, Type, Key &gt;">
+<area shape="rect" id="Node000001" title="Multiple statistic (one key)" alt="" coords="81,108,245,148"/>
+<area shape="rect" id="Node000002" href="$classca_1_1ss_1_1statistic.html" title="Base class for statistical values." alt="" coords="5,5,136,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,54,147,106,143,110,95,57"/>
+<area shape="rect" id="Node000003" href="/home/runner/work/calgo/calgo/doc/cppreference-doxygen-web.tag.xml$cpp/container/unordered_map.html" title=" " alt="" coords="161,5,351,45"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="231,57,182,110,178,106,227,54"/>
+</map>

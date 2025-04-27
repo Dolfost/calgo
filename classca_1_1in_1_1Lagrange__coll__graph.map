@@ -1,0 +1,12 @@
+<map id="ca::in::Lagrange" name="ca::in::Lagrange">
+<area shape="rect" id="Node000001" title=" " alt="" coords="67,271,192,296"/>
+<area shape="rect" id="Node000002" href="$classca_1_1in_1_1ExplicitInterpolation.html" title=" " alt="" coords="126,196,322,221"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="199,232,146,272,143,268,196,228"/>
+<area shape="rect" id="Node000003" href="$classca_1_1in_1_1Interpolation.html" title=" " alt="" coords="150,108,298,133"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="227,147,227,195,221,195,221,147"/>
+<area shape="rect" id="Node000004" href="/home/runner/work/calgo/calgo/doc/cppreference-doxygen-web.tag.xml$cpp/container/vector.html" title=" " alt="" coords="5,5,171,31"/>
+<area shape="poly" id="edge5_Node000001_Node000004" title=" " alt="" coords="93,44,101,123,116,221,128,270,123,271,111,222,96,124,87,45"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="116,37,210,106,207,110,113,41"/>
+<area shape="rect" id="Node000005" href="/home/runner/work/calgo/calgo/doc/cppreference-doxygen-web.tag.xml$cpp/types/size_t.html" title=" " alt="" coords="195,5,283,31"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="238,44,228,108,223,108,232,44"/>
+</map>

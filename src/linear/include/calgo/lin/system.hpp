@@ -10,7 +10,7 @@
 namespace ca::lin {
 
 template<typename T>
-class System {
+class system {
 public:
 	using value_type = T;
 

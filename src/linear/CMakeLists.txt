@@ -3,7 +3,6 @@ add_library(ca::linear ALIAS ca_linear)
 target_sources(ca_linear
 	PRIVATE
 		src/cyclicThomas.cpp
-		src/thomas.cpp
 	PUBLIC FILE_SET HEADERS 
 			BASE_DIRS include/
 			FILES

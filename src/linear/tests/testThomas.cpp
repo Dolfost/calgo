@@ -27,7 +27,7 @@ int main() {
 	std::vector<double> sol, expect = {635/1992.0, 563/996.0, -199/498.0,
 		2713/996.0, -589/332.0};
 
-	ca::lin::Thomas<double> thom;
+	ca::lin::thomas<double> thom;
 	thom.set_a(a); thom.set_b(b); thom.set_c(c); thom.set_constraints(d);
 	thom.solve_safe();
 	std::cout << thom.solution().n() << std::endl;

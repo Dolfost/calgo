@@ -13,6 +13,7 @@ target_sources(ca_numeric
 				include/calgo/num/goldenRatioMinimum.hpp
 				include/calgo/num/euler_cauchy.hpp
 				include/calgo/num/runge_kutta.hpp
+				include/calgo/num/boundary_value_problem.hpp
 )
 
 set_target_properties(ca_numeric PROPERTIES

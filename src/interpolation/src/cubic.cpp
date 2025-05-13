@@ -21,7 +21,7 @@ void Cubic::calculateM() {
 		l[i] = (i_y[i+2] - i_y[i+1])/hx(i+1) - (i_y[i+1] - i_y[i])/hx(i+1);
 	}
 
-	ca::lin::Thomas<double> thomas; 
+	ca::lin::thomas<double> thomas; 
 	thomas.set_a(a); thomas.set_b(b); thomas.set_c(a);
 	thomas.set_constraints(l);
 	thomas.solve(); // c = a

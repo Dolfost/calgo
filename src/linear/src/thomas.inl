@@ -4,13 +4,13 @@
 namespace ca::lin {
 
 template<typename T>
-void Thomas<T>::init() {
+void thomas<T>::init() {
 	this->m_solution.resize(m_constraints.n());
 	this->m_solution.set(0);
 }
 
 template<typename T>
-void Thomas<T>::solve() {
+void thomas<T>::solve() {
 	init();
 	const auto N = m_b.n();
 
@@ -32,7 +32,7 @@ void Thomas<T>::solve() {
 }
 
 template<typename T>
-void Thomas<T>::check() {
+void thomas<T>::check() {
 	if (m_b.n() != m_constraints.n())
 		throw std::runtime_error(
 			"ca::Thomas: number of constraints "

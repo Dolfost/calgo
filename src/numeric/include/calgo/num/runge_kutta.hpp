@@ -8,7 +8,7 @@
 
 namespace ca::num { 
 
-// TODO: joint the euler_cauchy with runge_kutta with same base
+// TODO: join the euler_cauchy with runge_kutta with same base
 
 /**
  * @brief Runge-Kutta method for Cauchy poblem (3th order)

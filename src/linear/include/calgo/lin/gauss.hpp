@@ -17,9 +17,9 @@ public:
 
 	void setConstraints(vec_view<value_type>& c) { m_constraints = c; };
 	void setVariables(mat_view<value_type>& v) { m_variables = v; };
-	vec_view<value_type>& constraints() { return m_variables; };
+	vec_view<value_type>& constraints() { return m_constraints; };
 	mat_view<value_type>& variables() { return m_variables; };
-	const vec_view<value_type>& constraints() const { return m_variables; };
+	const vec_view<value_type>& constraints() const { return m_constraints; };
 	const mat_view<value_type>& variables() const { return m_variables; };
 
 	void init() override;
@@ -51,12 +51,11 @@ public:
 		const vec_view<T>& constr
 	)
 
-protected:
 	void check() override;
 
 protected:
-		mat_view<value_type> m_variables;
-		vec_view<value_type> m_constraints;
+	mat_view<value_type> m_variables;
+	vec_view<value_type> m_constraints;
 };
 
 }

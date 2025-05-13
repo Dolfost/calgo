@@ -20,7 +20,6 @@ public:
 
 	vec<value_type>& solution() { return m_solution; };
 
-protected:
 	virtual void check() = 0;
 
 protected:

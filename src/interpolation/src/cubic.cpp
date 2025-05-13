@@ -12,7 +12,7 @@ void Cubic::setX(ListT x) {
 }
 
 void Cubic::calculateM() {
-	ListT a(i_n - 3), b(i_n - 2), l(i_n - 2); // c = a
+	vec<double> a(i_n - 3), b(i_n - 2), l(i_n - 2); // c = a
 	for (std::size_t i = 0; i < i_n - 3; i++)
 		a[i] = hx(i+2)/6;
 
@@ -21,7 +21,13 @@ void Cubic::calculateM() {
 		l[i] = (i_y[i+2] - i_y[i+1])/hx(i+1) - (i_y[i+1] - i_y[i])/hx(i+1);
 	}
 
-	ListT sol = ca::lin::Thomas::solve(a, b, a, l); // c = a
+	ca::lin::Thomas<double> thomas; 
+	thomas.set_a(a); thomas.set_b(b); thomas.set_c(a);
+	thomas.set_constraints(l);
+	thomas.solve(); // c = a
+	std::vector<double> sol(thomas.solution().n());
+	for (std::size_t i = 0; i < thomas.solution().n(); i++)
+		sol[i] = thomas.solution()[i];
 
 	n_M.clear();
 	n_M.push_back(0);

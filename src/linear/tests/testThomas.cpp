@@ -18,15 +18,21 @@ bool comp(
 
 int main() {
 
-	std::vector<double>
+	ca::vec<double>
 	a = {4, 5, 6, 9},
 	b = {6, 8, 5, 3, 11},
 	c = {9, 7, 3, 1},
 	d = {7, 3, 9, 4, 5};
 
-	std::vector<double> 
-	sol = ca::lin::Thomas::solve(a, b, c, d),
-	expect = {635/1992.0, 563/996.0, -199/498.0, 2713/996.0, -589/332.0};
+	std::vector<double> sol, expect = {635/1992.0, 563/996.0, -199/498.0,
+		2713/996.0, -589/332.0};
+
+	ca::lin::Thomas<double> thom;
+	thom.set_a(a); thom.set_b(b); thom.set_c(c); thom.set_constraints(d);
+	thom.solve_safe();
+	std::cout << thom.solution().n() << std::endl;
+	for (std::size_t i = 0; i < thom.solution().n(); i++)
+		sol.push_back(thom.solution()[i]);
 
 	std::cout << "expected: ";
 	for (auto const& x : expect) {

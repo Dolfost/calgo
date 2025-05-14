@@ -1,5 +1,4 @@
 #include<iostream>
-#include<cmath>
 
 #include<calgo/num/boundary_value_problem.hpp>
 #include<calgo/in/interpolation.hpp>

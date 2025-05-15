@@ -95,7 +95,6 @@ protected:
 	vec<value_type> m_y;
 	F m_f;
 	Q m_q;
-	value_type m_u0 = 0;
 };
 
 }

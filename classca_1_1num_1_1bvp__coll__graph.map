@@ -1,0 +1,11 @@
+<map id="ca::num::bvp&lt; T, k_present &gt;" name="ca::num::bvp&lt; T, k_present &gt;">
+<area shape="rect" id="Node000001" title="Boundary value problem." alt="" coords="5,300,151,340"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,197,108,223"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="64,235,77,299,72,300,59,236"/>
+<area shape="rect" id="Node000003" href="$classca_1_1vec.html" title=" " alt="" coords="133,183,301,237"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="173,248,104,302,101,298,170,244"/>
+<area shape="rect" id="Node000004" href="$classca_1_1vec__view.html" title="Array view." alt="" coords="145,108,289,133"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="219,147,219,183,214,183,214,147"/>
+<area shape="rect" id="Node000005" href="/home/runner/work/calgo/calgo/doc/cppreference-doxygen-web.tag.xml$cpp/types/size_t.html" title=" " alt="" coords="173,5,261,31"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="219,45,219,108,214,108,214,45"/>
+</map>

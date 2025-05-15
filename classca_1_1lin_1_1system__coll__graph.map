@@ -1,0 +1,9 @@
+<map id="ca::lin::system&lt; T &gt;" name="ca::lin::system&lt; T &gt;">
+<area shape="rect" id="Node000001" title=" " alt="" coords="13,271,168,296"/>
+<area shape="rect" id="Node000002" href="$classca_1_1vec.html" title=" " alt="" coords="5,183,176,208"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="93,222,93,270,88,270,88,222"/>
+<area shape="rect" id="Node000003" href="$classca_1_1vec__view.html" title="Array view." alt="" coords="19,108,163,133"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="93,148,93,182,88,182,88,148"/>
+<area shape="rect" id="Node000004" href="/home/runner/work/calgo/calgo/doc/cppreference-doxygen-web.tag.xml$cpp/types/size_t.html" title=" " alt="" coords="47,5,135,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="93,45,93,108,88,108,88,45"/>
+</map>

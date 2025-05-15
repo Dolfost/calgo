@@ -1,0 +1,9 @@
+<map id="ca::cr::scytale" name="ca::cr::scytale">
+<area shape="rect" id="Node000001" title="Scytale cipher implementation." alt="" coords="42,197,154,223"/>
+<area shape="rect" id="Node000002" href="$classca_1_1cr_1_1cipher.html" title="Base class for any cipher." alt="" coords="5,95,111,120"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="70,132,96,196,91,198,65,134"/>
+<area shape="rect" id="Node000003" href="/home/runner/work/calgo/calgo/doc/cppreference-doxygen-web.tag.xml$cpp/string/basic_string.html" title=" " alt="" coords="135,95,221,120"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="162,133,109,199,105,196,158,129"/>
+<area shape="rect" id="Node000004" href="/home/runner/work/calgo/calgo/doc/cppreference-doxygen-web.tag.xml$cpp/string/basic_string.html" title=" " alt="" coords="109,5,247,45"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="181,59,181,94,175,94,175,59"/>
+</map>

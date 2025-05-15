@@ -5,10 +5,11 @@
 
 int main() {
 	std::size_t n = 100;
-	ca::num::bvp<double> ec;
+	ca::num::bvp<double, true> ec;
 	ca::in::UniformNodes<double> nodes(0, ca::mconst.pi/4, n);
 	ec.set_f([](auto x) { return 0; });
 	ec.set_q([](auto x) { return -4; });
+	ec.set_k([](auto x) { return 1; });
 	ec.set_nodes(&nodes);
 	ec.set_mu({-2, 10});
 	ec.solve_safe();

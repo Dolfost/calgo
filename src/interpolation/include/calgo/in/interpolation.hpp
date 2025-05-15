@@ -63,6 +63,9 @@ public:
 	Nodes(interval_type a = 0, interval_type b = 1, size_type n = 10): m_a(a), m_b(b), m_n(n) {};
 
 	const vec<value_type>& nodes() const { return m_nodes; }
+	const value_type& operator[](size_type i) const { 
+		return m_nodes[i];
+	}
 	value_type weight(size_type i) { 
 		if (i == m_n-2) 
 			i--; 

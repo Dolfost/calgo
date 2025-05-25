@@ -1,8 +1,6 @@
-add_library(ca_numeric)
+add_library(ca_numeric INTERFACE)
 add_library(ca::numeric ALIAS ca_numeric)
 target_sources(ca_numeric
-	PRIVATE
-		src/simpson.cpp
 	PUBLIC FILE_SET HEADERS
 			BASE_DIRS include/
 			FILES 
@@ -22,7 +20,7 @@ set_target_properties(ca_numeric PROPERTIES
 )
 
 target_link_libraries(ca_numeric
-	PUBLIC ca::calgo ca::linear ca::interpolation
+	INTERFACE ca::calgo ca::linear ca::interpolation
 )
 
 if (CALGO_TESTING)

@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <cmath>
+#include <memory>
 
 int main(int argc, char** argv) {
 	ca::num::simpson<double> s;

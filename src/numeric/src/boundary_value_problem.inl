@@ -13,8 +13,6 @@ void bvp<T>::check() {
 		throw std::runtime_error("ca::nm::bvp: no nodes");
 	if (not m_f)
 		throw std::runtime_error("ca::nm::bvp: no f(x))");
-	if (not m_q)
-		throw std::runtime_error("ca::nm::bvp: no q(x)");
 }
 
 template<typename T>
@@ -22,12 +20,17 @@ void bvp_undefined_coefficients<T>::check() {
 	bvp<T>::check();
 	if (not this->m_k)
 		throw std::runtime_error("ca::nm::bvp_undefined_coefficients: no k(x)");
+	if (not this->m_q)
+		throw std::runtime_error("ca::nm::bvp: no q(x)");
 }
+
 template<typename T>
 void bvp_finite_differences<T>::check() {
 	bvp<T>::check();
 	if (this->m_k)
 		throw std::runtime_error("ca::nm::bvp_finite_differences: k(x) should not be provided");
+	if (not this->m_q)
+		throw std::runtime_error("ca::nm::bvp: no q(x)");
 }
 
 template<typename T>
@@ -106,51 +109,33 @@ void bvp_galerkin<T>::check() {
 	bvp<T>::check();
 	if (not this->m_k)
 		throw std::runtime_error("ca::nm::bvp_galerkin: no k(x)");
-	// if (not dynamic_cast<ca::in::UniformNodes<typename bvp_traits<T>::value_type>>(this->m_nodes))
-	// throw std::runtime_error("ca::nm::bvp_galerkin: nodes should be uniform");
+	if (not dynamic_cast<ca::in::UniformNodes<typename bvp_traits<T>::value_type>*>(this->m_nodes))
+		throw std::runtime_error("ca::nm::bvp_galerkin: nodes should be uniform");
+	if (this->m_nodes->a() != 0 or this->m_nodes->b() != 1)
+		throw std::runtime_error("ca::nm::bvp_galerkin: nodes.a: nodes should be in [0, 1]");
 	if (this->m_q)
 		throw std::runtime_error("ca::nm::bvp_galerkin: q(x) should not be provided");
 }
 
 template<typename T>
-typename bvp_traits<T>::value_type bvp_galerkin<T>::phi(
+typename bvp_traits<T>::value_type bvp_galerkin<T>::m_alpha(
 	typename bvp_traits<T>::size_type i,
-	typename bvp_traits<T>::value_type x
+	typename bvp_traits<T>::size_type j
 ) {
-	if (i == 0) {
-		if (x > this->m_nodes->nodes()[0] and x < this->m_nodes->nodes()[1])
-			return -(x -  this->m_nodes->nodes()[1])/this->m_nodes->weight(0);
-		else 
-			return 0;
-	} else if (i == this->m_nodes->n()-2) {
-		if (x > this->m_nodes->nodes()[this->m_nodes->n() - 2] and x < this->m_nodes->nodes()[this->m_nodes->n() - 1])
-			return (x -  this->m_nodes->nodes()[this->m_nodes->n()-2])/this->m_nodes->weight(this->m_nodes->n()-2);
-		else 
-			return 0;
-	} 
-
-	if (x > this->m_nodes->nodes()[i-1]) {
-		if (x < this->m_nodes->nodes()[i])
-			return (x - this->m_nodes->nodes()[i-1])/this->m_nodes->weight(i-1);
-		else if (x < this->m_nodes->nodes()[i+1])
-			return -(x - this->m_nodes->nodes()[i+1])/this->m_nodes->weight(i);
-	}
-
-	return 0;
+	auto h = this->m_nodes->weight(0);
+	auto h_2 = h/2;
+	auto x = this->m_nodes->nodes()[i];
+	return (this->m_k(x - h_2)*(m_d(i, j) - m_d(i, j-1)) - this->m_k(x+h_2)*(m_d(i, j+1) - m_d(i, j)))/h;
 }
 
 template<typename T>
-typename bvp_traits<T>::value_type bvp_galerkin<T>::phi_derivative(
-	typename bvp_traits<T>::size_type i,
-	typename bvp_traits<T>::value_type x
+typename bvp_traits<T>::value_type bvp_galerkin<T>::m_beta(
+	typename bvp_traits<T>::size_type i
 ) {
-	if (x > this->m_nodes->nodes()[i-1]) {
-		if (x < this->m_nodes->nodes()[i])
-			return 1/this->m_nodes->weight(i-1);
-		else if (x < this->m_nodes->nodes()[i+1])
-			return -1/this->m_nodes->weight(i);
-	}
-	return 0;
+	auto h = this->m_nodes->weight(0);
+	auto h_2 = h/2;
+	auto x = this->m_nodes->nodes()[i];
+	return h*(this->m_f(x - h_2) + this->m_f(x + h_2))/2;
 }
 
 template<typename T>
@@ -159,36 +144,18 @@ void ca::num::bvp_galerkin<T>::solve() {
 	vec<typename bvp_traits<T>::value_type> b(n-1), f(n-1);
 	vec<typename bvp_traits<T>::value_type> a(n-2), c(n-2);
 	ca::lin::thomas<typename bvp_traits<T>::value_type> thomas;
-
-	std::function<typename bvp_traits<T>::value_type(
-		typename bvp_traits<T>::size_type,
-		typename bvp_traits<T>::size_type,
-		typename bvp_traits<T>::value_type
-	)> fx = [this](auto i, auto j, auto x) {
-		return this->m_k(x) * phi_derivative(i, x) * phi_derivative(j, x) +
-		this->m_q(x) * phi(i, x) * phi(j, x);
-	};
-
-	std::function<typename bvp_traits<T>::value_type(
-		typename bvp_traits<T>::size_type,
-		typename bvp_traits<T>::value_type
-	)> fx_b = [this](auto i, auto x) {
-		return this->m_f(x) * this->phi(i, x);
-	};
+	this->m_mu = {0, 0};
 
 	{
-		using namespace std::placeholders;
 		typename vec<typename bvp_traits<T>::value_type>::size_type i;
 		for (i = 0; i < n-2; i++) {
-			a[i] = m_int_estimator(std::bind(fx, i+1, i, _1), this->m_nodes->a(), this->m_nodes->b());
-			b[i] = m_int_estimator(std::bind(fx, i, i,   _1), this->m_nodes->a(), this->m_nodes->b());
-			c[i] = m_int_estimator(std::bind(fx, i, i+1, _1), this->m_nodes->a(), this->m_nodes->b());
-			f[i] = m_int_estimator(std::bind(fx_b, i,    _1), this->m_nodes->a(), this->m_nodes->b());
-			std::cout << a[i] << " " << b[i] << " " << c[i] << " " << f[i] << std::endl;
+			a[i] = m_alpha(i + 1, i);
+			b[i] = m_alpha(i , i);
+			c[i] = m_alpha(i, i + 1);
+			f[i] = m_beta(i);
 		}
-		b[i] = m_int_estimator(std::bind(fx, i, i, _1), this->m_nodes->a(), this->m_nodes->b());
-		f[i] = m_int_estimator(std::bind(fx_b, i, _1),  this->m_nodes->a(), this->m_nodes->b());
-		f[0] -= this->m_mu.first;
+		b[i] = m_alpha(i , i);
+		f[i] = m_beta(i);
 	}
 
 	thomas.set_a(a); 

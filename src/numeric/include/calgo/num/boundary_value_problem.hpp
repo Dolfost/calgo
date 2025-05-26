@@ -164,63 +164,37 @@ public:
 };
 
 /**
- * @brief Boundary value problem solution using Glerkin method
+ * @brief Boundary value problem solution using Galerkin method
  * Problem is given in form
  * \f[
  * 	(k(x)u')' - q(x)u = -f(x),\ a<x<b,\\
  * u(a) = \mu_1,\\
  * u(b) = \mu_2,
  * \f]
- * and solved with finite differences method. You need to set integral
- * estimator with set_int_estimator() before making some calculations.
+ * where \f(a=0,\ b=1\f) and \f(q(x)=0\f), \f(u(a)=u(a)=0\f). 
  *
  * @tparam T `value_type`
  */
 template<typename T>
 class bvp_galerkin: public bvp<T> {
 public:
-	using integral_function = std::function<typename bvp_traits<T>::value_type(typename bvp_traits<T>::value_type)>; /// \f(f(x)\f)
-	using integral_estimator = std::function<
-	typename bvp_traits<T>::value_type(const integral_function&, typename bvp_traits<T>::value_type, typename bvp_traits<T>::value_type)
-	>; /// This function takes some function \f(f(x)\f) and bounds \f(a,b\f) and returns \f(\int_\limits_a^bf(x)\mathrm dx\f)
-
-public:
 	virtual void solve() override;
 	virtual void check() override;
 
-	/**
-	 * @brief Returns \f(\phi_i(x)\f).
-	 */
-	typename bvp_traits<T>::value_type phi(typename bvp_traits<T>::size_type i, typename bvp_traits<T>::value_type);
-	/**
-	 * @brief Returns \f(\phi_i'(x)\f).
-	 */
-	typename bvp_traits<T>::value_type phi_derivative(typename bvp_traits<T>::size_type i,typename bvp_traits<T>::value_type);
-
-	/**
-	 * @brief Set the function that will take integrals
-	 * This function takes some function \f(f(x)\f) and bounds \f(a,b\f) and
-	 * returns \f(\int_\limits_a^bf(x)\mathrm dx\f).
-	 * Required by galerkin method.
-	 *
-	 * You could try to use ca::num::simpson for it. 
-	 *
-	 * @param i integral estimator functor
-	 */
-	void set_int_estimator(const integral_estimator& i) {
-		m_int_estimator = i;
-	}
-
-	/**
-	 * @brief Get integral estimator
-	 *
-	 * @return Current integral estimator
-	 */
-	const integral_estimator& int_estimator() const { return m_int_estimator; }
-
 protected:
-	integral_estimator m_int_estimator;
-	typename bvp_traits<T>::value_type m_a(typename bvp_traits<T>::size_type i, typename bvp_traits<T>::size_type j);
+	typename bvp_traits<T>::value_type m_alpha(
+		typename bvp_traits<T>::size_type i,
+		typename bvp_traits<T>::size_type j
+	);
+	typename bvp_traits<T>::value_type m_beta(
+		typename bvp_traits<T>::size_type i
+	);
+	inline typename bvp_traits<T>::value_type m_d(
+		typename bvp_traits<T>::size_type i,
+		typename bvp_traits<T>::size_type j
+	) {
+		return i == j;
+	}
 };
 
 

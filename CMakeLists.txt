@@ -12,10 +12,11 @@ project(calgo
 	DESCRIPTION "Small computation and algorithms library"
 )
 
-option(CALGO_CALGO   "Build library" YES)
-option(CALGO_DOCS    "Build docs"    ${PROJECT_IS_TOP_LEVEL})
-option(CALGO_TESTING "Build tests"   ${PROJECT_IS_TOP_LEVEL})
-option(CALGO_QT      "Qt widgets"    YES)
+option(CALGO_CALGO      "Build library"     YES)
+option(CALGO_DOCS       "Build docs"        ${PROJECT_IS_TOP_LEVEL})
+option(CALGO_TESTING    "Build tests"       ${PROJECT_IS_TOP_LEVEL})
+option(CALGO_QT         "Qt widgets"        YES)
+option(CALGO_STATISTICS "Statistics module" NO)
 
 if (CALGO_TESTING)
 	enable_testing()

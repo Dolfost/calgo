@@ -1,0 +1,9 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" href="$classca_1_1num_1_1bvp.html" title="Boundary value problem base class." alt="" coords="5,70,149,95"/>
+<area shape="rect" id="Node000001" href="$classca_1_1num_1_1bvp__finite__differences.html" title="Boundary value problem solution using finite differences Problem is given in form." alt="" coords="226,5,373,45"/>
+<area shape="poly" id="edge21_Node000000_Node000001" title=" " alt="" coords="140,64,225,42,226,47,141,69"/>
+<area shape="rect" id="Node000002" href="$classca_1_1num_1_1bvp__galerkin.html" title="Boundary value problem solution using Galerkin method Problem is given in form." alt="" coords="197,70,401,95"/>
+<area shape="poly" id="edge22_Node000000_Node000002" title=" " alt="" coords="163,80,197,80,197,85,163,85"/>
+<area shape="rect" id="Node000003" href="$classca_1_1num_1_1bvp__undefined__coefficients.html" title="Boundary value problem solution using undefined coeficients Problem looks like this:" alt="" coords="211,120,388,160"/>
+<area shape="poly" id="edge23_Node000000_Node000003" title=" " alt="" coords="141,96,222,117,221,123,140,101"/>
+</map>

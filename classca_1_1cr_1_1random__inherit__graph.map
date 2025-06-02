@@ -1,0 +1,7 @@
+<map id="ca::cr::random&lt; T &gt;" name="ca::cr::random&lt; T &gt;">
+<area shape="rect" id="Node000001" title="Base class for random rumbers generators." alt="" coords="73,5,227,31"/>
+<area shape="rect" id="Node000002" href="$classca_1_1cr_1_1bbs.html" title="BBS RNG implementation." alt="" coords="5,79,132,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="128,42,84,80,80,76,125,38"/>
+<area shape="rect" id="Node000003" href="$classca_1_1cr_1_1lehmer.html" title="Lehmer RNG." alt="" coords="157,79,306,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="175,38,220,76,216,80,172,42"/>
+</map>

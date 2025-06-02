@@ -1,0 +1,17 @@
+<map id="ca::lin::Gauss&lt; T &gt;" name="ca::lin::Gauss&lt; T &gt;">
+<area shape="rect" id="Node000001" title=" " alt="" coords="140,428,287,453"/>
+<area shape="rect" id="Node000002" href="$classca_1_1lin_1_1system.html" title=" " alt="" coords="20,353,175,379"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="129,384,196,426,193,430,126,388"/>
+<area shape="rect" id="Node000003" href="$classca_1_1vec.html" title=" " alt="" coords="5,240,176,265"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="95,279,99,353,94,353,90,279"/>
+<area shape="rect" id="Node000004" href="$classca_1_1vec__view.html" title="Array view." alt="" coords="29,125,173,150"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="102,164,94,240,89,239,96,163"/>
+<area shape="rect" id="Node000005" href="/home/runner/work/calgo/calgo/doc/cppreference-doxygen-web.tag.xml$cpp/types/size_t.html" title=" " alt="" coords="169,5,257,31"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="162,39,137,57,124,73,115,92,106,125,101,124,110,90,120,70,133,53,159,34"/>
+<area shape="rect" id="Node000006" href="$classca_1_1mat__view.html" title=" " alt="" coords="133,176,293,216"/>
+<area shape="poly" id="edge6_Node000006_Node000005" title=" " alt="" coords="216,45,216,176,211,176,211,45"/>
+<area shape="rect" id="Node000007" href="$classca_1_1vec__view.html" title=" " alt="" coords="305,289,463,329"/>
+<area shape="poly" id="edge8_Node000007_Node000005" title=" " alt="" coords="253,36,273,53,296,82,316,115,348,181,369,243,382,288,377,290,364,244,343,183,311,117,291,85,269,57,249,40"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="214,230,211,289,212,368,215,428,210,428,206,368,205,289,208,230"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="350,340,230,430,227,426,347,335"/>
+</map>

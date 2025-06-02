@@ -1,0 +1,14 @@
+<map id="ca::num::euler_cauchy&lt; T &gt;" name="ca::num::euler_cauchy&lt; T &gt;">
+<area shape="rect" id="Node000001" title="Euler&#45;Cauchy method for Cauchy poblem." alt="" coords="967,53,1173,78"/>
+<area shape="rect" id="Node000002" href="$classca_1_1in_1_1Nodes.html" title=" " alt="" coords="683,53,839,78"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="852,63,966,63,966,68,852,68"/>
+<area shape="rect" id="Node000003" href="$classca_1_1vec.html" title=" " alt="" coords="384,22,555,47"/>
+<area shape="poly" id="edge5_Node000001_Node000003" title=" " alt="" coords="568,24,579,24,681,22,761,24,943,43,997,50,996,55,942,48,761,30,681,27,579,29,569,30"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="569,42,683,55,682,60,568,48"/>
+<area shape="rect" id="Node000004" href="$classca_1_1vec__view.html" title="Array view." alt="" coords="191,22,335,47"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="348,32,384,32,384,37,348,37"/>
+<area shape="rect" id="Node000005" href="/home/runner/work/calgo/calgo/doc/cppreference-doxygen-web.tag.xml$cpp/types/size_t.html" title=" " alt="" coords="5,22,93,47"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="107,32,190,32,190,37,107,37"/>
+<area shape="rect" id="Node000006" href="/home/runner/work/calgo/calgo/doc/cppreference-doxygen-web.tag.xml$cpp/utility/functional/function.html" title=" " alt="" coords="667,102,855,157"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="868,105,1007,75,1008,81,869,110"/>
+</map>

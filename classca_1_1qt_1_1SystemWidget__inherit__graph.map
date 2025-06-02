@@ -1,0 +1,7 @@
+<map id="ca::qt::SystemWidget" name="ca::qt::SystemWidget">
+<area shape="rect" id="Node000001" title="System of equations." alt="" coords="7,79,169,104"/>
+<area shape="rect" id="Node000003" href="$classca_1_1qt_1_1SimplexWidget.html" title="Simplex widget." alt="" coords="5,152,171,177"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="91,118,91,152,85,152,85,118"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="49,5,127,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,44,91,79,85,79,85,44"/>
+</map>

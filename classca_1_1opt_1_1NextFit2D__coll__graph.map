@@ -1,0 +1,9 @@
+<map id="ca::opt::NextFit2D&lt; T &gt;" name="ca::opt::NextFit2D&lt; T &gt;">
+<area shape="rect" id="Node000001" title=" " alt="" coords="508,41,685,67"/>
+<area shape="rect" id="Node000002" href="$classca_1_1opt_1_1Packing2D.html" title=" " alt="" coords="279,41,459,67"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="473,51,508,51,508,57,473,57"/>
+<area shape="rect" id="Node000003" href="$classca_1_1opt_1_1Bin2D.html" title=" " alt="" coords="15,5,166,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="180,27,279,40,278,45,179,32"/>
+<area shape="rect" id="Node000004" href="/home/runner/work/calgo/calgo/doc/cppreference-doxygen-web.tag.xml$cpp/utility/functional/function.html" title=" " alt="" coords="5,55,176,125"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="189,75,278,63,279,68,190,80"/>
+</map>

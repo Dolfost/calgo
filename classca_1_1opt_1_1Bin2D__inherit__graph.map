@@ -1,0 +1,15 @@
+<map id="ca::opt::Bin2D&lt; T &gt;" name="ca::opt::Bin2D&lt; T &gt;">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,71,156,97"/>
+<area shape="rect" id="Node000002" href="$classca_1_1opt_1_1Box2D.html" title=" " alt="" coords="217,30,371,55"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="160,66,227,53,228,58,161,71"/>
+<area shape="rect" id="Node000004" href="$classca_1_1opt_1_1Packing2D.html" title=" " alt="" coords="204,95,384,121"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="170,91,204,95,204,101,170,97"/>
+<area shape="rect" id="Node000003" href="$classca_1_1opt_1_1TreeFit2D_1_1Node.html" title=" " alt="" coords="453,5,588,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="385,33,453,28,454,33,386,38"/>
+<area shape="rect" id="Node000005" href="$classca_1_1opt_1_1FirstFit2D.html" title=" " alt="" coords="433,70,608,95"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="398,94,433,90,433,95,398,99"/>
+<area shape="rect" id="Node000006" href="$classca_1_1opt_1_1NextFit2D.html" title=" " alt="" coords="432,119,609,145"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="398,116,432,120,432,125,398,122"/>
+<area shape="rect" id="Node000007" href="$classca_1_1opt_1_1TreeFit2D.html" title=" " alt="" coords="434,169,607,194"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="342,123,433,155,471,166,469,171,431,160,340,128"/>
+</map>

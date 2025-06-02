@@ -1,0 +1,9 @@
+<map id="ca::num::GoldenRatioMinimum&lt; T &gt;" name="ca::num::GoldenRatioMinimum&lt; T &gt;">
+<area shape="rect" id="Node000001" title="Finds minimum on given interval using golden ratio." alt="" coords="34,183,297,208"/>
+<area shape="rect" id="Node000002" href="$classca_1_1num_1_1IntervalMinimum.html" title="Generic base class for interval function minimization." alt="" coords="49,108,281,133"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="168,148,168,182,163,182,163,148"/>
+<area shape="rect" id="Node000003" href="$structca_1_1interval.html" title=" " alt="" coords="5,5,152,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="107,53,156,106,152,109,103,57"/>
+<area shape="rect" id="Node000004" href="/home/runner/work/calgo/calgo/doc/cppreference-doxygen-web.tag.xml$cpp/utility/functional/function.html" title=" " alt="" coords="176,5,331,45"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="228,57,178,109,175,106,224,53"/>
+</map>

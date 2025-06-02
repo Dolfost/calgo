@@ -1,0 +1,11 @@
+<map id="ca::num::bvp_galerkin&lt; T &gt;" name="ca::num::bvp_galerkin&lt; T &gt;">
+<area shape="rect" id="Node000001" title="Boundary value problem solution using Galerkin method Problem is given in form." alt="" coords="5,375,209,400"/>
+<area shape="rect" id="Node000002" href="$classca_1_1num_1_1bvp.html" title="Boundary value problem base class." alt="" coords="35,300,179,325"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="110,340,110,374,105,374,105,340"/>
+<area shape="rect" id="Node000003" href="$classca_1_1vec.html" title=" " alt="" coords="23,183,191,237"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="110,251,110,300,105,300,105,251"/>
+<area shape="rect" id="Node000004" href="$classca_1_1vec__view.html" title="Array view." alt="" coords="35,108,179,133"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="110,147,110,183,105,183,105,147"/>
+<area shape="rect" id="Node000005" href="/home/runner/work/calgo/calgo/doc/cppreference-doxygen-web.tag.xml$cpp/types/size_t.html" title=" " alt="" coords="63,5,151,31"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="110,45,110,108,105,108,105,45"/>
+</map>

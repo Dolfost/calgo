@@ -1,0 +1,7 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" href="$classca_1_1ss_1_1statistic.html" title="Base class for statistical values." alt="" coords="5,37,136,77"/>
+<area shape="rect" id="Node000001" href="$classca_1_1ss_1_1map__statistic.html" title="Multiple statistic (one key)" alt="" coords="185,5,349,45"/>
+<area shape="poly" id="edge32_Node000000_Node000001" title=" " alt="" coords="149,42,184,36,185,41,150,47"/>
+<area shape="rect" id="Node000002" href="$classca_1_1ss_1_1single__statistic.html" title="Single statistic." alt="" coords="184,69,349,109"/>
+<area shape="poly" id="edge33_Node000000_Node000002" title=" " alt="" coords="150,68,184,73,183,78,149,73"/>
+</map>

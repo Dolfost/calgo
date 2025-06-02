@@ -1,0 +1,7 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" href="$classca_1_1num_1_1IntervalMinimum.html" title="Generic base class for interval function minimization." alt="" coords="5,31,237,56"/>
+<area shape="rect" id="Node000001" href="$classca_1_1num_1_1FibonacciMinimum.html" title="Find minimum of function on interval using Fibonacci sequence in fixed number of iterations." alt="" coords="295,5,538,31"/>
+<area shape="poly" id="edge24_Node000000_Node000001" title=" " alt="" coords="251,30,295,26,295,31,251,35"/>
+<area shape="rect" id="Node000002" href="$classca_1_1num_1_1GoldenRatioMinimum.html" title="Finds minimum on given interval using golden ratio." alt="" coords="285,55,548,80"/>
+<area shape="poly" id="edge25_Node000000_Node000002" title=" " alt="" coords="251,51,286,54,285,59,251,57"/>
+</map>

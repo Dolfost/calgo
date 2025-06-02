@@ -1,0 +1,13 @@
+<map id="ca::qt::SymmetricMatModel" name="ca::qt::SymmetricMatModel">
+<area shape="rect" id="Node000001" title="Symmetric table model implementation of ca::Mat." alt="" coords="5,360,208,385"/>
+<area shape="rect" id="Node000002" href="$classca_1_1qt_1_1MatModel.html" title="Table model implementation of ca::Mat." alt="" coords="41,285,172,311"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="109,325,109,360,104,360,104,325"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,197,165,223"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="94,235,106,284,101,285,89,237"/>
+<area shape="rect" id="Node000004" href="$classca_1_1mat.html" title=" " alt="" coords="190,197,335,223"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="231,232,129,287,127,283,229,227"/>
+<area shape="rect" id="Node000005" href="$classca_1_1mat__view.html" title="Matrix view." alt="" coords="189,123,336,148"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="265,162,265,197,260,197,260,162"/>
+<area shape="rect" id="Node000006" href="/home/runner/work/calgo/calgo/doc/cppreference-doxygen-web.tag.xml$cpp/types/size_t.html" title=" " alt="" coords="219,5,307,31"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="265,44,265,123,260,123,260,44"/>
+</map>

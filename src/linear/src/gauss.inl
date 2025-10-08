@@ -7,7 +7,7 @@
 namespace ca::lin {
 
 template<typename T>
-void Gauss<T>::init() {
+void gauss<T>::init() {
 	this->m_solution.resize(m_constraints.n());
 	this->m_solution.set(0);
 	if (p_initCallback)
@@ -15,7 +15,7 @@ void Gauss<T>::init() {
 }
 
 template<typename T>
-void Gauss<T>::solve() {
+void gauss<T>::solve() {
 	init();
 
 	typename mat<T>::size_type n = m_variables.rows();
@@ -66,7 +66,7 @@ void Gauss<T>::solve() {
 }
 
 template<typename T>
-void Gauss<T>::check() {
+void gauss<T>::check() {
 	if (m_variables.rows() != m_constraints.n())
 		throw std::runtime_error(
 			"ca::Gauss: number of constraints "

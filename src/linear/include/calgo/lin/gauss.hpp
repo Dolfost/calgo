@@ -7,10 +7,10 @@
 namespace ca::lin {
 
 template<typename T>
-class Gauss: public system<T> {
+class gauss: public system<T> {
 public:
 	using typename system<T>::value_type;
-	Gauss(
+	gauss(
 		mat_view<value_type> vars = mat_view<T>(nullptr, 0, 0), 
 		vec_view<value_type> constr = vec_view<T>(nullptr, 0)
 	): m_variables(vars), m_constraints(constr) {}

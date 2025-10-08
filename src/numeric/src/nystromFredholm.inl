@@ -29,7 +29,7 @@ void NystromFredholmSecondKind<T, I>::solve() {
 		b[j] = -m_f(m_nodes->nodes()[j]);       
 	}
 
-	ca::lin::Gauss<value_type> gauss(A, b);
+	ca::lin::gauss<value_type> gauss(A, b);
 	gauss.solve();
 	m_y = gauss.solution();
 }

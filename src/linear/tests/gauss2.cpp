@@ -20,4 +20,4 @@ ca::mat<double> variables = {
 	{ 1, 7,-7, 6, 2},
 };
 
-CA_LIN_TEST_GAUSS(ca::lin::Gauss<double>)
+CA_LIN_TEST_GAUSS(ca::lin::gauss<double>)

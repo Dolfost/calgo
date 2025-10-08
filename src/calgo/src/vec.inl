@@ -24,6 +24,10 @@ vec<T>::vec(
 	const size_type& len
 ): vec_view<T>(new value_type[len], len) { }
 
+template<typename T>
+vec<T>::vec(
+	const size_type& len, const value_type& init
+): vec_view<T>(new value_type[len], len) { this->set(init); }
 
 template<typename T>
 vec<T>::vec(const vec_view<value_type>& other): vec(other.m_len) {

@@ -524,6 +524,43 @@ mat_view<typename mat_view<T>::value_type> mat_view<T>::submmat_safe(
 }
 
 template<typename T>
+template<typename rhs_value_type> 
+auto mat_view<T>::mul(const ca::mat_view<rhs_value_type>& b) -> ca::mat<typename product<rhs_value_type>::type> const {
+	mat<typename product<rhs_value_type>::type> prod(m_rows, b.cols(), 0);
+	for (size_type i = 0; i < m_rows; i++)
+		for (size_type j = 0; j < b.cols(); j++)
+			for (size_type k = 0; k < m_cols; k++) 
+				prod.el(i, j) += el(i, k) * b.el(k, j);
+	return prod;
+}
+
+template<typename T>
+template<typename rhs_value_type> 
+auto mat_view<T>::mul(const ca::vec_view<rhs_value_type>& b) -> ca::vec<typename product<rhs_value_type>::type> const {
+	vec<typename product<rhs_value_type>::type> prod(m_rows, 0);
+	for (size_type i = 0; i < m_rows; i++)
+		for (size_type k = 0; k < m_cols; k++) 
+			prod.el(i) += el(i, k) * b.el(k);
+	return prod;
+}
+
+template<typename T>
+template<typename rhs_value_type> 
+auto mat_view<T>::mul_safe(const ca::mat_view<rhs_value_type>& b) -> ca::mat<typename product<rhs_value_type>::type> const {
+	if (not is_product_comformable(b))
+		throw std::logic_error("ca::Mat: can not multiply non-conformant matrices");
+	return mul(b);
+}
+
+template<typename T>
+template<typename rhs_value_type> 
+auto mat_view<T>::mul_safe(const ca::vec_view<rhs_value_type>& b) -> ca::vec<typename product<rhs_value_type>::type> const {
+	if (not is_product_comformable(b))
+		throw std::logic_error("ca::Mat: can not multiply non-conformant matrice and vector");
+	return mul(b);
+}
+
+template<typename T>
 mat<T>::~mat() {
 	delete[] this->m_mat;
 }

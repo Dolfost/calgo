@@ -7,6 +7,7 @@
 #include <initializer_list>
 #include <iostream>
 #include <ostream>
+#include <type_traits>
 
 namespace ca {
 
@@ -255,6 +256,42 @@ public:
 	bool is_square() const {
 		return m_rows == m_cols;
 	}
+
+	/// @name Matrix math functions
+	/// @{
+	template<typename rhs> struct product { 
+		using type = decltype(std::declval<value_type>() * std::declval<rhs>() + std::declval<value_type>() * std::declval<rhs>()); 
+	}; 
+	/**
+	 * @brief Check if matrix can be multiplied by `other` 
+	 * @tparam V `other` `value_type`
+	 * @param other other matrix
+	 * @return `true` if it can be multiplied, `false` otherwise
+	 */
+	template<typename V>
+	bool is_product_comformable(const mat_view<V>& other) const { return m_cols == other.rows(); }
+	template<typename V>
+	bool is_product_comformable(const vec_view<V>& other) const { return m_cols == other.n(); };
+	 /**
+	 * @brief Multiply matrices
+	 *
+	 * @tparam rhs_value_type `value_type` of argument matrix
+	 * @param rhs multyply by
+	 * @return multiplication result
+	 */
+	template<typename rhs_value_type> 
+	auto mul(const ca::mat_view<rhs_value_type>& rhs) -> ca::mat<typename product<rhs_value_type>::type> const;
+	template<typename rhs_value_type> 
+	auto mul(const ca::vec_view<rhs_value_type>& rhs) -> ca::vec<typename product<rhs_value_type>::type> const;
+	template<typename rhs_value_type> 
+	auto mul_safe(const ca::mat_view<rhs_value_type>& rhs) -> ca::mat<typename product<rhs_value_type>::type> const;
+	template<typename rhs_value_type> 
+	auto mul_safe(const ca::vec_view<rhs_value_type>& rhs) -> ca::vec<typename product<rhs_value_type>::type> const;
+	template<typename rhs_value_type> 
+	inline auto operator*(const ca::mat_view<rhs_value_type>& rhs) -> ca::mat<typename product<rhs_value_type>::type> const {
+		return mul(std::forward(rhs));
+	};
+	/// @}
 
 	friend ::ca::mat<T>;
 

@@ -192,6 +192,13 @@ public:
 	 */
 	vec(const size_type& len);
 	/**
+	 * @brief Construct array of fixed size and set it's elemets to some value
+	 *
+	 * @param len array size
+	 * @param init default cell value
+	 */
+	vec(const size_type& len, const value_type& init);
+	/**
 	 * @brief Copy constructor
 	 *
 	 * @param other other object

@@ -69,8 +69,10 @@ public:
 	 * @param other other mat_view
 	 * @return `true` if size of matrices and corresponding elements are equal
 	 */
-	bool operator==(const mat_view<value_type>& other);
-	bool operator!=(const mat_view<value_type>& other) {
+	template<typename rhs_value_type>
+	bool operator==(const mat_view<rhs_value_type>& other);
+	template<typename rhs_value_type>
+	bool operator!=(const mat_view<rhs_value_type>& other) {
 		return not (*this == other);
 	};
 

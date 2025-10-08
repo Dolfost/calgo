@@ -338,8 +338,9 @@ void ca::mat<T>::remove_cols(const size_type& col, const size_type& count) {
 }
 
 template<typename T>
-bool mat_view<T>::operator==(const mat_view<value_type>& other) {
-	if (m_rows != other.m_rows or m_cols != other.m_cols)
+template<typename rhs_typename>
+bool mat_view<T>::operator==(const mat_view<rhs_typename>& other) {
+	if (m_rows != other.rows() or m_cols != other.cols())
 		return false;
 	for (size_type i = 0; i < m_rows; i++)
 		for (size_type j = 0; j < m_cols; j++)

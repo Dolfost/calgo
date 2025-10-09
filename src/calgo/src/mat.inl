@@ -567,7 +567,7 @@ void mat_view<T>::rotation2d(const rad_type& rad) noexcept {
 	el(0, 0) = std::cos(rad);
 	el(0, 1) = -std::sin(rad);
 	el(1, 0) = -el(0, 1);
-	el(1, 1) = -el(0, 0);
+	el(1, 1) = el(0, 0);
 }
 
 template<typename T>

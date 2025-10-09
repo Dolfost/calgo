@@ -282,17 +282,29 @@ public:
 	 * @return multiplication result
 	 */
 	template<typename rhs_value_type> 
-	auto mul(const ca::mat_view<rhs_value_type>& rhs) -> ca::mat<typename product<rhs_value_type>::type> const;
+	auto mul(const ca::mat_view<rhs_value_type>& rhs) noexcept -> ca::mat<typename product<rhs_value_type>::type>;
 	template<typename rhs_value_type> 
-	auto mul(const ca::vec_view<rhs_value_type>& rhs) -> ca::vec<typename product<rhs_value_type>::type> const;
+	auto mul(const ca::vec_view<rhs_value_type>& rhs) noexcept -> ca::vec<typename product<rhs_value_type>::type>;
 	template<typename rhs_value_type> 
-	auto mul_safe(const ca::mat_view<rhs_value_type>& rhs) -> ca::mat<typename product<rhs_value_type>::type> const;
+	auto mul_safe(const ca::mat_view<rhs_value_type>& rhs) -> ca::mat<typename product<rhs_value_type>::type>;
 	template<typename rhs_value_type> 
-	auto mul_safe(const ca::vec_view<rhs_value_type>& rhs) -> ca::vec<typename product<rhs_value_type>::type> const;
+	auto mul_safe(const ca::vec_view<rhs_value_type>& rhs) -> ca::vec<typename product<rhs_value_type>::type>;
 	template<typename rhs_value_type> 
-	inline auto operator*(const ca::mat_view<rhs_value_type>& rhs) -> ca::mat<typename product<rhs_value_type>::type> const {
+	inline auto operator*(const ca::mat_view<rhs_value_type>& rhs) noexcept -> ca::mat<typename product<rhs_value_type>::type> {
 		return mul(std::forward(rhs));
 	};
+	/**
+	 * @brief Fill matrix with coefficients of rotation in 2D space
+	 *
+	 * Fills the view starting from [0][0] with \f[
+	 * \begin{bmatrix} \cos(\theta) & -\sin(\theta) \\ \sin(\theta) & \cos(\theta)
+	 * \f]
+	 * If matrix is smaller than 2 by 2 - behaivour is undefined.
+	 * @tparam rad_type argument type 
+	 * @param rad radians to rotate to
+	 */
+	template<typename rad_type>
+	void rotation2d(const rad_type& rad) noexcept;
 	/// @}
 
 	friend ::ca::mat<T>;

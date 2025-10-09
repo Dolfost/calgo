@@ -11,9 +11,6 @@
 
 namespace ca {
 
-// template<typename T>
-// class mat;
-
 /**
  * @brief Matrix view
  *
@@ -32,7 +29,6 @@ public:
 
 	/**
 	 * @brief Construct new object
-	 *
 	 * @param data `value_type` pointer
 	 * @param rows number of rows in matrix
 	 * @param cols number of columns in matrix
@@ -46,9 +42,9 @@ public:
 		const size_type& dist = 1
 	);
 
-	/**
+	/** @name Utility functions
+	 * @{
 	 * @brief Set each element to some value
-	 *
 	 * @param val value of each element
 	 */
 	virtual void set(const value_type& val);
@@ -65,7 +61,6 @@ public:
 
 	/**
 	 * @brief Equality operator
-	 *
 	 * @param other other mat_view
 	 * @return `true` if size of matrices and corresponding elements are equal
 	 */
@@ -82,8 +77,11 @@ public:
 	 */
 	value_type* data() { return this->m_mat; }
 	const value_type* data() const { return this->m_mat; }
+	/// @}
 
 	/**
+	* @name Printing functions 
+	* @{
 	* @brief STL stream output operator
 	* @param os stream object
 	* @param m matrix object
@@ -93,7 +91,6 @@ public:
 	friend std::ostream& operator<<(std::ostream& os, const mat_view<D>& m);
 	/**
 	 * @brief Print matrix as array of initializer lists
-	 *
 	 * @tparam D matrix `value_type`
 	 * @param os stream for output
 	 * @return passed `os` stream reference
@@ -101,7 +98,6 @@ public:
 	std::ostream& as_array(std::ostream& os = std::cout) const;
 	/**
 	 * @brief Print matrix as system of equations
-	 *
 	 * @tparam D vector `value_type`
 	 * @param v system constraints
 	 * @param os stream for output
@@ -109,13 +105,14 @@ public:
 	 */
 	template<typename D>
 	std::ostream& showSystem(const vec_view<D>& v, std::ostream& os = std::cout) const;
+	/// @}
 
 
 	/** @name Direct acces methods and operators
-	 * When accessing matrix elements with methods of this group, out of range
+	 * When accessing matrix elements with methods below, out of range
 	 * indices will not be caught and no exceptions will be thrown. This may be
-	 * useful if you know that your will not access any forbidden addresse in
-	 * advance, so could save a little time of conditionals.
+	 * useful if you know that your will not access any forbidden addresses in
+	 * advance, so You could save a little time of conditionals.
 	 *
 	 * Out of range indices lead to undefined behaivour.
 	 *
@@ -129,10 +126,9 @@ public:
 	inline const value_type& operator()(const size_type& row, const size_type& col) const noexcept;
 	inline value_type& el(const size_type& row, const size_type& col) noexcept;
 	inline const value_type& el(const size_type& row, const size_type& col) const noexcept;
-	/// @}
 
-	/** @name Smart acces methods and operators
-	 * When accessing matrix elements with methods of this group, out of range
+	/**
+	 * When accessing matrix elements with methods below, out of range
 	 * indices will be caught and std::out_of_range exception will be thrown.
 	 *
 	 * @param row matrix row
@@ -140,9 +136,13 @@ public:
 	 * @throws std::out_of_range
 	*/
 	/// @{
+	/// @throws std::out_of_range
 	vec_view<value_type> at(const size_type& row);
+	/// @throws std::out_of_range
 	const vec_view<value_type> at(const size_type& row) const;
+	/// @throws std::out_of_range
 	value_type& at(const size_type& row, const size_type& col);
+	/// @throws std::out_of_range
 	const value_type& at(const size_type& row, const size_type& col) const;
 	/// @}
 	
@@ -155,7 +155,6 @@ public:
 	/// @{
 	/**
 	 * @brief Get vec_view at matrix row
-	 *
 	 * @param idx row index
 	 * @param from starting index
 	 * @param len view length
@@ -166,7 +165,6 @@ public:
 	vec_view<value_type> row(const size_type& at, const size_type& from = 0, const size_type& len = 0) noexcept;
 	/**
 	 * @brief Get vec_view at matrix column
-	 *
 	 * @param idx column index
 	 * @param from starting index
 	 * @param len view length
@@ -175,54 +173,37 @@ public:
 	vec_view<value_type> col(const size_type& at, const size_type& from = 0, const size_type& len = 0) noexcept;
 	const vec_view<value_type> row(const size_type& at, const size_type& from = 0, const size_type& len = 0) const noexcept;
 	const vec_view<value_type> col(const size_type& at, const size_type& from = 0, const size_type& len = 0) const noexcept;
-	/// @}
-
-	/** @name Smart row/column based vector view access
-	 *
-	 * Any access out of range will lead to std::out_of_range beeing thrown.
-	*/
-	/// @{
-	/**
-	 * @copydoc vec_view<value_type> row(const size_type& at, const size_type& from = 0, const size_type& len = 0) noexcept
-	 * @throws std::out_of_range
-	 */
+	/// @throws std::out_of_range
 	vec_view<value_type> row_safe(const size_type& at, const size_type& from = 0, const size_type& len = 0);
-	/**
-	 * @copydoc vec_view<value_type> col(const size_type& at, const size_type& from = 0, const size_type& len = 0) noexcept
-	 * @throws std::out_of_range
-	 */
+	/// @throws std::out_of_range
 	vec_view<value_type> col_safe(const size_type& at, const size_type& from = 0, const size_type& len = 0);
+	/// @throws std::out_of_range
 	const vec_view<value_type> row_safe(const size_type& at, const size_type& from = 0, const size_type& len = 0) const;
+	/// @throws std::out_of_range
 	const vec_view<value_type> col_safe(const size_type& at, const size_type& from = 0, const size_type& len = 0) const;
+	/// @brief Returns vec_view at the matrix diagonal
+	vec_view<value_type> diagonal() noexcept;
+	const vec_view<value_type> diagonal() const noexcept;
+	 /// @throws std::logic_error
+	vec_view<value_type> diagonal_safe();
+	 /// @throws std::logic_error
+	const vec_view<value_type> diagonal_safe() const;
 	/// @}
 
-	/**
-	 * @brief Submatrix functions
+	/** @name Matrix based view access
 	 *
-	 * `row`/`col` beiing out of rance or `rows`/`cols` beiing too big leads to
-	 * unexpected behaivour.
+	 * `row`/`col` beiing out of range or `rows`/`cols` being too big leads to
+	 * unexpected behaivour when calling methods without `_safe` suffix
 	 *
+	 * @brief Get mat_view at matrix
 	 * @param row starting row
 	 * @param col starting column
 	 * @param rows submatrix height
 	 * @param cols submatrix witdht
-	 */
-
-	/** @name Matrix based view access
-	 *
 	 * Get the matrix view from (`row`,`col`) to (`row+rows`,`col+cols`) inclusive.
 	 * @note If underlying matrix gets resized, acessing data under the view
 	 * leads to undefined behaivour.
-	*/
-	/// @{
-	/**
-	 * @brief Get mat_view at matrix
-	 *
-	 * @param row starting row
-	 * @param col starting column
-	 * @param rows row span size
-	 * @param cols column span size
-	 * @return matrix view on a selected area
+	 * @{
 	 */
 	mat_view<value_type> submat(
 		const size_type& row,
@@ -236,31 +217,29 @@ public:
 		const size_type& rows,
 		const size_type& cols
 	) const noexcept;
-
+	/// @throws std::out_of_range
 	mat_view<value_type> submmat_safe(
 		const size_type& row,
 		const size_type& col,
 		const size_type& rows,
 		const size_type& cols
-	) noexcept;
+	);
+	/// @throws std::out_of_range
 	const mat_view<value_type> submat_safe(
 		const size_type& row,
 		const size_type& col,
 		const size_type& rows,
 		const size_type& cols
-	) const noexcept;
+	) const;
 	/// @}
 
-	/**
-	 * @brief Check if matrix is square matrix
-	 * @return `true` if matrix is square, `false` otherwise
-	 */
-	bool is_square() const {
-		return m_rows == m_cols;
-	}
 
-	/// @name Matrix math functions
-	/// @{
+	/** 
+	 * @name Matrix math
+	 * @{
+	 * @brief Matrix product related properties
+	 * @tparam rhs `value_type` of right hand side 
+	 */
 	template<typename rhs> struct product { 
 		using type = decltype(std::declval<value_type>() * std::declval<rhs>() + std::declval<value_type>() * std::declval<rhs>()); 
 	}; 
@@ -274,30 +253,36 @@ public:
 	bool is_product_comformable(const mat_view<V>& other) const { return m_cols == other.rows(); }
 	template<typename V>
 	bool is_product_comformable(const vec_view<V>& other) const { return m_cols == other.n(); };
+	/**
+	 * @brief Check if matrix is square matrix
+	 * @return `true` if matrix is square, `false` otherwise
+	 */
+	inline bool is_square() const noexcept {
+		return m_rows == m_cols;
+	}
 	 /**
 	 * @brief Multiply matrices
-	 *
 	 * @tparam rhs_value_type `value_type` of argument matrix
 	 * @param rhs multyply by
 	 * @return multiplication result
 	 */
 	template<typename rhs_value_type> 
-	auto mul(const ca::mat_view<rhs_value_type>& rhs) noexcept -> ca::mat<typename product<rhs_value_type>::type>;
+	auto mul(const ca::mat_view<rhs_value_type>& rhs) const noexcept -> ca::mat<typename product<rhs_value_type>::type>;
 	template<typename rhs_value_type> 
-	auto mul(const ca::vec_view<rhs_value_type>& rhs) noexcept -> ca::vec<typename product<rhs_value_type>::type>;
+	auto mul(const ca::vec_view<rhs_value_type>& rhs) const  noexcept -> ca::vec<typename product<rhs_value_type>::type>;
 	template<typename rhs_value_type> 
-	auto mul_safe(const ca::mat_view<rhs_value_type>& rhs) -> ca::mat<typename product<rhs_value_type>::type>;
+	auto mul_safe(const ca::mat_view<rhs_value_type>& rhs) const -> ca::mat<typename product<rhs_value_type>::type>;
 	template<typename rhs_value_type> 
-	auto mul_safe(const ca::vec_view<rhs_value_type>& rhs) -> ca::vec<typename product<rhs_value_type>::type>;
+	auto mul_safe(const ca::vec_view<rhs_value_type>& rhs) const-> ca::vec<typename product<rhs_value_type>::type>;
 	template<typename rhs_value_type> 
-	inline auto operator*(const ca::mat_view<rhs_value_type>& rhs) noexcept -> ca::mat<typename product<rhs_value_type>::type> {
+	inline auto operator*(const ca::mat_view<rhs_value_type>& rhs) const noexcept -> ca::mat<typename product<rhs_value_type>::type> {
 		return mul(std::forward(rhs));
 	};
 	/**
 	 * @brief Fill matrix with coefficients of rotation in 2D space
 	 *
 	 * Fills the view starting from [0][0] with \f[
-	 * \begin{bmatrix} \cos(\theta) & -\sin(\theta) \\ \sin(\theta) & \cos(\theta)
+	 * \begin{bmatrix} \cos(\theta) & -\sin(\theta) \\ \sin(\theta) & \cos(\theta) \end{bmatrix}
 	 * \f]
 	 * If matrix is smaller than 2 by 2 - behaivour is undefined.
 	 * @tparam rad_type argument type 
@@ -305,6 +290,17 @@ public:
 	 */
 	template<typename rad_type>
 	void rotation2d(const rad_type& rad) noexcept;
+	/**
+	 * @brief Determinant
+	 *
+	 * Calculate a determinant by making the matrix an upper-triangular matrix
+	 * swapping rows where needed and multyplying it's diagonal elements
+	 * Method will not check if matrix is square
+	 * @tparam V type to use during calculations
+	 * @return determinant value
+	 */
+	template<typename V>
+	typename std::enable_if<std::is_arithmetic<V>::value, V>::type det() const noexcept;
 	/// @}
 
 	friend ::ca::mat<T>;
@@ -358,6 +354,16 @@ public:
 	mat(const mat_view<value_type>& other);
 	mat(const mat<value_type>& other): mat(static_cast<const mat_view<value_type>&>(other)) {};
 	/**
+	 * @brief Templated copy constructor
+	 * Performs `static_cast<value_type>` on each element of `other`
+	 * @tparam V `value_type` of `other` 
+	 * @param other other matrix
+	 */
+	template<typename V>
+	mat(const mat_view<V>& other);
+	template<typename V>
+	mat(const mat<V>& other): mat(static_cast<const mat_view<V>&>(other)) {};
+	/**
 	 * @brief Move constructor
 	 * @param other other matrix
 	 */
@@ -397,9 +403,7 @@ public:
 	/** @name Qt-styled MVC-like column/row manipulator functions
 	 *
 	 * These functions are memory realocation hungry, so be careful with them.
-	*/
-	/// @{
-	/**
+	 * @{
 	 * @brief Insert rows
 	 *
 	 * Inserts `count` rows into the matrix before the given `row`. If
@@ -414,8 +418,8 @@ public:
 	void insert_rows(const size_type& row, const size_type& count, const value_type& init = 0);
 	/**
 	 * @brief Remove rows
-	 * Removes `count` rows starting with the given `row`.
 	 *
+	 * Removes `count` rows starting with the given `row`.
 	 * @param row starting row
 	 * @param count row count
 	 */
@@ -434,8 +438,8 @@ public:
 	void insert_cols(const size_type& col, const size_type& count, const value_type& init = 0);
 	/**
 	 * @brief Remove columns
-	 * Removes `count` columns starting with the given `col`.
 	 *
+	 * Removes `count` columns starting with the given `col`.
 	 * @param row starting column
 	 * @param count column count
 	 */

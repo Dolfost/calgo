@@ -102,6 +102,14 @@ public:
 	virtual void set(const value_type& val);
 
 	/**
+	 * @brief Product of all elements
+	 *
+	 * Product of an empty vector equals 1
+	 * @return product of all elements
+	 */
+	value_type prod() const noexcept;
+
+	/**
 	 * @brief Scalar multiplication
 	 *
 	 * Multiplies each element of array by `value`
@@ -203,8 +211,19 @@ public:
 	 *
 	 * @param other other object
 	 */
-	vec(const vec<value_type>& other): vec(static_cast<const vec_view<value_type>&>(other)) {};
 	vec(const vec_view<value_type>& other);
+	vec(const vec<value_type>& other): vec(static_cast<const vec_view<value_type>&>(other)) {};
+	/**
+	 * @brief Templated copy constructor
+	 * Performs `static_cast<value_type>` on each element of `other`
+	 * @tparam V `value_type` of `other` 
+	 * @param other other vector
+	 */
+	template<typename V>
+	vec(const vec_view<V>& other);
+	template<typename V>
+	vec(const vec<V>& other): vec(static_cast<const vec_view<V>&>(other)) {};
+
 	/**
 	 * @brief Move constructor
 	 *

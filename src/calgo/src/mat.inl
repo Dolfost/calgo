@@ -72,6 +72,14 @@ mat<T>::mat(const mat_view<value_type>& other): mat(other.m_rows, other.m_cols) 
 }
 
 template<typename T>
+template<typename V>
+mat<T>::mat(const mat_view<V>& other): mat(other.rows(), other.cols()) {
+	for (size_type i = 0; i < this->m_rows; i++)
+		for (size_type j = 0; j < this->m_cols; j++)
+			 this->el(i, j) = static_cast<value_type>(other.el(i, j));
+}
+
+template<typename T>
 mat<T>::mat(mat_view<value_type>&& other): mat(other.m_mat, other.m_rows, other.m_cols, other.m_dist) {
 	other.m_mat = nullptr;
 	other.m_rows = 0;
@@ -461,6 +469,30 @@ const vec_view<typename mat_view<T>::value_type> mat_view<T>::col_safe(
 }
 
 template<typename T>
+vec_view<typename mat_view<T>::value_type> mat_view<T>::diagonal() noexcept {
+	return vec_view<value_type>(m_mat, m_rows, m_rows + 1);
+}
+
+template<typename T>
+const vec_view<typename mat_view<T>::value_type> mat_view<T>::diagonal() const noexcept {
+	return vec_view<value_type>(m_mat, m_rows, m_rows + 1);
+}
+
+template<typename T>
+vec_view<typename mat_view<T>::value_type> mat_view<T>::diagonal_safe() {
+	if (not is_square())
+		throw std::logic_error("ca::Mat: can not get diagonal view for non-square matrix");
+	return diagonal();
+}
+ 
+template<typename T>
+const vec_view<typename mat_view<T>::value_type> mat_view<T>::diagonal_safe() const {
+	if (not is_square())
+		throw std::logic_error("ca::Mat: can not get diagonal view for non-square matrix");
+	return diagonal();
+}
+
+template<typename T>
 mat_view<typename mat_view<T>::value_type> mat_view<T>::submat(
 	const size_type& row,
 	const size_type& col,
@@ -494,7 +526,7 @@ const mat_view<typename mat_view<T>::value_type> mat_view<T>::submat_safe(
 	const size_type& col,
 	const size_type& rows,
 	const size_type& cols
-) const noexcept {
+) const {
 	if (col >= m_cols)
 		throw std::out_of_range("ca::Mat: column MatView index out of range");
 	if (row >= m_rows)
@@ -512,7 +544,7 @@ mat_view<typename mat_view<T>::value_type> mat_view<T>::submmat_safe(
 	const size_type& col,
 	const size_type& rows,
 	const size_type& cols
-) noexcept {
+) {
 	if (col >= m_cols)
 		throw std::out_of_range("ca::Mat: column MatView index out of range");
 	if (row >= m_rows)
@@ -526,7 +558,7 @@ mat_view<typename mat_view<T>::value_type> mat_view<T>::submmat_safe(
 
 template<typename T>
 template<typename rhs_value_type> 
-auto mat_view<T>::mul(const ca::mat_view<rhs_value_type>& b) noexcept -> ca::mat<typename product<rhs_value_type>::type> {
+auto mat_view<T>::mul(const ca::mat_view<rhs_value_type>& b) const noexcept -> ca::mat<typename product<rhs_value_type>::type> {
 	mat<typename product<rhs_value_type>::type> prod(m_rows, b.cols(), 0);
 	for (size_type i = 0; i < m_rows; i++)
 		for (size_type j = 0; j < b.cols(); j++)
@@ -537,7 +569,7 @@ auto mat_view<T>::mul(const ca::mat_view<rhs_value_type>& b) noexcept -> ca::mat
 
 template<typename T>
 template<typename rhs_value_type> 
-auto mat_view<T>::mul(const ca::vec_view<rhs_value_type>& b) noexcept -> ca::vec<typename product<rhs_value_type>::type> {
+auto mat_view<T>::mul(const ca::vec_view<rhs_value_type>& b) const noexcept -> ca::vec<typename product<rhs_value_type>::type> {
 	vec<typename product<rhs_value_type>::type> prod(m_rows, 0);
 	for (size_type i = 0; i < m_rows; i++)
 		for (size_type k = 0; k < m_cols; k++) 
@@ -547,7 +579,7 @@ auto mat_view<T>::mul(const ca::vec_view<rhs_value_type>& b) noexcept -> ca::vec
 
 template<typename T>
 template<typename rhs_value_type> 
-auto mat_view<T>::mul_safe(const ca::mat_view<rhs_value_type>& b) -> ca::mat<typename product<rhs_value_type>::type> {
+auto mat_view<T>::mul_safe(const ca::mat_view<rhs_value_type>& b) const -> ca::mat<typename product<rhs_value_type>::type> {
 	if (not is_product_comformable(b))
 		throw std::logic_error("ca::Mat: can not multiply non-conformant matrices");
 	return mul(b);
@@ -555,7 +587,7 @@ auto mat_view<T>::mul_safe(const ca::mat_view<rhs_value_type>& b) -> ca::mat<typ
 
 template<typename T>
 template<typename rhs_value_type> 
-auto mat_view<T>::mul_safe(const ca::vec_view<rhs_value_type>& b) -> ca::vec<typename product<rhs_value_type>::type> {
+auto mat_view<T>::mul_safe(const ca::vec_view<rhs_value_type>& b) const -> ca::vec<typename product<rhs_value_type>::type> {
 	if (not is_product_comformable(b))
 		throw std::logic_error("ca::Mat: can not multiply non-conformant matrice and vector");
 	return mul(b);
@@ -568,6 +600,42 @@ void mat_view<T>::rotation2d(const rad_type& rad) noexcept {
 	el(0, 1) = -std::sin(rad);
 	el(1, 0) = -el(0, 1);
 	el(1, 1) = el(0, 0);
+}
+
+template<typename T>
+template<typename V>
+typename std::enable_if<std::is_arithmetic<V>::value, V>::type
+mat_view<T>::det() const noexcept {
+	mat<V> triangular = *this;
+	signed char sign = 1;
+	for (size_type col = 0; col < m_cols - 1; ++col) {
+		// pivot row with largest absolute value in this column
+		size_type pivot = col;
+		V max_val = std::abs(triangular.el(col, col));
+		for (size_type r = col + 1; r < m_rows; ++r) {
+			V val = std::abs(triangular.el(r, col));
+			if (val > max_val) {
+				max_val = val;
+				pivot = r;
+			}
+		}
+		// if pivot element is zero ==> determinant = 0
+		if (max_val == 0)
+			return 0;
+		// swap rows if needed and flip determinant sign
+		if (pivot != col) {
+			for (size_type c = 0; c < m_cols; ++c)
+				std::swap(triangular.el(col, c), triangular.el(pivot, c));
+			sign = -sign;
+		}
+		// eliminate entries below the pivot
+		for (size_type row = col + 1; row < m_rows; ++row) {
+			V factor = triangular.el(row, col) / triangular.el(col, col);
+			for (size_type i = col; i < m_cols; ++i)
+				triangular.el(row, i) -= factor * triangular.el(col, i);
+		}
+	}
+	return sign * triangular.diagonal().prod();
 }
 
 template<typename T>

@@ -34,6 +34,12 @@ vec<T>::vec(const vec_view<value_type>& other): vec(other.m_len) {
 	for (size_type i = 0; i < this->m_len; i++)
 		this->el(i) = other[i];
 }
+template<typename T>
+template<typename V>
+vec<T>::vec(const vec_view<V>& other): vec(other.len()) {
+	for (size_type i = 0; i < this->m_len; i++)
+		this->el(i) = static_cast<value_type>(other[i]);
+}
 
 template<typename T>
 vec<T>::vec(vec_view<value_type>&& other) {
@@ -160,6 +166,14 @@ typename vec_view<T>::value_type& vec_view<T>::at(
 	if (index >= m_len)
 		throw std::out_of_range("ca::Vec index is out of range");
 	return el(index);
+}
+
+template<typename T> 
+typename vec_view<T>::value_type vec_view<T>::prod() const noexcept {
+	value_type prod = 1;
+	for (size_type i = 0; i < m_len; i++) 
+		prod *= el(i);
+	return prod;
 }
 
 template<typename T>

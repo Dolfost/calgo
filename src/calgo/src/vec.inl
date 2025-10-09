@@ -198,7 +198,7 @@ typename vec_view<T>::value_type vec_view<T>::operator*(const vec_view<value_typ
 template<typename D>
 std::ostream& operator<<(std::ostream& os, const vec_view<D>& v) {
 	for (long long i = 0; i < (long long)v.m_len - 1; i++)
-		os << std::setw(9) << std::fixed << std::setprecision(4) << std::left <<
+		os << std::setw(16) << std::fixed << std::setprecision(4) << std::left <<
 			v[i];
 	if (v.m_len >= 1)
 		os << v[v.m_len - 1];

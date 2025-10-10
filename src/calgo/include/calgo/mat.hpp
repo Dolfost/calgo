@@ -15,7 +15,23 @@ namespace ca {
  * @brief Matrix view
  *
  * Class holds pointer to some data, can access and modify it, but not
- * realocate or free it.
+ * realocate or free it. It is intended that underlyng data will be continious,
+ * unlike using `std::vector<std::vector<value_type>>`. This means that already
+ * implemented funcitons for vector dot product can be used to multiply row and
+ * column (or two columns (see row() and col())) of same matrix without
+ * allocating new memory by using `vec_view` that points to same data with
+ * offset. For exammple to get first row from matrix \f(n\f) by \f(m\f) you
+ * just make vector view that points to first element and allows access up to
+ * \f(m\f)-th element. This would even work with `std::vector<std::vector<>>`.
+ * But if You wan to do the same with colums of an matrix and work with matrix
+ * columns as with plain arrays - you can't do this without saving adress of
+ * every `std::vector` for each element. But `ca::vec_view` can do it. It just
+ * saves the adress of first element in targeted column, number of elements to
+ * skip to get to next element in the column and the total size of column
+ * (allowed number of skips). Heck, You can do this with the matrices too! You
+ * can have big matrix and get its submatrix with ca::mat_view::submat() and
+ * work with it as with regular matrix without pain of counting offsets in the
+ * big matrix!
  *
  * @tparam T `value_type`
  * @sa mat
@@ -336,6 +352,12 @@ public:
 	friend ::ca::mat<T>;
 
 protected:
+	/**
+	 * @brief Get address to elemet
+	 * @param row element row
+	 * @param col element column
+	 * @return adress of element at `[row][col]`
+	 */
 	inline value_type* addr(const size_type& row, const size_type& col) const noexcept;
 
 protected:

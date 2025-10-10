@@ -8,6 +8,7 @@
 #include <iostream>
 #include <ostream>
 #include <type_traits>
+#include <functional>
 
 namespace ca {
 
@@ -81,11 +82,21 @@ public:
 	 * @return `true` if size of matrices and corresponding elements are equal
 	 */
 	template<typename rhs_value_type>
-	bool operator==(const mat_view<rhs_value_type>& other);
+	bool operator==(const mat_view<rhs_value_type>& other) const noexcept;
 	template<typename rhs_value_type>
-	bool operator!=(const mat_view<rhs_value_type>& other) {
+	bool operator!=(const mat_view<rhs_value_type>& other) const noexcept {
 		return not (*this == other);
 	};
+	/**
+	 * @brief Compare matrices with custom comparator
+	 * @tparam rhs_value_type `value_type` of argument matrix
+	 * @param other argument matrix
+	 * @param comp comparisment functor
+	 * @return `true` if `comp` returnss `true` for all pairs of corresponding elements, `false` otherwise
+	 */
+	template<typename rhs_value_type, class comparator>
+	typename std::enable_if<std::is_invocable_r<bool, comparator, value_type, rhs_value_type>::value, bool>::type 
+	compare(const mat_view<rhs_value_type>& other, const comparator& comp) const noexcept;
 
 	/**
 	 * @brief Get data pointer
@@ -347,6 +358,23 @@ public:
 	 */
 	template<typename V>
 	typename std::enable_if<std::is_arithmetic<V>::value, V>::type det_safe() const;
+	/**
+	 * @brief Find inverse matrix
+	 *
+	 * Finds inverse matrix using Gaussian elimination with partial pivoting
+	 *
+	 * This method won't check if matrix is square. If you need exception to be thrown when 
+	 * the matrix isn't square -- see `ca::mat<T>::inverse_safe()`. 
+	 * @throws std::runtime_error when matrix is singular
+	 * @tparam V `value_type` of inverse matrix 
+	 * @return inverse matrix (`ca::mat<V>`)
+	 */
+	template<typename V>
+	typename std::enable_if<std::is_arithmetic<V>::value, mat<V>>::type inverse() const;
+	/// @throws std::logic_error when matrix is not square
+	/// @throws std::runtime_error when matrix is singular
+	template<typename V>
+	typename std::enable_if<std::is_arithmetic<V>::value, mat<V>>::type inverse_safe() const;
 	/// @}
 
 	friend ::ca::mat<T>;
@@ -417,10 +445,19 @@ public:
 	mat(const mat<V>& other): mat(static_cast<const mat_view<V>&>(other)) {};
 	/**
 	 * @brief Move constructor
+	 * @note If somebody is wondering why there is no `mat(mat_view<value_type>&&
+	 * other)`, there is an reason for that. Suppose you want to make matrix
+	 * object from the `ca::mat_view` that you have built with
+	 * `ca::mat_view.submat()`. If you tried to copy-construct ca::mat from that
+	 * view in the return statement of an fuction, then the return value
+	 * optimization would move the view to the caller and deleted the original
+	 * object that owned the view data. When caller scope comes to an end, this
+	 * data would bee freed again, but in other point of an array (which is
+	 * incorrect in it's nature). `ca::mat_view` move costructor existed prior to
+	 * v4.1.5.4.
 	 * @param other other matrix
 	 */
-	mat(mat_view<value_type>&& other);
-	mat(mat<value_type>&& other): mat(static_cast<mat_view<value_type>&&>(other)) {};
+	mat(mat<value_type>&& other);
 	/**
 	 * @brief Copy assignment operator
 	 * @param other other matrix

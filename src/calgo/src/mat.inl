@@ -80,7 +80,7 @@ mat<T>::mat(const mat_view<V>& other): mat(other.rows(), other.cols()) {
 }
 
 template<typename T>
-mat<T>::mat(mat_view<value_type>&& other): mat(other.m_mat, other.m_rows, other.m_cols, other.m_dist) {
+mat<T>::mat(mat<value_type>&& other): mat(other.m_mat, other.m_rows, other.m_cols, other.m_dist) {
 	other.m_mat = nullptr;
 	other.m_rows = 0;
 	other.m_cols = 0;
@@ -347,12 +347,25 @@ void ca::mat<T>::remove_cols(const size_type& col, const size_type& count) {
 
 template<typename T>
 template<typename rhs_typename>
-bool mat_view<T>::operator==(const mat_view<rhs_typename>& other) {
+bool mat_view<T>::operator==(const mat_view<rhs_typename>& other) const noexcept {
 	if (m_rows != other.rows() or m_cols != other.cols())
 		return false;
 	for (size_type i = 0; i < m_rows; i++)
 		for (size_type j = 0; j < m_cols; j++)
 			if (el(i, j) != other.el(i, j))
+				return false;
+	return true;
+}
+
+template<typename T>
+template<typename rhs_value_type, class comparator>
+typename std::enable_if<std::is_invocable_r<bool, comparator, typename mat_view<T>::value_type, rhs_value_type>::value, bool>::type 
+mat_view<T>::compare(const mat_view<rhs_value_type>& other, const comparator& comp) const noexcept {
+	if (m_rows != other.rows() or m_cols != other.cols())
+		return false;
+	for (size_type i = 0; i < m_rows; i++)
+		for (size_type j = 0; j < m_cols; j++)
+			if (not comp(el(i, j), other.el(i, j)))
 				return false;
 	return true;
 }
@@ -699,6 +712,60 @@ mat_view<T>::det_safe() const {
 	return det<V>();
 }
 
+template<typename T>
+template<typename V>
+typename std::enable_if<std::is_arithmetic<V>::value, mat<V>>::type
+mat_view<T>::inverse() const {
+	mat<V> augmented(m_rows, 2*m_rows, 0);
+	for (size_type i = 0; i < m_rows; ++i) {
+		for (size_type j = 0; j < m_rows; ++j)
+			augmented.el(i, j) = static_cast<V>(this->el(i, j));
+		augmented.el(i, m_rows + i) = 1; // identity part
+	}
+
+	// perform Gaussian elimination with partial pivoting
+	for (size_type col = 0; col < m_rows; ++col) {
+		size_type pivot = col;
+		V max_val = std::abs(augmented.el(col, col));
+		for (size_type r = col + 1; r < m_rows; ++r) {
+			V val = std::abs(augmented.el(r, col));
+			if (val > max_val) {
+				max_val = val;
+				pivot = r;
+			}
+		}
+
+		// singular check
+		if (max_val == 0)
+			throw std::runtime_error("ca::Mat: can not find inverse of an singular matrix");
+
+		// swap rows if needed
+		if (pivot != col)
+			for (size_type c = 0; c < 2*m_rows; ++c)
+				std::swap(augmented.el(col, c), augmented.el(pivot, c));
+		// normalize pivot row
+		V pivot_val = augmented.el(col, col);
+		for (size_type c = 0; c < 2*m_rows; ++c)
+			augmented.el(col, c) /= pivot_val;
+		// eliminate all other rows
+		for (size_type r = 0; r < m_rows; ++r) {
+			if (r == col) continue;
+			V factor = augmented.el(r, col);
+			for (size_type c = 0; c < 2*m_rows; ++c)
+				augmented.el(r, c) -= factor * augmented.el(col, c);
+		}
+	}
+	return augmented.submat(0, m_cols, m_rows, m_cols);
+}
+
+template<typename T>
+template<typename V>
+typename std::enable_if<std::is_arithmetic<V>::value, mat<V>>::type
+mat_view<T>::inverse_safe() const {
+	if (not is_square()) 
+		throw std::logic_error("ca::Mat: can not find inverse of non-square matrix");
+	return inverse<V>();
+}
 
 template<typename T>
 mat<T>::~mat() {

@@ -8,7 +8,7 @@ int main() {
 		{ 1, 6, 8 },
 	};
 	double expected = 193;
-	double determinant = m.det<double>();
+	double determinant = m.det_safe<double>();
 	std::cout << "expected: " << expected << "\ngot:      " << determinant << std::endl;
 
 	return expected != determinant;

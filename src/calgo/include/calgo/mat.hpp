@@ -324,6 +324,13 @@ public:
 	 */
 	template<typename V>
 	typename std::enable_if<std::is_arithmetic<V>::value, V>::type det() const noexcept;
+	/**
+	 * @brief Same as `det()` but with a check for square matrix
+	 * @copydetails det()
+	 * @throws std::logic_error
+	 */
+	template<typename V>
+	typename std::enable_if<std::is_arithmetic<V>::value, V>::type det_safe() const;
 	/// @}
 
 	friend ::ca::mat<T>;

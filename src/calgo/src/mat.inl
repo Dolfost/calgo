@@ -691,6 +691,16 @@ mat_view<T>::det() const noexcept {
 }
 
 template<typename T>
+template<typename V>
+typename std::enable_if<std::is_arithmetic<V>::value, V>::type
+mat_view<T>::det_safe() const {
+	if (not is_square())
+		throw std::logic_error("ca::Mat: can not calculate determinant of non-square matrix");
+	return det<V>();
+}
+
+
+template<typename T>
 mat<T>::~mat() {
 	delete[] this->m_mat;
 }

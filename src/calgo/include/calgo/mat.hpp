@@ -375,6 +375,10 @@ public:
 	/// @throws std::runtime_error when matrix is singular
 	template<typename V>
 	typename std::enable_if<std::is_arithmetic<V>::value, mat<V>>::type inverse_safe() const;
+	/**
+	 * @brief Transponation
+	 */
+	mat<value_type> transpose() const noexcept;
 	/// @}
 
 	friend ::ca::mat<T>;

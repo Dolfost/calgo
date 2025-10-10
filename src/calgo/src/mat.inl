@@ -759,6 +759,15 @@ mat_view<T>::inverse() const {
 }
 
 template<typename T>
+mat<T> mat_view<T>::transpose() const noexcept {
+	mat<value_type> m(m_cols, m_rows);
+	for (size_type i = 0; i < m_rows; i++)
+		for (size_type j = 0; j < m_cols; j++)
+			m.el(j, i) = el(i, j);
+	return m;
+}
+
+template<typename T>
 template<typename V>
 typename std::enable_if<std::is_arithmetic<V>::value, mat<V>>::type
 mat_view<T>::inverse_safe() const {

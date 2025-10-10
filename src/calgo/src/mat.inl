@@ -469,27 +469,79 @@ const vec_view<typename mat_view<T>::value_type> mat_view<T>::col_safe(
 }
 
 template<typename T>
+vec_view<typename mat_view<T>::value_type> mat_view<T>::diagonal(const size_type& index, diagonal_type dt) noexcept {
+	if (dt == diagonal_type::upper)
+		return diagonal_upper(index);
+	return diagonal_lower(index);
+}
+
+template<typename T>
+const vec_view<typename mat_view<T>::value_type> mat_view<T>::diagonal(const size_type& index, diagonal_type dt) const noexcept {
+	if (dt == diagonal_type::upper)
+		return diagonal_upper(index);
+	return diagonal_lower(index);
+}
+
+template<typename T>
+const vec_view<typename mat_view<T>::value_type> mat_view<T>::diagonal_safe(const size_type& index, diagonal_type dt) const {
+	if (dt == diagonal_type::upper)
+		return diagonal_upper_safe(index);
+	return diagonal_lower_safe(index);
+}
+
+template<typename T>
+vec_view<typename mat_view<T>::value_type> mat_view<T>::diagonal_safe(const size_type& index, diagonal_type dt) {
+	if (dt == diagonal_type::upper)
+		return diagonal_upper_safe(index);
+	return diagonal_lower_safe(index);
+}
+
+template<typename T>
+vec_view<typename mat_view<T>::value_type> mat_view<T>::diagonal_upper(const size_type& index) noexcept {
+	return vec_view<value_type>(addr(0, index), m_rows - index, m_cols + 1);
+}
+
+template<typename T>
+const vec_view<typename mat_view<T>::value_type> mat_view<T>::diagonal_lower(const size_type& index) const noexcept {
+	return vec_view<value_type>(addr(index, 0), m_rows - index, m_cols + 1);
+}
+
+template<typename T>
+vec_view<typename mat_view<T>::value_type> mat_view<T>::diagonal_upper_safe(const size_type& index) {
+	if (index >= m_cols)
+		throw std::out_of_range("ca::Mat: diagonal index is too large");
+	return diagonal_upper(index);
+}
+
+template<typename T>
+const vec_view<typename mat_view<T>::value_type> mat_view<T>::diagonal_upper_safe(const size_type& index) const {
+	if (index >= m_cols)
+		throw std::out_of_range("ca::Mat: diagonal index is too large");
+	return diagonal_upper(index);
+}
+
+template<typename T>
+const vec_view<typename mat_view<T>::value_type> mat_view<T>::diagonal_lower_safe(const size_type& index) const {
+	if (index >= m_rows)
+		throw std::out_of_range("ca::Mat: diagonal index is too large");
+	return diagonal_lower(index);
+}
+
+template<typename T>
+vec_view<typename mat_view<T>::value_type> mat_view<T>::diagonal_lower_safe(const size_type& index) {
+	if (index >= m_rows)
+		throw std::out_of_range("ca::Mat: diagonal index is too large");
+	return diagonal_lower(index);
+}
+
+template<typename T>
 vec_view<typename mat_view<T>::value_type> mat_view<T>::diagonal() noexcept {
-	return vec_view<value_type>(m_mat, m_rows, m_rows + 1);
+	return diagonal_upper(0);
 }
 
 template<typename T>
 const vec_view<typename mat_view<T>::value_type> mat_view<T>::diagonal() const noexcept {
-	return vec_view<value_type>(m_mat, m_rows, m_rows + 1);
-}
-
-template<typename T>
-vec_view<typename mat_view<T>::value_type> mat_view<T>::diagonal_safe() {
-	if (not is_square())
-		throw std::logic_error("ca::Mat: can not get diagonal view for non-square matrix");
-	return diagonal();
-}
- 
-template<typename T>
-const vec_view<typename mat_view<T>::value_type> mat_view<T>::diagonal_safe() const {
-	if (not is_square())
-		throw std::logic_error("ca::Mat: can not get diagonal view for non-square matrix");
-	return diagonal();
+	return diagonal_upper(0);
 }
 
 template<typename T>

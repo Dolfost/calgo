@@ -146,7 +146,7 @@ public:
 	const value_type& at(const size_type& row, const size_type& col) const;
 	/// @}
 	
-	/** @name Row/column based vector view access
+	/** @name Row/column/diagonal based vector view access
 	 *
 	 * Get the vector view at `at` row(column) starting from element `from` and
 	 * spanning `len` elements. If `len` = 0, it is converted to vec::n().
@@ -181,13 +181,36 @@ public:
 	const vec_view<value_type> row_safe(const size_type& at, const size_type& from = 0, const size_type& len = 0) const;
 	/// @throws std::out_of_range
 	const vec_view<value_type> col_safe(const size_type& at, const size_type& from = 0, const size_type& len = 0) const;
-	/// @brief Returns vec_view at the matrix diagonal
+	/**
+	 * @brief Diagonal type
+	 */
+	enum class diagonal_type {
+		lower, upper
+	};
+	/**
+	 * @brief Get `vec_view` at any matrix diagonal
+	 *
+	 * @param index diagonal index. 0 means main diagonal
+	 * @param dt diagonal location
+	 * @sa diagonal_type
+	 */
+	vec_view<value_type> diagonal(const size_type& index, diagonal_type dt) noexcept;
+	const vec_view<value_type> diagonal(const size_type& index, diagonal_type dt) const noexcept;
+	vec_view<value_type> diagonal_safe(const size_type& index, diagonal_type dt);
+	const vec_view<value_type> diagonal_safe(const size_type& index, diagonal_type dt) const;
+	vec_view<value_type> diagonal_upper(const size_type& index) noexcept;
+	const vec_view<value_type> diagonal_lower(const size_type& index) const noexcept;
+	/// @throws std::out_of_range
+	const vec_view<value_type> diagonal_upper_safe(const size_type& index) const;
+	/// @throws std::out_of_range
+	vec_view<value_type> diagonal_upper_safe(const size_type& index);
+	/// @throws std::out_of_range
+	const vec_view<value_type> diagonal_lower_safe(const size_type& index) const;
+	/// @throws std::out_of_range
+	vec_view<value_type> diagonal_lower_safe(const size_type& index);
+	/// @brief Returns vec_view at the matrix main diagonal
 	vec_view<value_type> diagonal() noexcept;
 	const vec_view<value_type> diagonal() const noexcept;
-	 /// @throws std::logic_error
-	vec_view<value_type> diagonal_safe();
-	 /// @throws std::logic_error
-	const vec_view<value_type> diagonal_safe() const;
 	/// @}
 
 	/** @name Matrix based view access

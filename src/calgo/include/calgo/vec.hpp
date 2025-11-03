@@ -110,6 +110,15 @@ public:
 	value_type prod() const noexcept;
 
 	/**
+	 * @brief Get vector length
+	 * Length \f(l\f) is calculated accordint to formula 
+	 * \f{ l = \sqrt(e_1^2 + e_2^2 + \dots + \e_{n-1}^2 + e_n^2) \f}
+	 * @tparam V return type
+	 * @return vector length
+	 */
+	template<typename V = value_type>
+	V length() const;
+	/**
 	 * @brief Scalar multiplication
 	 *
 	 * Multiplies each element of array by `value`

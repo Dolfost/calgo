@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <iomanip>
 #include <algorithm>
+#include <cmath>
 
 #define CALGO_VEC_INDEX(vec, dist, index) (vec + (dist)*(index))
 
@@ -174,6 +175,15 @@ typename vec_view<T>::value_type vec_view<T>::prod() const noexcept {
 	for (size_type i = 0; i < m_len; i++) 
 		prod *= el(i);
 	return prod;
+}
+
+template<typename T> 
+template<typename V>
+V vec_view<T>::length() const {
+	V sum = 0;
+	for (size_type i = 0; i < m_len; i++)
+		sum += std::pow(el(i), 2);
+	return std::sqrt(sum);
 }
 
 template<typename T>

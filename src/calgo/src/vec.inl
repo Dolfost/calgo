@@ -248,6 +248,16 @@ typename vec_view<T>::value_type vec_view<T>::operator*(const vec_view<value_typ
 	return prod;
 }
 
+template<typename T>
+template<typename rhs_value_type>
+vec<decltype(std::declval<rhs_value_type>()*std::declval<typename ca::vec_view<T>::value_type>())> vec_view<T>::cross_3d(const vec_view<rhs_value_type>& rhs) noexcept {
+	return {
+		el(1)*rhs.el(2) - el(2)*rhs.el(1),
+		el(2)*rhs.el(0) - el(0)*rhs.el(2),
+		el(0)*rhs.el(1) - el(1)*rhs.el(0),
+	};
+}
+
 template<typename D>
 std::ostream& operator<<(std::ostream& os, const vec_view<D>& v) {
 	for (long long i = 0; i < (long long)v.m_len - 1; i++)

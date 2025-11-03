@@ -84,10 +84,19 @@ public:
 	 * If `other` is not the same size, then
 	 * behaivour is undefined.
 	 *
-	 * @param array of same size
+	 * @param other vector of same size
 	 * @return dot product value
 	 */
 	T operator*(const vec_view<T>& other) noexcept;
+	/**
+	 * @brief Cross product in 3D space
+	 * If lhs size is not equal rhs and not equal to 3 - behaivour is undefined.
+	 * @param rhs right hand side vector
+	 * @tparam rhs_value_type rhs value_type
+	 * @return cross product vector that is perpendicular to lhs and rhs vectors
+	 */
+	template<typename rhs_value_type>
+	vec<decltype(std::declval<rhs_value_type>()*std::declval<typename ca::vec_view<T>::value_type>())> cross_3d(const vec_view<rhs_value_type>& rhs) noexcept;
 
 	/**
 	 * @brief Subscript operator

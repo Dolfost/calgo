@@ -186,6 +186,14 @@ V vec_view<T>::length() const {
 	return std::sqrt(sum);
 }
 
+template<typename T> 
+template<typename V>
+void vec_view<T>::normalize() {
+	V len = length();
+	for (size_type i = 0; i < m_len; i++)
+		el(i) = el(i)/len;
+}
+
 template<typename T>
 template<typename M>
 void vec_view<T>::operator*=(const M& d) noexcept {

@@ -119,6 +119,13 @@ public:
 	template<typename V = value_type>
 	V length() const;
 	/**
+	 * @brief Normalize vector
+	 * Makes vector length equal to 1
+	 * @tparam V type used during calculations
+	 */
+	template<typename V = value_type>
+	void normalize();
+	/**
 	 * @brief Scalar multiplication
 	 *
 	 * Multiplies each element of array by `value`

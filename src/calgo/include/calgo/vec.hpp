@@ -60,6 +60,25 @@ public:
 	virtual value_type sum() const;
 
 	/**
+	 * @brief Elementvise substraction
+	 * If rhs is longer than lhs, behaivour is undefined.
+	 * @tparam V `value_type` of other vector
+	 * @param rhs right hand side 
+	 * @return ca::vec<V> with size of the lhs vector
+	 */
+	template<typename V>
+	auto operator-(const vec_view<V>& rhs) noexcept 
+	-> ca::vec<decltype(std::declval<value_type>() - std::declval<typename vec_view<V>::value_type>())>;
+	/** @brief Elementvise addition
+	 * If rhs is longer than lhs, behaivour is undefined.
+	 * @tparam V `value_type` of other vector
+	 * @param rhs right hand side 
+	 * @return ca::vec<V> with size of the lhs vector
+	 */
+	template<typename V>
+	auto operator+(const vec_view<V>& rhs) noexcept 
+	-> ca::vec<decltype(std::declval<value_type>() + std::declval<typename vec_view<V>::value_type>())>;
+	/**
 	 * @brief Dot product
 	 *
 	 * If `other` is not the same size, then
@@ -148,9 +167,11 @@ public:
 	 * @param other other object to compare to 
 	 * @return `true` if lengths and elements are same, `false` otherwise
 	 */
-	bool operator==(const vec_view<value_type>& other);
-	inline bool operator!=(const vec_view<value_type>& other) {
-		return not operator==(other);
+	template<typename rhs_value_type>
+	bool operator==(const vec_view<rhs_value_type>& other);
+	template<typename rhs_value_type>
+	inline bool operator!=(const vec_view<rhs_value_type>& other) {
+		return not operator==<rhs_value_type>(other);
 	}
 
 	friend ca::mat<T>;

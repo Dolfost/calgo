@@ -109,6 +109,26 @@ typename vec_view<T>::value_type vec_view<T>::sum() const {
 }
 
 template<typename T>
+template<typename V>
+auto vec_view<T>::operator-(const vec_view<V>& rhs) noexcept 
+-> ca::vec<decltype(std::declval<value_type>() - std::declval<typename vec_view<V>::value_type>())> {
+	vec<decltype(std::declval<value_type>() - std::declval<typename vec_view<V>::value_type>())> res(m_len); 
+	for (size_type i = 0; i < m_len; i++)
+		res.el(i) = el(i) - rhs.el(i);
+	return res;
+}
+
+template<typename T>
+template<typename V>
+auto vec_view<T>::operator+(const vec_view<V>& rhs) noexcept 
+-> ca::vec<decltype(std::declval<value_type>() + std::declval<typename vec_view<V>::value_type>())> {
+	vec<decltype(std::declval<value_type>() + std::declval<typename vec_view<V>::value_type>())> res(m_len); 
+	for (size_type i = 0; i < m_len; i++)
+		res.el(i) = el(i) + rhs.el(i);
+	return res;
+}
+
+template<typename T>
 void vec_view<T>::set(const value_type& val) {
 	for (size_type i = 0; i < m_len; i++) {
 		el(i) = val;
@@ -209,8 +229,9 @@ typename vec_view<T>::value_type vec_view<T>::dot(const vec_view<value_type>& ot
 	operator*(other);
 }
 template<typename T>
-bool vec_view<T>::operator==(const vec_view<value_type>& other) {
-	if (m_len != other.m_len)
+template<typename rhs_value_type>
+bool vec_view<T>::operator==(const vec_view<rhs_value_type>& other) {
+	if (m_len != other.n())
 		return false;
 	for (size_type i = 0; i < m_len; i++) 
 		if (el(i) != other.el(i))

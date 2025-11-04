@@ -54,6 +54,7 @@ vec<T>::vec(vec_view<value_type>&& other) {
 template<typename T>
 vec<T>& vec<T>::operator=(vec_view<value_type>&& other) {
 	delete[] this->m_vec;
+	this->m_vec = nullptr;
 	vec<T>::operator=(other); // assign other.<x> to this-><x>
 	other.m_vec = nullptr;
 	other.m_len = 0;
@@ -65,6 +66,7 @@ template<typename T>
 vec<T>& vec<T>::operator=(const vec_view<value_type>& other) {
 	if (other.m_len != this->m_len) {
 		delete[] this->m_vec;
+		this->m_vec = nullptr;
 		this->m_len = other.m_len;
 		this->m_vec = new value_type[this->m_len];
 	}
@@ -226,7 +228,7 @@ template<typename T>
 typename vec_view<T>::value_type vec_view<T>::dot(const vec_view<value_type>& other) {
 	if (m_len != other.m_len)
 		throw std::runtime_error("ca::Vec: dot product not possible");
-	operator*(other);
+	operator*(other); //  FIXIT:  missed return???
 }
 template<typename T>
 template<typename rhs_value_type>

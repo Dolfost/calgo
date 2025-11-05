@@ -54,8 +54,10 @@ vec<T>::vec(vec_view<value_type>&& other) {
 template<typename T>
 vec<T>& vec<T>::operator=(vec_view<value_type>&& other) {
 	delete[] this->m_vec;
-	this->m_vec = nullptr;
-	vec<T>::operator=(other); // assign other.<x> to this-><x>
+	this->m_vec = other.m_vec;
+	this->m_len = other.m_len;
+	this->m_dist = other.m_dist;
+
 	other.m_vec = nullptr;
 	other.m_len = 0;
 	other.m_dist = 1;
